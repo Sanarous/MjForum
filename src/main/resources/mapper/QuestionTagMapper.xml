@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.QuestionTagMapper">
+
+    <insert id="insertQuestionTag" parameterType="cn.bestzuo.zuoforum.pojo.QuestionTag">
+        insert into tb_question_tag(tag_id,question_id) values(#{tagId},#{questionId})
+    </insert>
+    <!-- 查询引用次数最多的tag前20条 -->
+    <select id="selectMostReferTag" resultType="java.lang.Integer">
+        SELECT tag_id FROM tb_question_tag GROUP BY tag_id ORDER BY COUNT(*) DESC;
+    </select>
+</mapper>

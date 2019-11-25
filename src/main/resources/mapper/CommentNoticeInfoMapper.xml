@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.CommentNoticeInfoMapper">
+    <resultMap id="BaseResultMap" type="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="parent_comment_id" jdbcType="INTEGER" property="parentCommentId"/>
+        <result column="comment_id" jdbcType="INTEGER" property="commentId"/>
+        <result column="comment_name" jdbcType="VARCHAR" property="commentName"/>
+        <result column="notice_id" jdbcType="INTEGER" property="noticeId"/>
+        <result column="notice_name" jdbcType="VARCHAR" property="noticeName"/>
+        <result column="time" jdbcType="VARCHAR" property="time"/>
+        <result column="question_id" jdbcType="INTEGER" property="questionId"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, parent_comment_id, comment_id, comment_name, notice_id, notice_name, time, question_id, status
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from tb_comment_notice
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <!-- 根据被通知者用户名查询通知消息 -->
+    <select id="selectCommentNoticeByName" resultType="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+    select * from tb_comment_notice where notice_name = #{noticeName} order by id desc
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_comment_notice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+    insert into tb_comment_notice (id,parent_comment_id, comment_id, comment_name,
+      notice_id, notice_name, time, 
+      question_id, status, content
+      )
+    values (#{id,jdbcType=INTEGER},#{parentCommentId,jdbcType=INTEGER},#{commentId,jdbcType=INTEGER}, #{commentName,jdbcType=VARCHAR},
+      #{noticeId,jdbcType=INTEGER}, #{noticeName,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR}, 
+      #{questionId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+        insert into tb_comment_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="parent_comment_id != null">
+                parent_comment_id,
+            </if>
+            <if test="commentId != null">
+                comment_id,
+            </if>
+            <if test="commentName != null">
+                comment_name,
+            </if>
+            <if test="noticeId != null">
+                notice_id,
+            </if>
+            <if test="noticeName != null">
+                notice_name,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+            <if test="questionId != null">
+                question_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="parent_comment_id != null">
+                #{parent_comment_id,jdbcType=INTEGER},
+            </if>
+            <if test="commentId != null">
+                #{commentId,jdbcType=INTEGER},
+            </if>
+            <if test="commentName != null">
+                #{commentName,jdbcType=VARCHAR},
+            </if>
+            <if test="noticeId != null">
+                #{noticeId,jdbcType=INTEGER},
+            </if>
+            <if test="noticeName != null">
+                #{noticeName,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                #{time,jdbcType=VARCHAR},
+            </if>
+            <if test="questionId != null">
+                #{questionId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+        update tb_comment_notice
+        <set>
+            <if test="commentId != null">
+                comment_id = #{commentId,jdbcType=INTEGER},
+            </if>
+            <if test="parent_comment_id != null">
+                parent_comment_id = #{parent_comment_id,jdbcType=INTEGER},
+            </if>
+            <if test="commentName != null">
+                comment_name = #{commentName,jdbcType=VARCHAR},
+            </if>
+            <if test="noticeId != null">
+                notice_id = #{noticeId,jdbcType=INTEGER},
+            </if>
+            <if test="noticeName != null">
+                notice_name = #{noticeName,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                time = #{time,jdbcType=VARCHAR},
+            </if>
+            <if test="questionId != null">
+                question_id = #{questionId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+    update tb_comment_notice
+    set comment_id = #{commentId,jdbcType=INTEGER},
+      parent_comment_id = #{parentCommentId,jdbcType=INTEGER}
+      comment_name = #{commentName,jdbcType=VARCHAR},
+      notice_id = #{noticeId,jdbcType=INTEGER},
+      notice_name = #{noticeName,jdbcType=VARCHAR},
+      time = #{time,jdbcType=VARCHAR},
+      question_id = #{questionId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="cn.bestzuo.zuoforum.pojo.CommentNoticeInfo">
+    update tb_comment_notice
+    set comment_id = #{commentId,jdbcType=INTEGER},
+      parent_comment_id = #{parentCommentId,jdbcType=INTEGER}
+      comment_name = #{commentName,jdbcType=VARCHAR},
+      notice_id = #{noticeId,jdbcType=INTEGER},
+      notice_name = #{noticeName,jdbcType=VARCHAR},
+      time = #{time,jdbcType=VARCHAR},
+      question_id = #{questionId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

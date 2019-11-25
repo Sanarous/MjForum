@@ -1,0 +1,30 @@
+.upload-image {
+    position: absolute;
+    border-radius: 40px;
+    padding: 5px 6px;
+    left: 150px;
+    margin-top: 23px;
+    border: 1px solid #42c02e;
+    color: #42c02e !important;
+    background-color: rgba(59, 194, 29, 0);
+}
+
+.upload-image:hover {
+    background-color: rgba(59, 194, 29, .05);
+}
+
+.layui-elem-field legend{
+    font-size: 23px;
+}
+
+.email-check-input{
+    margin-left: -38px;
+}
+
+.info-header{
+    font-size: 20px;
+}
+
+.layui-layout-admin .layui-footer {
+    left: 0 !important;
+}

@@ -1,0 +1,188 @@
+body{
+    font-family: "Linux Biolinum",'Noto Serif SC',sans-serif;
+}
+
+.layui-tab-brief>.layui-tab-more li.layui-this:after, .layui-tab-brief>.layui-tab-title .layui-this:after{
+    border-bottom: 2px solid #49b1f5 !important;
+}
+
+.layui-tab-brief>.layui-tab-title .layui-this {
+    color: #49b1f5;
+}
+
+.forum-nav li{
+    float: right;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.userToolTip {
+    /*color: #222;*/
+    /*font-size: 16px;*/
+    /*line-height: 40px;*/
+    /*height: 140px;*/
+    /*width: 201px;*/
+    /*text-align: center;*/
+    /*border-radius: 5px;*/
+    /*margin-left: 32px;*/
+    /*vertical-align: top;*/
+    /*background-color: #fff;*/
+    /*border: 1px solid #222;*/
+    /*z-index: 99999999999;*/
+    display: none;
+}
+.arrow {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 10px solid;
+    border-bottom: 10px solid transparent;
+    position: absolute;
+    margin-left: -10px;
+    margin-top: 10px;
+    border-right-color: maroon;
+}
+
+
+.hot_tag {
+    text-decoration-line: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    line-height: 21px;
+    padding: 3px 5px;
+    background-color: #99cfff;
+    font-size: 14px;
+    color: #fff !important;
+    border-radius: 4px;
+    margin: 3px;
+}
+
+.hot_tag a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.right-header{
+    margin-left: 40px;
+    font-size: 22px;
+    font-weight: 500
+}
+
+.recommend-list li a{
+    color: #50adea
+}
+.recommend-list li span{
+    float: right;
+    font-size: 14px;
+    color: #666;
+}
+
+.hot-topics li{
+    padding: 5px 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.topic-avatar {
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+    display: block;
+    cursor: pointer;
+}
+.topics{
+    position: relative;
+    display: flow-root;
+}
+
+.topic-info {
+    color: #555;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    margin-top: 1px;
+    display: block;
+    text-decoration: none;
+}
+
+span.focus-links{
+    cursor: pointer;
+    font-style: normal;
+    margin-left: 10px;
+    position: unset;
+    left: 0;
+    padding: 0 7px;
+    font-size: 11px;
+    border-color: #42c02e;
+    border-radius: 16px;
+    line-height: 21px;
+    height: 20px;
+    color: #fff!important;
+    background-color: #42c02e;
+    display: inline-block;
+}
+
+span.focus-links:hover{
+    background-color: #42a532;
+}
+
+.layui-layout-admin .layui-logo{
+    font-family: 'Comic Sans MS',sans-serif;
+    /*color: #fff;*/
+    font-weight: bolder;
+    vertical-align: top;
+    font-size: 20px;
+}
+
+.floatR {
+    padding-left: 65px;
+    font-size: 17px;
+    color: #8a8a8a;
+    margin-top: 5px;
+}
+
+div#test1 {
+    margin-left: 40px;
+}
+
+.boxContent {
+    padding: 18px 24px;
+    background-color: white;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.layui-carousel {
+    margin-top: 10px;
+    margin-left: 10px !important;
+    border-radius: 50px;
+}
+
+.layui-carousel > [carousel-item] {
+    border-radius: 10px;
+}
+
+.list-group {
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    margin-right: 40px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+#ques-pagination{
+    margin-bottom: 50px;
+    margin-left: 24px;
+}

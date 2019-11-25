@@ -1,0 +1,149 @@
+/*侧边栏位置固定*/
+.layui-layout-admin .layui-side{
+    position: absolute;
+    margin-bottom: -99999px;
+}
+
+
+.abstract {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 24px;
+    color: #999;
+}
+
+blockquote {
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 17.5px;
+    border-left: 5px solid #eee;
+}
+
+
+.reply-list blockquote {
+    margin-bottom: 0;
+    color: #969696;
+    border-left: 3px solid #d9d9d9;
+}
+
+
+.reply-list li{
+    position: relative;
+    width: 100%;
+    margin: 0 0 15px;
+    padding: 15px 2px 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    word-wrap: break-word;
+}
+
+.reply-list .content .author {
+    margin-bottom: 14px;
+    font-size: 16px;
+}
+
+.reply-list p{
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.reply-list .content .info{
+    margin-left: 10px;
+}
+
+.reply-list .author .avatar,.reply-list .author .info {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.reply-list .author .info .nickname {
+    vertical-align: middle;
+}
+
+.reply-list .author a {
+    color: #333;
+}
+
+.reply-list .author .info span {
+    display: inline-block;
+    padding-left: 3px;
+    color: #969696;
+    vertical-align: middle;
+}
+
+.reply-list .author {
+    margin-bottom: 14px;
+    font-size: 13px;
+}
+.reply-list .title{
+    font-family: -apple-system,SF UI Display,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
+}
+
+
+.reply-list blockquote {
+    margin-bottom: 0;
+    color: #969696;
+    border-left: 3px solid #d9d9d9;
+}
+
+.sub-comment-box{
+    position: relative;
+    margin: 10px 0 0 0;
+    /*border: 1px solid #e6e6e6;*/
+    background-color: #fff;
+}
+
+.sub-comment-button-comment{
+    display: inline-block;
+    height: 25px;
+    padding: 0 10px;
+    line-height: 24px;
+    background-color: #5bbf5a;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.sub-comment-button-cancel {
+    display: inline-block;
+    height: 25px;
+    padding: 0 10px;
+    line-height: 24px;
+    background-color: #eee;
+    color: #999;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+
+.collection-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.collection-avatar {
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+    display: block;
+    cursor: pointer;
+}
+
+.collection-time {
+    color: #555;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    margin-top: 1px;
+    display: block;
+    text-decoration: none;
+}

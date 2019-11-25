@@ -1,0 +1,111 @@
+/* 全局自定义样式 */
+
+/* 搜索样式 */
+#search{
+    margin-left: 60px;
+}
+
+.d1 input {
+    width: 133%;
+    height: 33px;
+    padding-left: 10px;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+    border: 2px solid #fff;
+    color: #9E9C9C;
+}
+
+.d1 button {
+    position: absolute;
+    top: 11px;
+    right: -71px;
+    width: 41px;
+    height: 37px;
+    border: none;
+    background: #5FB878;
+    cursor: pointer;
+}
+
+.d1 button:before {
+    content: "\f002";
+    font-family: FontAwesome;
+    font-size: 16px;
+    color: #F9F0DA;
+}
+
+/*页脚样式*/
+.layui-layout-admin .layui-footer{
+    left: 0 !important;
+}
+
+.layui-layout-admin .layui-logo {
+    font-family: 'Comic Sans MS',sans-serif;
+    font-weight: bolder;
+    vertical-align: top;
+    font-size: 20px;
+}
+
+/* 热门标签样式 */
+.hot_tag {
+    text-decoration-line: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    line-height: 16px;
+    padding: 2px 5px;
+    background-color: #99cfff;
+    font-size: 12px;
+    color: #fff !important;
+    border-radius: 4px;
+    margin: 3px;
+}
+
+.hot_tag:hover{
+    background-color: #53a0e4;
+}
+
+.hot_tag a {
+    color: #fff;
+    line-height: 22px;
+    text-decoration: none;
+}
+
+.layui-layout-admin .layui-footer {
+    left: 0 !important;
+}
+
+/*更好的侧边滚动条*/
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+}
+::-webkit-scrollbar-button:start:increment,::-webkit-scrollbar-button:end:decrement {
+    display: none;
+}
+::-webkit-scrollbar-corner {
+    display: block;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: rgba(0,0,0,.2);
+}
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 8px;
+    background-color: rgba(0,0,0,.5);
+}
+::-webkit-scrollbar-track,::-webkit-scrollbar-thumb {
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+}
+::-webkit-scrollbar-track:hover {
+    background-color: rgba(0,0,0,.15);
+}
+::-webkit-scrollbar-button:start {
+    width: 10px;
+    height: 10px;
+}

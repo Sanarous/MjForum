@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.UserMapper">
+    <!-- 修改密码 -->
+    <update id="updatePassword">
+        update tb_user set password = #{newPassword} where username = #{username}
+    </update>
+    <select id="getAllUsers" resultType="cn.bestzuo.zuoforum.pojo.User">
+        select * from tb_user
+    </select>
+    <!-- 插入一条用户信息，并返回主键信息 -->
+    <insert id="insertUser" parameterType="cn.bestzuo.zuoforum.pojo.User" useGeneratedKeys="true" keyProperty="uid">
+        insert into tb_user(username,password) values (#{username},#{password})
+    </insert>
+    <select id="getUserByName" parameterType="string" resultType="cn.bestzuo.zuoforum.pojo.User">
+        select * from tb_user where username = #{username}
+    </select>
+</mapper>

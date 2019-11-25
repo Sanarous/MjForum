@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.TagMapper">
+    <!-- 查询所有标签信息 -->
+    <select id="queryAllTags" resultType="cn.bestzuo.zuoforum.pojo.Tags">
+        select * from tb_tags
+    </select>
+    <!-- 根据标签名查询标签ID -->
+    <select id="selectTagIdByTagName" resultType="java.lang.Integer">
+        select id from tb_tags where tags_name = #{tagName}
+    </select>
+    <!-- 根据Id查询用户名 -->
+    <select id="selectTagNameByTagId" resultType="java.lang.String">
+        select tags_name from tb_tags where id=#{tagId}
+    </select>
+    <!-- 根据问题ID查询对应的标签ID -->
+    <select id="selectTagIDsByQuestionId" resultType="java.lang.Integer">
+        select tag_id from tb_question_tag where question_id = #{questionId}
+    </select>
+    <!-- 根据标签ID查询对应的问题ID -->
+    <select id="selectQuestionIdsByTagId" resultType="java.lang.Integer">
+        select question_id from tb_question_tag where tag_id = #{tagId}
+    </select>
+
+    <!-- 新增标签信息，并返回主键 -->
+    <insert id="insertNewTag" useGeneratedKeys="true" keyProperty="id" parameterType="cn.bestzuo.zuoforum.pojo.Tags">
+        insert into tb_tags(tags_name,category_id) values (#{tagsName},#{categoryId})
+    </insert>
+    <insert id="insertQuestionAndTag" parameterType="int">
+        insert into tb_question_tag(tag_id,question_id) values(#{tagId},#{questionId})
+    </insert>
+</mapper>

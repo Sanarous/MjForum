@@ -1,0 +1,20 @@
+<div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+        <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+            <li class="layui-nav-item"><a th:href="${session.username}">个人中心</a></li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a class="" href="javascript:;">我的信息</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/touserinfo">基本资料</a></dd>
+                    <dd><a href="javascript:;">我的问题</a></dd>
+                    <dd><a href="javascript:;">我的回复</a></dd>
+                    <dd><a href="javascript:;">我的关注</a></dd>
+                    <dd><a href="javascript:;">我的粉丝</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">安全设置</a>
+            </li>
+        </ul>
+    </div>
+</div>
