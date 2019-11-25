@@ -5,11 +5,12 @@
     <title>首页 - 码匠论坛</title>
     <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/swiper.min.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/css/index.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/css/Source Han Sans CN Regular.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">-->
     <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/swiper.min.js}"></script>
     <script th:src="@{/static/js/search.js}"></script>
     <script th:src="@{/static/common/jquery.min.js}"></script>
     <script th:src="@{/static/js/forum.js}"></script>
@@ -22,14 +23,30 @@
         <!-- 左侧 -->
         <div class="layui-col-md3">
             <!-- 轮播图 -->
-            <div class="layui-carousel" id="carousel" lay-filter="carousel">
-                <div carousel-item="">
-                    <div><img width="450" height="250" src="https://bestzuo.cn/images/forum/show-index-1.png"></div>
-                    <div><img width="450" height="250" src="https://bestzuo.cn/images/forum/issue.png"></div>
-                    <div><img width="450" height="250" src="https://bestzuo.cn/images/forum/mjforum-index.png"></div>
-                    <div><img width="450" height="250" src="https://bestzuo.cn/images/forum/show-index-4.png"></div>
-                    <div><img width="450" height="250" src="https://bestzuo.cn/images/forum/show-index-5.png"></div>
+            <!--<div class="layui-carousel" id="carousel" lay-filter="carousel">-->
+                <!--<div carousel-item="">-->
+                    <!--<div><img width="450" height="250" src="https://bestzuo.cn/images/forum/show-index-1.png"></div>-->
+                    <!--<div><img width="450" height="250" src="https://bestzuo.cn/images/forum/issue.png"></div>-->
+                    <!--<div><img width="450" height="250" src="https://bestzuo.cn/images/forum/mjforum-index.png"></div>-->
+                    <!--<div><img width="450" height="250" src="https://bestzuo.cn/images/forum/show-index-4.png"></div>-->
+                    <!--<div><img width="450" height="250" src="https://bestzuo.cn/images/forum/show-index-5.png"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img width="450" height="250" src="https://bestzuo.cn/images/forum/show-index-1.png"></div>
+                    <div class="swiper-slide"><img width="450" height="250" src="https://bestzuo.cn/images/forum/issue.png"></div>
+                    <div class="swiper-slide"><img width="450" height="250" src="https://bestzuo.cn/images/forum/mjforum-index.png"></div>
                 </div>
+                <!-- 如果需要分页器 -->
+                <div class="swiper-pagination"></div>
+
+                <!-- 如果需要导航按钮 -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+                <!-- 如果需要滚动条 -->
+                <div class="swiper-scrollbar"></div>
             </div>
             <!-- 热门话题 -->
             <div style="margin-left: 10px;margin-top:20px;font-size: 22px;font-weight: 500">💬&nbsp;热门话题</div>
@@ -157,6 +174,27 @@
         let element = layui.element;
         let carousel = layui.carousel;
         let laypage = layui.laypage;
+
+        let mySwiper = new Swiper ('.swiper-container', {
+            direction: 'vertical', // 垂直切换选项
+            loop: true, // 循环模式选项
+
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // 如果需要滚动条
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+        })
 
         //监听选项卡切换事件
         element.on('tab(tab-questions)', function (data) {
