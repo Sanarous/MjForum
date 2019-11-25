@@ -7,6 +7,13 @@
 
 # 技术选型
 
+![](https://bestzuo.cn/images/forum/project/springboot.svg)
+![](https://bestzuo.cn/images/forum/project/mybatis.svg)
+![](https://bestzuo.cn/images/forum/project/thymeleaf.svg)
+![](https://bestzuo.cn/images/forum/project/layui.svg)
+![](https://bestzuo.cn/images/forum/project/jquery.svg)
+![](https://bestzuo.cn/images/forum/project/mysql.svg)
+
 ## 后端选型
 
 - SpringBoot
