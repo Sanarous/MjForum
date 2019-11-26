@@ -1,6 +1,10 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.pojo.EmailInfo;
 import cn.bestzuo.zuoforum.pojo.User;
+import cn.bestzuo.zuoforum.pojo.UserInfo;
+import cn.bestzuo.zuoforum.service.EmailService;
+import cn.bestzuo.zuoforum.service.UserInfoService;
 import cn.bestzuo.zuoforum.service.UserService;
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.util.JsonUtils;
@@ -17,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 用户登录注册Controller
@@ -26,6 +32,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @GetMapping("/register")
     public String register() {
@@ -127,9 +139,31 @@ public class UserController {
             return new ForumResult(500, "用户名或密码不能为空", null);
         }
 
-        User user = userService.getUserByName(username);
-        if (user == null) {
-            return new ForumResult(500, "用户不存在", null);
+        //判断用户名格式
+        User user = null;
+        String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        Pattern p = Pattern.compile(regEx1);
+        Matcher m = p.matcher(username);
+        if (m.matches()) {
+            //使用邮箱登录的，先验证邮箱是否验证过
+            EmailInfo emailInfo = emailService.selectEmailInfoByEmail(username);
+            //邮箱是否存在
+            if (emailInfo == null) {
+                return new ForumResult(400, "邮箱不存在", null);
+            }
+            //邮箱是否已经被激活
+            if (emailInfo.getCheck() == 0) {
+                return new ForumResult(500, "邮箱未验证", null);
+            }
+
+            //再根据邮箱查询密码
+            user = userService.getUserByName(emailInfo.getUsername());
+
+        } else {
+            user = userService.getUserByName(username);
+            if (user == null) {
+                return new ForumResult(500, "用户不存在", null);
+            }
         }
 
         //校验密码
@@ -137,14 +171,11 @@ public class UserController {
             return new ForumResult(500, "密码错误", null);
         }
 
-        //登录成功，跳转首页
-        user.setPassword(null);  //清除密码
-
         //将用户信息存在session中
-        request.getSession().setAttribute("username", username);
-        request.getSession().setAttribute("uid",user.getUid());
+        request.getSession().setAttribute("username", user.getUsername());
+        request.getSession().setAttribute("uid", user.getUid());
 
-        return new ForumResult(200, "登录成功", user);
+        return new ForumResult(200, "登录成功", null);
     }
 
     /**

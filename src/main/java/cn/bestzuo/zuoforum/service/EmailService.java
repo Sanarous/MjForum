@@ -3,6 +3,8 @@ package cn.bestzuo.zuoforum.service;
 import cn.bestzuo.zuoforum.pojo.EmailInfo;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 public interface EmailService {
 
     /**
@@ -48,4 +50,17 @@ public interface EmailService {
      * @return
      */
     int updateEmailStatusByEmail(Integer check,String email);
+
+    /**
+     * 查询所有邮箱
+     * @return
+     */
+    List<String> queryAllEmails();
+
+    /**
+     * 根据邮箱查询邮箱信息
+     * @param email
+     * @return
+     */
+    EmailInfo selectEmailInfoByEmail(String email);
 }

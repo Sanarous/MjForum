@@ -14,7 +14,7 @@ function init(username,token) {
             "    <a href=\"/publish\">提问</a>\n" +
             "  </li>\n" +
             "  <li class=\"layui-nav-item\">\n" +
-            "    <a href=\"/notice\">通知<span class=\"layui-badge-dot\"></span></a>\n" +
+            "    <a href=\"/notice\">消息通知</a>\n" +
             "  </li>";
         let insertHtml = "<li class=\"layui-nav-item\">\n" +
             "        <a href=\"javascript:;\">\n" +

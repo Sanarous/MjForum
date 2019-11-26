@@ -1,8 +1,10 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.EmailService;
 import cn.bestzuo.zuoforum.service.IMailService;
+import cn.bestzuo.zuoforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 邮箱验证Controller
@@ -24,6 +29,9 @@ public class EmailCheckController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     /**
      * 验证邮件
@@ -84,7 +92,10 @@ public class EmailCheckController {
                 //先查询状态
                 Integer status = emailService.selectEmailCheckStatusByUsername(username);
                 if (status == 0) {
-                    //置1
+                    //验证成功，保存信息到用户数据库
+                    UserInfo info = userInfoService.getUserInfoByName(username);
+                    info.setEmail(email);
+                    userInfoService.updateUserInfo(info);
                     emailService.updateEmailStatusByEmail(1, email);
                 } else {
                     emailService.updateEmailStatusByEmail(0, email);
@@ -117,5 +128,35 @@ public class EmailCheckController {
         } catch (Exception e) {
             return new ForumResult(500, "查询失败", null);
         }
+    }
+
+    /**
+     * 查询邮箱是否已经被验证过
+     *
+     * @return
+     */
+    @RequestMapping("/getEmailStatus")
+    @ResponseBody
+    public ForumResult selectEmailByUsername(@RequestParam("email") String email) {
+
+        if (StringUtils.isEmpty(email)) {
+            return new ForumResult(400, "邮箱不能为空", null);
+        }
+
+        String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        Pattern p = Pattern.compile(regEx1);
+        Matcher m = p.matcher(email);
+        if (!m.matches()) {
+            return new ForumResult(400, "邮箱格式不正确", null);
+        }
+
+        //查询验证过的邮箱
+        List<String> emails = emailService.queryAllEmails();
+        if (emails.contains(email)) {
+            //说明邮箱已经被验证过
+            return new ForumResult(500, "邮箱已被验证", null);
+        }
+
+        return new ForumResult(200, "邮箱未被验证", null);
     }
 }

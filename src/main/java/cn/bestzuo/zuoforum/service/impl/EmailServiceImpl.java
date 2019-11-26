@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 邮箱信息
  */
@@ -46,5 +48,24 @@ public class EmailServiceImpl implements EmailService {
     @Transactional
     public int updateEmailStatusByEmail(Integer check, String email) {
         return emailMapper.updateEmailStatusByEmail(check,email);
+    }
+
+    /**
+     * 查询所有验证的邮箱
+     * @return
+     */
+    @Override
+    public List<String> queryAllEmails() {
+        return emailMapper.queryAllEmails();
+    }
+
+    /**
+     * 根据邮箱查询邮箱信息
+     * @param email
+     * @return
+     */
+    @Override
+    public EmailInfo selectEmailInfoByEmail(String email) {
+        return emailMapper.selectEmailInfoByEmail(email);
     }
 }

@@ -25,7 +25,7 @@
                     <input type="text" id="username" name="username" lay-verify="username" class="layui-input"
                            autofocus="true"
                            style="width: 98%"
-                           placeholder="请输入用户名" required>
+                           placeholder="请输入用户名 / 邮箱" required>
                 </div>
             </div>
 
@@ -58,52 +58,6 @@
 </div>
 </body>
 <script>
-    layui.use(['form', 'jquery'], function () {
-        var form = layui.form, layer = layui.layer;
-        $ = layui.jquery;
-        form.render();
-        form.verify({
-            username: function (username) {
-                if (username == null || username === "") {
-                    return '用户名不能为空'
-                }
-                if (/^\d+\d+\d$/.test(username)) {
-                    return '用户名不能全为数字';
-                }
-
-                if (username.length < 2 || username.length > 12) {
-                    return '用户名长度必须2~12之间';
-                }
-            },
-            password: function (password) {
-                if (password == null || password === "") {
-                    return '密码不能为空';
-                }
-            }
-        });
-
-        //监听提交
-        form.on('submit(login)', function () {
-            $.ajax({
-                type: "post",
-                url: "/login",
-                data: {
-                    username: $("#username").val(),
-                    password: $("#password").val()
-                },
-                success: function (res) {
-                    if (res.status === 200) {
-                        window.location.href = "/";
-                    } else if (res.status === 500) {
-                        layer.alert(res.msg, {icon: 5, time: 2000});
-                    }
-                },
-                error: function () {
-                    layer.alert("登录失败，请稍后再试", {icon: 5, time: 2000});
-                }
-            });
-            return false;
-        });
-    });
+    layui.use(['form','jquery'],function(){let form=layui.form,layer=layui.layer;$=layui.jquery;form.render();form.verify({username:function(username){if(username==null||username===""){return'用户名不能为空'}if(/^\d+\d+\d$/.test(username)){return'用户名不能全为数字'}},password:function(password){if(password==null||password===""){return'密码不能为空'}}});form.on('submit(login)',function(){$.ajax({type:"post",url:"/login",data:{username:$("#username").val(),password:$("#password").val()},success:function(res){if(res.status===200){window.location.href="/"}else{layer.alert(res.msg,{icon:5,time:2000})}},error:function(){layer.alert("登录失败，请稍后再试",{icon:5,time:2000})}});return false})});
 </script>
 </html>

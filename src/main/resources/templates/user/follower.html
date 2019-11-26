@@ -74,14 +74,11 @@
 <script th:inline="javascript">
     layui.use(['element', 'form', 'upload', 'jquery'], function () {
         let element = layui.element;
-        let form = layui.form;
         $ = layui.jquery;
 
-        //监听选项卡切换事件
         let username = [[${session.username}]];
         element.on('tab(userIndex)', function (data) {
             if (data.index === 0) {
-                //我的关注
                 let followHtml = "<ul>";
                 $.ajax({
                     type: "get",
@@ -96,15 +93,18 @@
                             } else {
                                 var followArray = res.data;
                                 $.each(followArray, function (i, item) {
+                                    if(item.info === null){
+                                        item.info = "&nbsp;&nbsp;";
+                                    }
                                     followHtml += "             <li style=\"margin-top: 15px;display: block\">\n" +
                                         "                            <div class=\"pull-left aw-border-radius-5\">\n" +
-                                        "                                <a href=\"#\">\n" +
+                                        "                                <a href=\"/user/"+ item.id +"\">\n" +
                                         "                                    <img style=\"border-radius: 50%\"\n" +
-                                        "                                         src=\"" + item.avatar + "\" width=\"55\">\n" +
+                                        "                                         src=\"" + item.avatar + "\" width=\"55\" height='55'>\n" +
                                         "                                </a>\n" +
                                         "                            </div>\n" +
                                         "                            <div class=\"pull-left\" style=\"margin-left: 20px;margin-bottom: 15px;\">\n" +
-                                        "                                <a class=\"aw-user-name publish-name\" href=\"#\"\n" +
+                                        "                                <a class=\"aw-user-name publish-name\" href=\"/user/"+ item.id +"\"\n" +
                                         "                                   style=\"font-size: 17px;font-weight: 700;color: #333;\">" + item.username + "</a>\n" +
                                         "                                <span style=\"font-size: 12px;vertical-align: 1px;color: #222222b3;\">" + item.info + "</span>\n" +
                                         "                                <p style=\"font-size: 13px;margin-top: 10px;color: #969696;\">关注 " + item.follow + " &nbsp;|&nbsp; 粉丝\n" +
@@ -123,7 +123,6 @@
                 followHtml += "</ul>";
                 $("#myFollow").html(followHtml);
             } else if (data.index === 1) {
-                //我的粉丝
                 let fansHtml = "<ul>";
                 $.ajax({
                     type: "get",
@@ -137,15 +136,18 @@
                             } else {
                                 let fansArray = res.data;
                                 $.each(fansArray, function (i, item) {
+                                    if(item.info === null){
+                                        item.info = "&nbsp;&nbsp;";
+                                    }
                                     fansHtml += "                    <li style=\"margin-top: 15px;display: block\">\n" +
                                         "                            <div class=\"pull-left aw-border-radius-5\">\n" +
-                                        "                                <a href=\"#\">\n" +
+                                        "                                <a href=\"/user/"+ item.id +"\">\n" +
                                         "                                    <img style=\"border-radius: 50%\"\n" +
-                                        "                                         src=\"" + item.avatar + "\" width=\"55\">\n" +
+                                        "                                         src=\"" + item.avatar + "\" width=\"55\" height='55'>\n" +
                                         "                                </a>\n" +
                                         "                            </div>\n" +
                                         "                            <div class=\"pull-left\" style=\"margin-left: 20px;margin-bottom: 15px;\">\n" +
-                                        "                                <a class=\"aw-user-name publish-name\" href=\"#\"\n" +
+                                        "                                <a class=\"aw-user-name publish-name\" href=\"/user/"+ item.id +"\"\n" +
                                         "                                   style=\"font-size: 17px;font-weight: 700;color: #333;\">" + item.username + "</a>\n" +
                                         "                                <span style=\"font-size: 12px;vertical-align: 1px;color: #222222b3;\">" + item.info + "</span>\n" +
                                         "                                <p style=\"font-size: 13px;margin-top: 10px;color: #969696;\">关注 " + item.follow + " &nbsp;|&nbsp; 粉丝\n" +
@@ -165,10 +167,9 @@
                 $("#myFans").html(fansHtml);
             }
 
-            //点击取消关注
             $(".un-follow").click(function () {
                 let click = $(this);
-                var objName = $(this).siblings(".pull-left").children(".publish-name").html(); //取消的用户名
+                let objName = $(this).siblings(".pull-left").children(".publish-name").html(); //取消的用户名
 
                 $.ajax({
                     type: "get",
@@ -202,7 +203,6 @@
                 })
             });
 
-            //点击关注
             $(".follow").click(function () {
                 let click = $(this);
                 let objName = $(this).siblings(".pull-left").children(".publish-name").html(); //关注的用户名
@@ -223,7 +223,6 @@
 
                         if (res.status === 200) {
                             if (res.data === 1) {
-                                //点击关注成功
                                 click.removeClass("follow").addClass("un-follow");
                                 click.children("i").removeClass("layui-icon-add-1").addClass("layui-icon-ok");
                                 click.children("i").html("&nbsp;已关注");
@@ -231,7 +230,6 @@
                                 click.css("background", "#fff");
                                 click.css("border", "1px solid #969696");
                             } else {
-                                //又点击了取消关注
                                 click.removeClass("un-follow").addClass("follow");
                                 click.children("i").removeClass("layui-icon-ok").addClass("layui-icon-add-1");
                                 click.children("i").html("&nbsp;关注");
@@ -246,23 +244,18 @@
 
         });
 
-        //选中
         $('.layui-header li').click(function () {
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         });
     });
 
-    //页面加载完成就开始
     $(document).ready(function () {
         let username = [[${session.username}]];
         let token = [[${session.uid}]];
-        //赋值给输入框
         $("#username").attr("value", username);
 
-        //去查询用户的头像
         init(username,token);
 
-        //获取我的详情页面
         $.ajax({
             type: "get",
             url: "/getUserIndexInfo",
@@ -279,7 +272,7 @@
                         "                         id=\"no-view\">\n" +
                         "                </a>\n" +
                         "                <a class=\"index-username\" href=\"#\" target=\"_blank\">" + username + "</a>\n" +
-                        "                <div class=\"user-info\" style=\"margin-left: 7%\">\n" +
+                        "                <div class=\"user-info\" style=\"margin-left: 103px\">\n" +
                         "                    <ul style=\"margin-top: 10px\">\n" +
                         "                        <li>\n" +
                         "                            <div class=\"meta-block\"><a href=\"/myfollow?choose=follow\"><p>" + userInfo.follow + "</p><span>关注 ></span></a></div>\n" +
@@ -303,13 +296,10 @@
             }
         });
 
-        //首次加载时获取页面选择
         let choose = [[${choose}]];
         if (choose === "follow") {
             $("#myFollowTab").addClass("layui-this");
             $("#myFollow").addClass("layui-show")
-            //发请求
-            //我的关注
             let followHtml = "<ul>";
             $.ajax({
                 type: "get",
@@ -318,21 +308,24 @@
                 data: {username: username},
                 success: function (res) {
                     if (res.status === 200) {
-                        //添加html
                         if (res.data == null) {
                             followHtml += "您还没有关注任何人哦";
                         } else {
-                            var followArray = res.data;
+                            let followArray = res.data;
                             $.each(followArray, function (i, item) {
+                                if(item.info === null){
+                                    item.info = "&nbsp;&nbsp;";
+                                }
+
                                 followHtml += "                        <li style=\"margin-top: 15px;display: block\">\n" +
                                     "                            <div class=\"pull-left aw-border-radius-5\">\n" +
-                                    "                                <a href=\"#\">\n" +
+                                    "                                <a href=\"/user/"+ item.id +"\">\n" +
                                     "                                    <img style=\"border-radius: 50%\"\n" +
-                                    "                                         src=\"" + item.avatar + "\" width=\"55\">\n" +
+                                    "                                         src=\"" + item.avatar + "\" width=\"55\" height='55'>\n" +
                                     "                                </a>\n" +
                                     "                            </div>\n" +
                                     "                            <div class=\"pull-left\" style=\"margin-left: 20px;margin-bottom: 15px;\">\n" +
-                                    "                                <a class=\"aw-user-name publish-name\" href=\"#\"\n" +
+                                    "                                <a class=\"aw-user-name publish-name\" href=\"/user/"+ item.id +"\"\n" +
                                     "                                   style=\"font-size: 17px;font-weight: 700;color: #333;\">" + item.username + "</a>\n" +
                                     "                                <span style=\"font-size: 12px;vertical-align: 1px;color: #222222b3;\">" + item.info + "</span>\n" +
                                     "                                <p style=\"font-size: 13px;margin-top: 10px;color: #969696;\">关注 " + item.follow + " &nbsp;|&nbsp; 粉丝\n" +
@@ -353,7 +346,6 @@
         } else if (choose === "fans") {
             $("#myFansTab").addClass("layui-this");
             $("#myFans").addClass("layui-show");
-            //我的粉丝
             let fansHtml = "<ul>";
             $.ajax({
                 type: "get",
@@ -367,15 +359,19 @@
                         } else {
                             let fansArray = res.data;
                             $.each(fansArray, function (i, item) {
+                                if(item.info === null){
+                                    item.info = "&nbsp;&nbsp;";
+                                }
+
                                 fansHtml += "                    <li style=\"margin-top: 15px;display: block\">\n" +
                                     "                            <div class=\"pull-left aw-border-radius-5\">\n" +
-                                    "                                <a href=\"#\">\n" +
+                                    "                                <a href=\"/user/"+ item.id +"\">\n" +
                                     "                                    <img style=\"border-radius: 50%\"\n" +
-                                    "                                         src=\"" + item.avatar + "\" width=\"55\">\n" +
+                                    "                                         src=\"" + item.avatar + "\" width=\"55\" height='55'>\n" +
                                     "                                </a>\n" +
                                     "                            </div>\n" +
                                     "                            <div class=\"pull-left\" style=\"margin-left: 20px;margin-bottom: 15px;\">\n" +
-                                    "                                <a class=\"aw-user-name publish-name\" href=\"#\"\n" +
+                                    "                                <a class=\"aw-user-name publish-name\" href=\"/user/"+ item.id +"\"\n" +
                                     "                                   style=\"font-size: 17px;font-weight: 700;color: #333;\">" + item.username + "</a>\n" +
                                     "                                <span style=\"font-size: 12px;vertical-align: 1px;color: #222222b3;\">" + item.info + "</span>\n" +
                                     "                                <p style=\"font-size: 13px;margin-top: 10px;color: #969696;\">关注 " + item.follow + " &nbsp;|&nbsp; 粉丝\n" +
@@ -395,7 +391,6 @@
             $("#myFans").html(fansHtml);
         }
 
-        //点击取消关注
         $(".un-follow").click(function () {
             let click = $(this);
             let objName = $(this).siblings(".pull-left").children(".publish-name").html(); //取消的用户名
@@ -405,13 +400,12 @@
                 url: "/follow",
                 async: false,
                 data: {
-                    userName: objName,  //被关注者用户名
-                    followName: username   //关注者用户名
+                    userName: objName,
+                    followName: username
                 },
                 success: function (res) {
                     if (res.status === 200) {
                         if (res.data === 0) {
-                            //取消关注后的动作
                             click.removeClass("un-follow").addClass("follow");
                             click.children("i").removeClass("layui-icon-ok").addClass("layui-icon-add-1");
                             click.children("i").html("&nbsp;关注");
@@ -419,7 +413,6 @@
                             click.css("color", "#fff");
                             click.css("border", "1px solid #3db922");
                         } else {
-                            //又点击关注后的动作
                             click.removeClass("follow").addClass("un-follow");
                             click.children("i").removeClass("layui-icon-add-1").addClass("layui-icon-ok");
                             click.children("i").html("&nbsp;已关注");
@@ -472,24 +465,8 @@
                 }
             })
         })
-
-        // //关注按钮hover特效
-        // $(".un-follow").hover(function () {
-        //     $(this).children("i").removeClass("layui-icon-ok").addClass("layui-icon-close");
-        //     $(this).css("background-color","#8c8c8c1c");
-        //     $(this).children("i").css("font-size","14px");
-        //     $(this).css("padding","10px 9px");
-        //     $(this).children("i").html("&nbsp;取消关注");
-        // },function () {
-        //     $(this).children("i").removeClass("layui-icon-close").addClass("layui-icon-ok");
-        //     $(this).css("background-color","#fff");
-        //     $(this).css("padding","8px 10px");
-        //     $(this).children("i").css("font-size","17px");
-        //     $(this).children("i").html("&nbsp;已关注");
-        // });
     });
 
-    //查询用户头像
     function getAvatar(username) {
         $.ajax({
             type: "get",

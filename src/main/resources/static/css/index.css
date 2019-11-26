@@ -16,19 +16,14 @@ body{
     font-weight: 500;
 }
 
+.swiper-container {
+    margin: 10px 10px 0 10px;
+    width: 91%;
+    height: 23%;
+    border-radius: 10px;
+}
+
 .userToolTip {
-    /*color: #222;*/
-    /*font-size: 16px;*/
-    /*line-height: 40px;*/
-    /*height: 140px;*/
-    /*width: 201px;*/
-    /*text-align: center;*/
-    /*border-radius: 5px;*/
-    /*margin-left: 32px;*/
-    /*vertical-align: top;*/
-    /*background-color: #fff;*/
-    /*border: 1px solid #222;*/
-    /*z-index: 99999999999;*/
     display: none;
 }
 .arrow {

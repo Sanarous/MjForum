@@ -66,8 +66,10 @@
 
     <div id="project" class="layui-col-md8 layui-col-md-offset2" style="margin-bottom: 80px">
         <h2 style="margin-top: 30px;margin-bottom: 10px;font-weight: 600;">1. 写在前面</h2>
-        <div>码匠论坛是一个功能基本全面的内部交流使用论坛平台，提供发布问题、个人资料展示、评论、回复、搜索、接收消息通知等基本功能。后端采用了 SpringBoot + MyBatis + MySQL进行构建，前端采用了 Thymeleaf + Layui 进行展示。界面风格简洁，尚未进行深度美化。如有 BUG 请尽快联系作者提交问题，不胜感激！<br/>
-            <img style="margin-left: 88px;margin-top: 10px" width="1200px" height="auto" src="https://bestzuo.cn/images/forum/forum.jpg">
+        <div>码匠论坛是一个功能基本全面的内部交流使用论坛平台，提供发布问题、个人资料展示、评论、回复、搜索、接收消息通知等基本功能。后端采用了 SpringBoot + MyBatis + MySQL进行构建，前端采用了
+            Thymeleaf + Layui 进行展示。界面风格简洁，尚未进行深度美化。如有 BUG 请尽快联系作者提交问题，不胜感激！<br/>
+            <img style="margin-left: 88px;margin-top: 10px" width="1200px" height="auto"
+                 src="https://bestzuo.cn/images/forum/forum.jpg">
             <br/>
         </div>
 
@@ -121,40 +123,9 @@
         </div>
         <footer th:replace="common/footer"></footer>
     </div>
-    <script th:inline="javascript">
-        layui.use(['element', 'form', 'upload', 'jquery'], function () {
-            let element = layui.element;
-            $ = layui.jquery;
-
-        });
-
-        //页面加载完成就开始
-        $(document).ready(function () {
-            let username = [[${session.username}]];
-            let token = [[${session.uid}]];
-            //赋值给输入框
-            $("#username").attr("value", username);
-
-            //去查询用户的头像
-            init(username, token);
-
-        });
-
-        //查询用户头像
-        function getAvatar(username) {
-            $.ajax({
-                type: "get",
-                url: "/getavatar",
-                data: {username: username},
-                success: function (res) {
-                    $("#useravatar").attr("src", res.data);  //从数据库中读取
-                    $(".user-small-avatar").attr("src", res.data);
-                },
-                error: function () {
-                    layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
-                }
-            });
-        }
-    </script>
+</div>
+<script th:inline="javascript">
+    layui.use(['element','form','upload','jquery'],function(){let element=layui.element;$=layui.jquery});$(document).ready(function(){let username=[[${session.username}]];let token=[[${session.uid}]];$("#username").attr("value",username);init(username,token)});function getAvatar(username){$.ajax({type:"get",url:"/getavatar",data:{username:username},success:function(res){$("#useravatar").attr("src",res.data);$(".user-small-avatar").attr("src",res.data)},error:function(){layer.alert("系统错误，请稍后再试",{icon:5,time:2000})}})}
+</script>
 </body>
 </html>
