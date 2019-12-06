@@ -5,7 +5,9 @@ import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.EmailService;
 import cn.bestzuo.zuoforum.service.IMailService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
+import cn.bestzuo.zuoforum.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,10 +35,13 @@ public class EmailCheckController {
     @Autowired
     private UserInfoService userInfoService;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     /**
      * 验证邮件
      *
-     * @param emailTo
+     * @param emailTo  发送邮箱地址
      * @return
      */
     @RequestMapping("/email")
@@ -44,8 +49,9 @@ public class EmailCheckController {
     public ForumResult emailCheck(@RequestParam("emailTo") String emailTo, HttpServletRequest request) {
         String randomCode = getRandomCode(6);
         try {
+            //存入redis，设置15分钟过期时间
+            redisUtil.set(emailTo,randomCode,15 * 60);
             mailService.sendSimpleMail(emailTo, "码匠论坛 邮箱验证", "您的邮箱验证码为：" + randomCode + "（15分钟后失效）");
-            request.getSession().setAttribute("emailCode", randomCode);
             return new ForumResult(200, "邮件发送成功", null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +62,7 @@ public class EmailCheckController {
     /**
      * 随机生成6位数验证码
      *
-     * @param code
+     * @param code   验证码位数
      * @return
      */
     private String getRandomCode(Integer code) {
@@ -85,7 +91,12 @@ public class EmailCheckController {
             return new ForumResult(400, "验证码不能为空", null);
         }
 
-        String emailCode = (String) request.getSession().getAttribute("emailCode");
+        //从redis中取出验证码
+        String emailCode = (String)redisUtil.get(email);
+        if(emailCode == null){
+            return new ForumResult(500,"验证码已过期",null);
+        }
+//        String emailCode = (String) request.getSession().getAttribute("emailCode");
         try {
             if (emailCode.equalsIgnoreCase(verifyCode)) {
                 //改变数据库状态
@@ -100,6 +111,8 @@ public class EmailCheckController {
                 } else {
                     emailService.updateEmailStatusByEmail(0, email);
                 }
+                //验证成功，将验证码在redis中删除
+                redisUtil.del(email);
                 return new ForumResult(200, "验证成功", null);
             } else {
                 return new ForumResult(500, "验证码不正确", null);

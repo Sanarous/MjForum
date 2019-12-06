@@ -20,15 +20,19 @@
     <header th:replace="common/header"></header>
 
     <div class="layui-fluid">
+        <!-- 左侧 -->
         <div class="layui-col-md3">
+            <!-- 轮播图 -->
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide"><img style="width: 100%;height: auto;" src="https://bestzuo.cn/images/forum/show-index-1.png"></div>
                     <div class="swiper-slide"><img style="width: 100%;height: auto;" src="https://bestzuo.cn/images/forum/issue.png"></div>
                     <div class="swiper-slide"><img style="width: 100%;height: auto;" src="https://bestzuo.cn/images/forum/mjforum-index.png"></div>
                 </div>
+                <!-- 如果需要分页器 -->
                 <div class="swiper-pagination"></div>
             </div>
+            <!-- 热门话题 -->
             <div style="margin-left: 10px;margin-top:20px;font-size: 22px;font-weight: 500">💬&nbsp;热门话题</div>
             <div style="margin-left: 15px;margin-top: 10px">
                 <ul class="hot-topics">
@@ -64,6 +68,7 @@
                     </li>
                 </ul>
             </div>
+            <!-- 公告部分 -->
             <div style="margin-left: 10px;margin-top:20px;margin-bottom:20px;font-size: 22px;font-weight: 500">📢&nbsp;论坛发展</div>
             <div style="margin-left: 15px;margin-top: 10px">
                 <ul class="layui-timeline">
@@ -94,6 +99,7 @@
                 </ul>
             </div>
         </div>
+        <!-- 中间主体部分 -->
         <div class="layui-col-md6" style="margin-bottom: 60px;">
             <div class="layui-tab layui-tab-brief" lay-filter="tab-questions">
                 <ul class="layui-tab-title forum-nav">
@@ -110,10 +116,12 @@
                     <div class="layui-tab-item" id="hotQues"></div>
                     <div class="layui-tab-item" id="recommendQues"></div>
                     <div class="layui-tab-item layui-show" id="newQues"></div>
+                    <!-- 分页插件 -->
                     <div id="ques-pagination"></div>
                 </div>
             </div>
         </div>
+        <!-- 右侧 -->
         <div class="layui-col-md3" style="margin-top: 20px">
             <div class="right-header">🔖&nbsp;热门标签</div>
             <div style="margin-left: 40px;margin-top: 10px" id="hot-tags">
@@ -121,12 +129,14 @@
                     <div><a class="tagname" href="javascript:;"><span>JAVA</span></a></div>
                 </div>
             </div>
+            <!--热门推荐-->
             <div class="right-header"  style="margin-top:20px">🌏&nbsp;热门推荐</div>
             <div style="margin-left: 40px;margin-top: 10px">
                 <ul class="recommend-list">
                 </ul>
                 <footer th:replace="common/footer"></footer>
             </div>
+            <!--<hr/>-->
             <div class="right-header" style="margin-top:20px;z-index: -99999999;position: relative">👨‍🎓&nbsp;最新用户</div>
             <div style="margin-left: 40px;margin-top: 10px">
                 <ul class="list-group"></ul>
@@ -135,7 +145,246 @@
     </div>
 </div>
 <script th:inline="javascript">
-    let totalCount=0;layui.use(['element','carousel','laypage','layer'],function(){let element=layui.element;let carousel=layui.carousel;let laypage=layui.laypage;let mySwiper=new Swiper('.swiper-container',{direction:'horizontal',loop:true,pagination:{el:'.swiper-pagination',},navigation:{nextEl:'.swiper-button-next',prevEl:'.swiper-button-prev',},});element.on('tab(tab-questions)',function(data){let currId="";let currURL="";if(data.index===3){currId="#newQues";currURL="/getAllQuestions"}else if(data.index===2){currId="#recommendQues";currURL="/getAllQuestionsByViewCount";laypage.render({elem:'ques-pagination',count:totalCount,page:true,limits:[10,15,20,25],layout:['count','prev','page','next','limit','skip'],jump:function(obj){pageQuery(obj.curr,obj.limit,currURL,currId)}})}else if(data.index===1){currId="#hotQues";currURL="/getAllQuestionsByCommentCount";laypage.render({elem:'ques-pagination',count:totalCount,page:true,limits:[10,15,20,25],layout:['count','prev','page','next','limit','skip'],jump:function(obj){pageQuery(obj.curr,obj.limit,currURL,currId)}})}else if(data.index===0){currId="#zeroCommentQues";currURL="/getAllQuestionsByZeroComment";laypage.render({elem:'ques-pagination',count:totalCount,page:true,limits:[10,15,20,25],layout:['count','prev','page','next','limit','skip'],jump:function(obj){pageQuery(obj.curr,obj.limit,currURL,currId)}})}});let currId="#newQues";let currURL="/getAllQuestions";laypage.render({elem:'ques-pagination',count:totalCount,page:true,limits:[10,15,20,25],layout:['count','prev','page','next','limit','skip'],jump:function(obj){pageQuery(obj.curr,obj.limit,currURL,currId)}})});$(document).ready(function(){$("#index").addClass("layui-this");let username=[[${session.username}]];let token=[[${session.uid}]];$("#username").attr("value",username);$(".searchQues").hover(function(){$(".layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after").css("background-color","")});init(username,token);$.ajax({type:"get",url:"/getTotalCount",success:function(res){if(res.status===200){totalCount=res.data}}});$.ajax({type:"get",url:"/getNewUserInfo",success:function(res){if(res.status===200){let html="";$.each(res.data,function(i,item){let university=item.university;let company=item.company;let infomation="";if(($.trim(company).length>0)){infomation="&nbsp;·&nbsp;"+company}if(($.trim(university).length>0)){infomation="&nbsp;·&nbsp;"+university}html+=" <li class=\"list-group-item\" style=\"list-style: none;\">\n           <a style=\"margin-right: 5px;\" href=\"/user/"+item.uid+"\">\n              <img class=\"img-rounded\" width=\"30\" height='30' \n                    src=\""+item.avatar+"\">\n           </a>\n           <small style=\"font-size: 14px;color: #303030;\">"+item.username+"<span style=\"color: #666;font-size: 12px;\">"+infomation+"</span></small>\n           <small style=\"float: right;font-size: 14px;color: #666;\">问题:&nbsp;&nbsp; <span\n                                class=\"iconfont icon-fensi2\"></span>"+item.questionNum+"\n                        </small>\n      </li>"});$(".list-group").html(html)}}});$.get("/getRecommendQuestion",function(res){let recommendHtml="";if(res.status===200){$.each(res.data,function(i,item){recommendHtml+="<li class=\"list-group-item\"><a href=\"/question/"+item.id+"\">"+item.title+"</a><span>浏览量："+item.viewCount+"</span></li>"})}$(".recommend-list").html(recommendHtml)});$.get("/getMostReferTag",function(res){let html="";if(res.status===200){$.each(res.data,function(i,item){html+="    <div class=\"hot_tag\">\n            <div><a class=\"tagname\" href=\"javascript:;\"><span>"+item+"</span></a></div>\n        </div>"});$("#hot-tags").html(html)}})});function pageQuery(currPage,pageSize,url,id){$.ajax({type:"get",url:url,async:false,data:{"currPage":currPage,"pageSize":pageSize},success:function(res){let questionArray=res.data;let html="";for(let i=0;i<questionArray.length;i++){let quesHtml="          <li class=\"boxContent\">\n                        <div>\n                            <div class=\"user_bar\">\n                                <div class='hook' style=\"display: inline-block;float: left;\">\n                                    <a href=\"/user/"+questionArray[i].uid+"\" style=\"text-decoration: none;height: 45px;width: 45px;\">\n                                        <img src="+questionArray[i].avatar+"\n                                             alt=\"\" style=\"height: 48px;width: 48px;border-radius: 10px;\">\n                                    </a>\n                                </div>\n                                <div class='userToolTip'><div class=\"arrow\"></div>\n                                    <span>这是一个提示框</span>\n                                </div>\n                                <div class=\"floatR\" style=\"\">\n                                    <a href=\"/question/"+questionArray[i].id+"\">\n                                        <div class=\"title\" style=\"display: inline-block;\">"+questionArray[i].title+"</div>\n                                    </a>\n                                    <div style=\"font-size: 13px;margin-top: 10px;\">\n                                        <span><span><a href='#'>"+questionArray[i].publisher+"</a> 发起了问题</span></span>\n                                        <span>&nbsp;&nbsp;&nbsp;浏览量：<span>"+questionArray[i].viewCount+"</span></span>\n                                        <span>&nbsp;&nbsp;&nbsp;评论数：<span>"+questionArray[i].commentCount+"</span></span>\n                                        <span>&nbsp;&nbsp;&nbsp;发布于：<span>"+questionArray[i].gmtCreate+"</span></span>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </li>";html+=quesHtml}$(id).html(html)},error:function(){layer.alert("系统错误，请稍后再试",{icon:5,time:2000})}})}function getAvatar(username){$.get("/getavatar?username="+username,function(res){$("#useravatar").attr("src",res.data);$(".user-small-avatar").attr("src",res.data)})}
+    let totalCount = 0;  //数据总条数
+    layui.use(['element', 'carousel', 'laypage', 'layer'], function () {
+        let element = layui.element;
+        let carousel = layui.carousel;
+        let laypage = layui.laypage;
+
+        let mySwiper = new Swiper ('.swiper-container', {
+            direction: 'horizontal',
+            autoplay:true,
+            grabCursor : true,
+            parallax : true,
+            loop: true,
+
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+            },
+        });
+
+        //监听选项卡切换事件
+        element.on('tab(tab-questions)', function (data) {
+            let currId = "";
+            let currURL = "";
+            if (data.index === 3) {
+                //最新
+                currId = "#newQues";
+                currURL = "/getAllQuestions";
+            } else if (data.index === 2) {
+                //推荐
+                currId = "#recommendQues";
+                currURL = "/getAllQuestionsByViewCount";
+                laypage.render({
+                    elem: 'ques-pagination'
+                    , count: totalCount
+                    , page: true
+                    , limits: [10, 15, 20, 25]
+                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    , jump: function (obj) {
+                        pageQuery(obj.curr, obj.limit, currURL, currId);
+                    }
+                });
+            } else if (data.index === 1) {
+                //热门
+                currId = "#hotQues";
+                currURL = "/getAllQuestionsByCommentCount";
+                laypage.render({
+                    elem: 'ques-pagination'
+                    , count: totalCount
+                    , page: true
+                    , limits: [10, 15, 20, 25]
+                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    , jump: function (obj) {
+                        pageQuery(obj.curr, obj.limit, currURL, currId);
+                    }
+                });
+            } else if (data.index === 0) {
+                //消灭零回复
+                currId = "#zeroCommentQues";
+                currURL = "/getAllQuestionsByZeroComment";
+                laypage.render({
+                    elem: 'ques-pagination'
+                    , count: totalCount
+                    , page: true
+                    , limits: [10, 15, 20, 25]
+                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    , jump: function (obj) {
+                        pageQuery(obj.curr, obj.limit, currURL, currId);
+                    }
+                });
+            }
+        });
+
+        let currId = "#newQues";
+        let currURL = "/getAllQuestions";
+        //分页
+        laypage.render({
+            elem: 'ques-pagination'
+            , count: totalCount
+            , page: true
+            , limits: [10, 15, 20, 25]
+            , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+            , jump: function (obj) {
+                pageQuery(obj.curr, obj.limit, currURL, currId);
+            }
+        });
+
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        //导航栏停留在首页
+        $("#index").addClass("layui-this");
+        let username = [[${session.username}]];
+        let token = [[${session.uid}]];
+        //赋值给输入框
+        $("#username").attr("value", username);
+
+        $(".searchQues").hover(function () {
+            $(".layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after").css("background-color", "");
+        });
+
+        //初始化
+        init(username,token);
+
+        //获取数据库中总条数
+        $.ajax({
+            type: "get",
+            url: "/getTotalCount",
+            success: function (res) {
+                if (res.status === 200) {
+                    totalCount = res.data;
+                }
+            }
+        });
+
+        //获取数据库最新的三个用户信息
+        $.ajax({
+            type: "get",
+            url: "/getNewUserInfo",
+            success: function (res) {
+                if (res.status === 200) {
+                    //渲染Html
+                    // alert(res.data[0].username);
+                    let html = "";
+                    $.each(res.data, function (i, item) {
+                        let university = item.university;
+                        let company = item.company;
+                        let infomation = "";
+
+                        if (($.trim(company).length > 0)) {
+                            infomation = "&nbsp;·&nbsp;" + company;
+                        }
+
+                        if (($.trim(university).length > 0)) {
+                            infomation = "&nbsp;·&nbsp;" + university;
+                        }
+
+                        html += " <li class=\"list-group-item\" style=\"list-style: none;\">\n" +
+                            "           <a style=\"margin-right: 5px;\" href=\"/user/" + item.uid + "\">\n" +
+                            "              <img class=\"img-rounded\" width=\"30\" height='30' \n" +
+                            "                    src=\"" + item.avatar + "\">\n" +
+                            "           </a>\n" +
+                            "           <small style=\"font-size: 14px;color: #303030;\">" + item.username + "<span style=\"color: #666;font-size: 12px;\">" + infomation + "</span></small>\n" +
+                            "           <small style=\"float: right;font-size: 14px;color: #666;\">问题:&nbsp;&nbsp; <span\n" +
+                            "                                class=\"iconfont icon-fensi2\"></span>" + item.questionNum + "\n" +
+                            "                        </small>\n" +
+                            "      </li>";
+                    });
+                    $(".list-group").html(html);
+                }
+            }
+        });
+
+        //查询推荐文章信息
+        $.get("/getRecommendQuestion", function (res) {
+            let recommendHtml = "";
+            if (res.status === 200) {
+                $.each(res.data, function (i, item) {
+                    recommendHtml += "<li class=\"list-group-item\"><a href=\"/question/" + item.id + "\">" + item.title + "</a><span>浏览量：" + item.viewCount + "</span></li>";
+                })
+            }
+            $(".recommend-list").html(recommendHtml);
+        });
+
+        //查询标签推荐
+        $.get("/getMostReferTag", function (res) {
+            let html = "";
+            if (res.status === 200) {
+                $.each(res.data, function (i, item) {
+                    html += "    <div class=\"hot_tag\">\n" +
+                        "            <div><a class=\"tagname\" href=\"javascript:;\"><span>" + item + "</span></a></div>\n" +
+                        "        </div>";
+                });
+
+                $("#hot-tags").html(html);
+            }
+        })
+    });
+
+    //查询分页信息
+    function pageQuery(currPage, pageSize, url, id) {
+        //页面加载完成后去查询数据库中问题信息，渲染到页面上
+        $.ajax({
+            type: "get",
+            url: url,
+            async: false,
+            data: {
+                "currPage": currPage,
+                "pageSize": pageSize
+            },
+            success: function (res) {
+                //取出所有的问题信息
+                let questionArray = res.data;
+                let html = "";
+                for (let i = 0; i < questionArray.length; i++) {
+                    let quesHtml = "          <li class=\"boxContent\">\n" +
+                        "                        <div>\n" +
+                        "                            <div class=\"user_bar\">\n" +
+                        "                                <div class='hook' style=\"display: inline-block;float: left;\">\n" +
+                        "                                    <a href=\"/user/" + questionArray[i].uid + "\" style=\"text-decoration: none;height: 45px;width: 45px;\">\n" +
+                        "                                        <img src=" + questionArray[i].avatar + "\n" +
+                        "                                             alt=\"\" style=\"height: 48px;width: 48px;border-radius: 10px;\">\n" +
+                        "                                    </a>\n" +
+                        "                                </div>\n" +
+                        "                                <div class='userToolTip'><div class=\"arrow\"></div>\n" +
+                        "                                    <span>这是一个提示框</span>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"floatR\" style=\"\">\n" +
+                        "                                    <a href=\"/question/" + questionArray[i].id + "\">\n" +
+                        "                                        <div class=\"title\" style=\"display: inline-block;\">" + questionArray[i].title + "</div>\n" +
+                        "                                    </a>\n" +
+                        "                                    <div style=\"font-size: 13px;margin-top: 10px;\">\n" +
+                        "                                        <span><span><a href='#'>" + questionArray[i].publisher + "</a> 发起了问题</span></span>\n" +
+                        "                                        <span>&nbsp;&nbsp;&nbsp;浏览量：<span>" + questionArray[i].viewCount + "</span></span>\n" +
+                        "                                        <span>&nbsp;&nbsp;&nbsp;评论数：<span>" + questionArray[i].commentCount + "</span></span>\n" +
+                        "                                        <span>&nbsp;&nbsp;&nbsp;发布于：<span>" + questionArray[i].gmtCreate + "</span></span>\n" +
+                        "                                    </div>\n" +
+                        "                                </div>\n" +
+                        "                            </div>\n" +
+                        "                        </div>\n" +
+                        "                    </li>";
+                    html += quesHtml;
+                }
+                $(id).html(html);
+
+            },
+            error: function () {
+                layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
+            }
+        });
+    }
+
+
+    //查询用户头像
+    function getAvatar(username) {
+        $.get("/getavatar?username=" + username, function (res) {
+            $("#useravatar").attr("src", res.data);
+            $(".user-small-avatar").attr("src", res.data);
+        });
+    }
 
 </script>
 </body>

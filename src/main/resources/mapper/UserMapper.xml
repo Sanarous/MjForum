@@ -7,6 +7,10 @@
     <update id="updatePassword">
         update tb_user set password = #{newPassword} where username = #{username}
     </update>
+    <!--根据用户ID删除用户信息-->
+    <delete id="deleteUserById">
+        delete from tb_user where uid = #{id}
+    </delete>
     <select id="getAllUsers" resultType="cn.bestzuo.zuoforum.pojo.User">
         select * from tb_user
     </select>

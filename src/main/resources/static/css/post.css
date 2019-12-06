@@ -69,7 +69,6 @@ h2{
 
 .aw-user-name, .aw-topic-name {
     font-size: 16px;
-    line-height: 32px;
     font-weight: normal;
 }
 
@@ -249,6 +248,7 @@ a {
 }
 
 .sub-comment-btn{
+    border-radius: 4px;
     background: #126b22f0;
     color: #ffffff;
     padding: 4px 8px;
@@ -301,7 +301,7 @@ button, input, optgroup, option, select, textarea{
 }
 
 .relatedQuestions li{
-    padding: 5px 0;
+    padding: 10px 0;
 }
 
 span.focus-links {
@@ -320,8 +320,4 @@ span.focus-links {
     background-color: #42c02e;
     display: inline-block;
 }
-
-/*span.focus-links:hover {*/
-    /*background-color: #42a532;*/
-/*}*/
 

@@ -80,7 +80,7 @@ public class CommentController {
     /**
      * 根据问题ID查询问题一级评论信息
      *
-     * @param questionId
+     * @param questionId  问题ID
      * @return
      */
     @RequestMapping("/getCommentsByQuestionId")
@@ -96,7 +96,7 @@ public class CommentController {
         }
 
         List<CommentVO> res = new ArrayList<>();
-        for (Comment comment : comments){
+        for (Comment comment : comments) {
             res.add(convertCommentToVO(comment));
         }
 
@@ -106,13 +106,12 @@ public class CommentController {
     /**
      * 将Comment转换成前端VO
      *
-     * @param comment
+     * @param comment  评论
      * @return
      */
     private CommentVO convertCommentToVO(Comment comment) {
         CommentVO vo = new CommentVO();
         vo.setUid(comment.getUid());
-        vo.setAvatar(comment.getAvatar());
         vo.setCId(comment.getCId());
         vo.setQuestionId(comment.getQuestionId());
         vo.setUname(comment.getUname());
@@ -120,6 +119,13 @@ public class CommentController {
         vo.setComment(comment.getComment());
 
         UserInfo info = userInfoService.getUserInfoByName(comment.getUname());
+        //获取评论者的头像信息
+        if (info.getAvatar().contains("https")) {
+            vo.setAvatar(info.getAvatar());
+        } else {
+            vo.setAvatar("https://forum-1258928558.cos.ap-guangzhou.myqcloud.com/" + info.getAvatar());
+        }
+
         //工作/学校信息
         if (StringUtils.isEmpty(info.getCompany()) && StringUtils.isEmpty(info.getUniversity())) {
             vo.setInfo("&nbsp;");

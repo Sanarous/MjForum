@@ -1,8 +1,6 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
-import cn.bestzuo.zuoforum.mapper.QuestionMapper;
-import cn.bestzuo.zuoforum.mapper.UserInfoMapper;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.pojo.vo.UserIndexQuestionVO;
@@ -11,10 +9,8 @@ import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.QuestionTagService;
 import cn.bestzuo.zuoforum.service.TagService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
-import cn.bestzuo.zuoforum.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -49,12 +45,12 @@ public class IndexController {
     }
 
     @GetMapping("/java")
-    public String getIndex(){
+    public String getIndex() {
         return "java";
     }
 
     @GetMapping("/project")
-    public String getProjectIndex(){
+    public String getProjectIndex() {
         return "project";
     }
 
@@ -124,15 +120,16 @@ public class IndexController {
 
     /**
      * 将Question转换成前端VO
+     *
      * @param question 问题实体类
      * @return
      */
     private UserIndexQuestionVO convertQuestionToVO(Question question) {
         UserIndexQuestionVO vo = new UserIndexQuestionVO();
         vo.setId(question.getId());
-        if(question.getTitle().length() > 20){
-            vo.setTitle(question.getTitle().substring(0,20) + "...");
-        }else
+        if (question.getTitle().length() > 20) {
+            vo.setTitle(question.getTitle().substring(0, 20) + "...");
+        } else
             vo.setTitle(question.getTitle());
         vo.setViewCount(question.getViewCount());
         return vo;

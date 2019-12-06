@@ -80,7 +80,416 @@
     <footer th:replace="common/footer"></footer>
 </div>
 <script th:inline="javascript">
-    layui.use(['element','form','jquery'],function(){let element=layui.element;$=layui.jquery;let username=[[${username}]];element.on('tab(userIndex)',function(data){if(data.index===0){let html="<div id=\"questions\"><ul class=\"question-list\">";$.ajax({type:"get",url:"/getMyQuestions",async:false,data:{username:username},success:function(res){if(res.status===200){if(res.data==null){html+="<div style='font-size: 17px;font-weight: 300;'>您暂未发布问题</div>"}else{var questionArray=res.data;$.each(questionArray,function(i,item){html+="                       <li>\n                                <div class=\"content\">\n                                    <a class=\"title\" target=\"_blank\" href=\"/question/"+item.id+"\">"+item.title+"</a>\n                                    <p class=\"abstract\">"+item.description+"</p>\n                                    <div class=\"meta\">\n                                        <a target=\"_blank\" href=\"#\">\n                                            <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n                                            <span>"+item.viewCount+"&nbsp;&nbsp;</span>\n                                        </a>\n                                        <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n                                            <span>"+item.commentCount+"&nbsp;&nbsp;</span>\n                                        </span>\n                                        <a target=\"_blank\" href=\"#\">\n                                            <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n                                            <span>"+item.likeCount+"&nbsp;&nbsp;</span>\n                                        </a>\n\n                                        <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n                                            <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n                                            <span> "+item.gmtCreate+"</span>\n                                        </span>\n                                    </div>\n                                </div>\n                            </li>"})}}}});html+="</ul></div>";console.log(html);$("#myQuestions").html(html)}else if(data.index===1){let html="<div id=\"comments\"><ul class=\"comment-list\">";$.ajax({type:"get",url:"/getMyCommentInfo",async:false,data:{username:username},success:function(res){if(res.status===200){if(res.data==null){html+="<div style='font-size: 17px;font-weight: 300;'>暂无评论消息</div>"}else{var commentArray=res.data;$.each(commentArray,function(i,item){html+="                     <li>\n                                <div class=\"content\">\n                                    <div class=\"author\">\n                                        <a class=\"avatar\" href=\"#\">\n                                            <img style=\"width: 30px;height: 30px;border-radius: 50%\"\n                                                 src=\""+item.avatar+"\"\n                                                 alt=\"180\">\n                                        </a>\n                                        <div class=\"info\">\n                                            <a class=\"nickname\" href=\"#\">"+item.username+"</a>\n                                            <span data-type=\"share_note\" data-datetime=\"2019-06-11T16:56:18+08:00\"> 发表了评论 · "+item.time+"</span>\n                                        </div>\n                                    </div>\n                                    <p class=\"comment\" style=\"margin-bottom: 10px;\">"+item.comment+"</p>\n                                    <blockquote>\n                                        <a class=\"title\" href=\"/question/"+item.questionId+"\">"+item.title+"</a>\n                                        <p class=\"abstract\">"+item.contents+"</p>\n                                        <div class=\"meta\" style=\"font-size: 12px\">\n                                            <a target=\"_blank\" href=\"#\">\n                                                <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n                                                <span>"+item.viewCount+"&nbsp;&nbsp;</span>\n                                            </a>\n                                            <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n                                            <span>"+item.commentCount+"&nbsp;&nbsp;</span>\n                                        </span>\n                                            <a target=\"_blank\" href=\"#\">\n                                                <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n                                                <span>"+item.likeCount+"&nbsp;&nbsp;</span>\n                                            </a>\n                                        </div>\n                                    </blockquote>\n                                </div>\n                            </li>"})}}}});html+="</ul></div>";$("#myComments").html(html)}else if(data.index===2){let html="<div id=\"collection\"><ul class=\"collection-list\">";$.ajax({type:"get",url:"/getMyCollection",async:false,data:{username:username},success:function(res){if(res.status===200){if(res.data==null){html+="<div style='font-size: 17px;font-weight: 300;'>您暂无收藏的问题</div>"}else{let collectionArray=res.data;$.each(collectionArray,function(i,item){html+="<li>\n          <div class=\"content\">\n               <a class=\"title\" target=\"_blank\" href=\"/question/"+item.id+"\">"+item.title+"</a>\n                    <p class=\"abstract\">"+item.description+"</p>\n                     <div class=\"meta\">\n                          <a target=\"_blank\" href=\"#\">\n                               <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n                                    <span>"+item.viewCount+"&nbsp;&nbsp;</span>\n                          </a>\n                          <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n                          <span>"+item.commentCount+"&nbsp;&nbsp;</span>\n                          </span>\n                          <a target=\"_blank\" href=\"#\">\n                               <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n                                   <span>"+item.likeCount+"&nbsp;&nbsp;</span>\n                               </a>\n                          <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n                                 <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n                                  <span> "+item.gmtCreate+"</span>\n                            </span>\n                   </div>\n          </div>\n     </li>"})}}}});html+="</ul><div>";$("#myCollection").html(html)}else if(data.index===3){let html="<div id=\"hotQuestion\"><ul class=\"hotQuestion-list\">";$.ajax({type:"get",url:"/getMyHotQuestions",async:false,data:{username:username},success:function(res){if(res.status===200){if(res.data==null){html+="<div style='font-size: 17px;font-weight: 300;'>暂无问题信息</div>"}else{var questionArray=res.data;$.each(questionArray,function(i,item){html+="                       <li>\n                                <div class=\"content\">\n                                    <a class=\"title\" target=\"_blank\" href=\"/question/"+item.id+"\">"+item.title+"</a>\n                                    <p class=\"abstract\">"+item.description+"</p>\n                                    <div class=\"meta\">\n                                        <a target=\"_blank\" href=\"#\">\n                                            <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n                                            <span>"+item.viewCount+"&nbsp;&nbsp;</span>\n                                        </a>\n                                        <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n                                            <span>"+item.commentCount+"&nbsp;&nbsp;</span>\n                                        </span>\n                                        <a target=\"_blank\" href=\"#\">\n                                            <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n                                            <span>"+item.likeCount+"&nbsp;&nbsp;</span>\n                                        </a>\n\n                                        <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n                                            <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n                                            <span> "+item.gmtCreate+"</span>\n                                        </span>\n                                    </div>\n                                </div>\n                            </li>"})}}}});html+="</ul></div>";$("#myHotQuestions").html(html)}});$('.layui-header li').click(function(){$(this).addClass('layui-this').siblings().removeClass('layui-this')})});$(document).ready(function(){let username=[[${session.username}]];let token=[[${session.uid}]];$("#username").attr("value",username);init(username,token);if(($.trim(username).length>0)){let queryUsername=[[${username}]];$.ajax({type:"get",url:"/getUserIndexInfo",async:false,data:{username:queryUsername},success:function(res){let html="";if(res.status===200){let userInfo=res.data;html+="            <div>\n                <a class=\"index-useravatar\" href=\"#\" target=\"_blank\">\n                    <img style=\"border-radius: 10px\" width=\"80\" height=\"80\"\n                         src=\""+userInfo.avatar+"\"\n                         id=\"no-view\">\n                </a>\n                <a class=\"index-username\" href=\"#\" target=\"_blank\">"+queryUsername+"</a>                     <span class='focus-links' style='margin-left: 20px;vertical-align: 6px;display: none;'>关注</span>\n                <div class=\"user-info\" style=\"margin-left: 103px\">\n                    <ul style=\"margin-top: 10px\">\n                        <li>\n                            <div class=\"meta-block\" style='cursor: pointer;'><a onclick='getFollow()'><p>"+userInfo.follow+"</p><span>关注 ></span></a></div>\n                        </li>\n                        <li>\n                            <div class=\"meta-block\" style='cursor: pointer;'><a onclick='getFans()'><p>"+userInfo.fans+"</p><span>粉丝 ></span></a></div>\n                        </li>\n                        <li>\n                            <div class=\"meta-block\"><a href=\"#\"><p>"+userInfo.questionNum+"</p><span>问题 ></span></a></div>\n                        </li>\n                        <li>\n                            <div class=\"meta-block\" style=\"border-right: none\"><a href=\"#\"><p>"+userInfo.likeCount+"</p>\n                                <span>收获点赞</span></a></div>\n                        </li>\n                    </ul>\n                </div>\n            </div>";$(".user-index-header").html(html);if(username!==queryUsername){$(".focus-links").show();$.ajax({type:"get",url:"/getFollowStatus",data:{userName:queryUsername,followName:username},async:false,success:function(res){if(res.status===200){if(res.data===1){$(".focus-links").css("background-color","#a9b5ac");$(".focus-links").html("已关注")}else{$(".focus-links").css("background-color","#42c02e");$(".focus-links").html("关注")}}}})}else{$(".focus-links").hide()}$(".focus-links").click(function(){$.ajax({type:"get",url:"/follow",async:false,data:{userName:queryUsername,followName:username},success:function(res){if(res.status===200){if(res.data===0){$(".focus-links").css("background-color","#42c02e");$(".focus-links").html("关注")}else{$(".focus-links").css("background-color","#a9b5ac");$(".focus-links").html("已关注")}}}})})}}});let html="<div id=\"questions\"><ul class=\"question-list\">";$.ajax({type:"get",url:"/getMyQuestions",async:false,data:{username:queryUsername},success:function(res){if(res.status===200){if(res.data==null){html+="<div style='font-size: 17px;font-weight: 300;'>您暂未发布消息</div>"}else{let questionArray=res.data;$.each(questionArray,function(i,item){html+="                       <li>\n                                <div class=\"content\">\n                                    <a class=\"title\" target=\"_blank\" href=\"/question/"+item.id+"\">"+item.title+"</a>\n                                    <p class=\"abstract\">"+item.description+"</p>\n                                    <div class=\"meta\">\n                                        <a target=\"_blank\" href=\"#\">\n                                            <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n                                            <span>"+item.viewCount+"&nbsp;&nbsp;</span>\n                                        </a>\n                                        <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n                                            <span>"+item.commentCount+"&nbsp;&nbsp;</span>\n                                        </span>\n                                        <a target=\"_blank\" href=\"#\">\n                                            <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n                                            <span>"+item.likeCount+"&nbsp;&nbsp;</span>\n                                        </a>\n\n                                        <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n                                            <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n                                            <span> "+item.gmtCreate+"</span>\n                                        </span>\n                                    </div>\n                                </div>\n                            </li>"})}}}});html+="</ul></div>";$("#myQuestions").html(html)}});function getAvatar(username){$.ajax({type:"get",url:"/getavatar",data:{username:username},success:function(res){$("#useravatar").attr("src",res.data);$(".user-small-avatar").attr("src",res.data)},error:function(){layer.alert("系统错误，请稍后再试",{icon:5,time:2000})}})}function getFollow(){let username=[[${session.username}]];let queryUsername=[[${username}]];if(username===queryUsername){window.location.href="/myfollow?choose=follow"}}function getFans(){let username=[[${session.username}]];let queryUsername=[[${username}]];if(username===queryUsername){window.location.href="/myfollow?choose=fans"}}
+    layui.use(['element', 'form', 'jquery'], function () {
+        let element = layui.element;
+        $ = layui.jquery;
+
+        //获取user的个人信息
+        let username = [[${username}]];
+
+        //监听选项卡切换事件
+        element.on('tab(userIndex)', function (data) {
+            if (data.index === 0) {
+                //我的问题
+                //获取我的问题详情
+                let html = "<div id=\"questions\"><ul class=\"question-list\">";
+                $.ajax({
+                    type: "get",
+                    url: "/getMyQuestions",
+                    async: false,
+                    data: {username: username},
+                    success: function (res) {
+                        if (res.status === 200) {
+                            //添加html
+                            if (res.data == null) {
+                                html += "<div style='font-size: 17px;font-weight: 300;'>您暂未发布问题</div>";
+                            } else {
+                                var questionArray = res.data;
+                                $.each(questionArray, function (i, item) {
+                                    html += "                       <li>\n" +
+                                        "                                <div class=\"content\">\n" +
+                                        "                                    <a class=\"title\" target=\"_blank\" href=\"/question/" + item.id + "\">" + item.title + "</a>\n" +
+                                        "                                    <p class=\"abstract\">" + item.description + "</p>\n" +
+                                        "                                    <div class=\"meta\">\n" +
+                                        "                                        <a target=\"_blank\" href=\"#\">\n" +
+                                        "                                            <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span>" + item.viewCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                        </a>\n" +
+                                        "                                        <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span>" + item.commentCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                        </span>\n" +
+                                        "                                        <a target=\"_blank\" href=\"#\">\n" +
+                                        "                                            <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span>" + item.likeCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                        </a>\n" +
+                                        "\n" +
+                                        "                                        <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n" +
+                                        "                                            <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span> " + item.gmtCreate + "</span>\n" +
+                                        "                                        </span>\n" +
+                                        "                                    </div>\n" +
+                                        "                                </div>\n" +
+                                        "                            </li>";
+                                });
+                            }
+                        }
+                    }
+                });
+                html += "</ul></div>";
+                console.log(html);
+                $("#myQuestions").html(html);
+            } else if (data.index === 1) {
+                //我的评论
+                let html = "<div id=\"comments\"><ul class=\"comment-list\">";
+                $.ajax({
+                    type: "get",
+                    url: "/getMyCommentInfo",
+                    async: false,
+                    data: {username: username},
+                    success: function (res) {
+                        if (res.status === 200) {
+                            if (res.data == null) {
+                                html += "<div style='font-size: 17px;font-weight: 300;'>暂无评论消息</div>";
+                            } else {
+                                var commentArray = res.data;
+                                $.each(commentArray, function (i, item) {
+                                    html += "                     <li>\n" +
+                                        "                                <div class=\"content\">\n" +
+                                        "                                    <div class=\"author\">\n" +
+                                        "                                        <a class=\"avatar\" href=\"#\">\n" +
+                                        "                                            <img style=\"width: 30px;height: 30px;border-radius: 50%\"\n" +
+                                        "                                                 src=\"" + item.avatar + "\"\n" +
+                                        "                                                 alt=\"180\">\n" +
+                                        "                                        </a>\n" +
+                                        "                                        <div class=\"info\">\n" +
+                                        "                                            <a class=\"nickname\" href=\"#\">" + item.username + "</a>\n" +
+                                        "                                            <span data-type=\"share_note\" data-datetime=\"2019-06-11T16:56:18+08:00\"> 发表了评论 · " + item.time + "</span>\n" +
+                                        "                                        </div>\n" +
+                                        "                                    </div>\n" +
+                                        "                                    <p class=\"comment\" style=\"margin-bottom: 10px;\">" + item.comment + "</p>\n" +
+                                        "                                    <blockquote>\n" +
+                                        "                                        <a class=\"title\" href=\"/question/" + item.questionId + "\">" + item.title + "</a>\n" +
+                                        "                                        <p class=\"abstract\">" + item.contents + "</p>\n" +
+                                        "                                        <div class=\"meta\" style=\"font-size: 12px\">\n" +
+                                        "                                            <a target=\"_blank\" href=\"#\">\n" +
+                                        "                                                <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n" +
+                                        "                                                <span>" + item.viewCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                            </a>\n" +
+                                        "                                            <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span>" + item.commentCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                        </span>\n" +
+                                        "                                            <a target=\"_blank\" href=\"#\">\n" +
+                                        "                                                <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n" +
+                                        "                                                <span>" + item.likeCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                            </a>\n" +
+                                        "                                        </div>\n" +
+                                        "                                    </blockquote>\n" +
+                                        "                                </div>\n" +
+                                        "                            </li>";
+                                })
+                            }
+                        }
+                    }
+                });
+
+                html += "</ul></div>";
+
+                $("#myComments").html(html);
+            } else if (data.index === 2) {
+                //我的收藏
+                let html = "<div id=\"collection\"><ul class=\"collection-list\">";
+                $.ajax({
+                    type: "get",
+                    url: "/getMyCollection",
+                    async: false,
+                    data: {username: username},
+                    success: function (res) {
+                        if (res.status === 200) {
+                            if (res.data == null) {
+                                html += "<div style='font-size: 17px;font-weight: 300;'>您暂无收藏的问题</div>";
+                            } else {
+                                let collectionArray = res.data;
+                                $.each(collectionArray, function (i, item) {
+                                    html += "<li>\n" +
+                                        "          <div class=\"content\">\n" +
+                                        "               <a class=\"title\" target=\"_blank\" href=\"/question/" + item.id + "\">" + item.title + "</a>\n" +
+                                        "                    <p class=\"abstract\">" + item.description + "</p>\n" +
+                                        "                     <div class=\"meta\">\n" +
+                                        "                          <a target=\"_blank\" href=\"#\">\n" +
+                                        "                               <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n" +
+                                        "                                    <span>" + item.viewCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                          </a>\n" +
+                                        "                          <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n" +
+                                        "                          <span>" + item.commentCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                          </span>\n" +
+                                        "                          <a target=\"_blank\" href=\"#\">\n" +
+                                        "                               <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n" +
+                                        "                                   <span>" + item.likeCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                               </a>\n" +
+                                        "                          <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n" +
+                                        "                                 <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n" +
+                                        "                                  <span> " + item.gmtCreate + "</span>\n" +
+                                        "                            </span>\n" +
+                                        "                   </div>\n" +
+                                        "          </div>\n" +
+                                        "     </li>";
+                                });
+                            }
+                        }
+                    }
+                });
+                html += "</ul><div>";
+                $("#myCollection").html(html);
+
+            } else if (data.index === 3) {
+                let html = "<div id=\"hotQuestion\"><ul class=\"hotQuestion-list\">";
+                $.ajax({
+                    type: "get",
+                    url: "/getMyHotQuestions",
+                    async: false,
+                    data: {username: username},
+                    success: function (res) {
+                        if (res.status === 200) {
+                            if (res.data == null) {
+                                html += "<div style='font-size: 17px;font-weight: 300;'>暂无问题信息</div>";
+                            } else {
+                                var questionArray = res.data;
+                                $.each(questionArray, function (i, item) {
+                                    html += "                       <li>\n" +
+                                        "                                <div class=\"content\">\n" +
+                                        "                                    <a class=\"title\" target=\"_blank\" href=\"/question/" + item.id + "\">" + item.title + "</a>\n" +
+                                        "                                    <p class=\"abstract\">" + item.description + "</p>\n" +
+                                        "                                    <div class=\"meta\">\n" +
+                                        "                                        <a target=\"_blank\" href=\"#\">\n" +
+                                        "                                            <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span>" + item.viewCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                        </a>\n" +
+                                        "                                        <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span>" + item.commentCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                        </span>\n" +
+                                        "                                        <a target=\"_blank\" href=\"#\">\n" +
+                                        "                                            <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span>" + item.likeCount + "&nbsp;&nbsp;</span>\n" +
+                                        "                                        </a>\n" +
+                                        "\n" +
+                                        "                                        <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n" +
+                                        "                                            <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n" +
+                                        "                                            <span> " + item.gmtCreate + "</span>\n" +
+                                        "                                        </span>\n" +
+                                        "                                    </div>\n" +
+                                        "                                </div>\n" +
+                                        "                            </li>";
+                                });
+                            }
+                        }
+                    }
+                });
+                html += "</ul></div>";
+                $("#myHotQuestions").html(html);
+            }
+        });
+
+        //选中
+        $('.layui-header li').click(function () {
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        });
+
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        let username = [[${session.username}]];
+        let token = [[${session.uid}]];
+        //赋值给输入框
+        $("#username").attr("value", username);
+
+        init(username, token);
+
+        if (($.trim(username).length > 0)) {
+
+            //获取我的详情页面
+            let queryUsername = [[${username}]];
+            $.ajax({
+                type: "get",
+                url: "/getUserIndexInfo",
+                async: false,
+                data: {username: queryUsername},
+                success: function (res) {
+                    let html = "";
+                    if (res.status === 200) {
+                        let userInfo = res.data;
+                        html += "            <div>\n" +
+                            "                <a class=\"index-useravatar\" href=\"#\" target=\"_blank\">\n" +
+                            "                    <img style=\"border-radius: 10px\" width=\"80\" height=\"80\"\n" +
+                            "                         src=\"" + userInfo.avatar + "\"\n" +
+                            "                         id=\"no-view\">\n" +
+                            "                </a>\n" +
+                            "                <a class=\"index-username\" href=\"#\" target=\"_blank\">" + queryUsername + "</a>" +
+                            "                     <span class='focus-links' style='margin-left: 20px;vertical-align: 6px;display: none;'>关注</span>\n" +
+                            "                <div class=\"user-info\" style=\"margin-left: 103px\">\n" +
+                            "                    <ul style=\"margin-top: 10px\">\n" +
+                            "                        <li>\n" +
+                            "                            <div class=\"meta-block\" style='cursor: pointer;'><a onclick='getFollow()'><p>" + userInfo.follow + "</p><span>关注 ></span></a></div>\n" +
+                            "                        </li>\n" +
+                            "                        <li>\n" +
+                            "                            <div class=\"meta-block\" style='cursor: pointer;'><a onclick='getFans()'><p>" + userInfo.fans + "</p><span>粉丝 ></span></a></div>\n" +
+                            "                        </li>\n" +
+                            "                        <li>\n" +
+                            "                            <div class=\"meta-block\"><a href=\"#\"><p>" + userInfo.questionNum + "</p><span>问题 ></span></a></div>\n" +
+                            "                        </li>\n" +
+                            "                        <li>\n" +
+                            "                            <div class=\"meta-block\" style=\"border-right: none\"><a href=\"#\"><p>" + userInfo.likeCount + "</p>\n" +
+                            "                                <span>收获点赞</span></a></div>\n" +
+                            "                        </li>\n" +
+                            "                    </ul>\n" +
+                            "                </div>\n" +
+                            "            </div>";
+
+                        $(".user-index-header").html(html);
+
+                        //判断是否有关注按钮
+                        if (username !== queryUsername) {
+                            //存在关注按钮
+                            $(".focus-links").show();
+
+                            //查询是否关系信息
+                            $.ajax({
+                                type: "get",
+                                url: "/getFollowStatus",
+                                data: {
+                                    userName: queryUsername,
+                                    followName: username
+                                },
+                                async: false,
+                                success: function (res) {
+                                    if (res.status === 200) {
+                                        if (res.data === 1) {
+                                            //已关注
+                                            $(".focus-links").css("background-color", "#a9b5ac");
+                                            $(".focus-links").html("已关注");
+                                        } else {
+                                            //未关注
+                                            $(".focus-links").css("background-color", "#42c02e");
+                                            $(".focus-links").html("关注");
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            $(".focus-links").hide();
+                        }
+
+                        //关注按钮
+                        $(".focus-links").click(function () {
+                            $.ajax({
+                                type: "get",
+                                url: "/follow",
+                                async: false,
+                                data: {
+                                    userName: queryUsername,   //被关注的用户名
+                                    followName: username   //点击关注者的用户名
+                                },
+                                success: function (res) {
+                                    if (res.status === 200) {
+                                        if (res.data === 0) {
+                                            //取消关注
+                                            $(".focus-links").css("background-color", "#42c02e");
+                                            $(".focus-links").html("关注");
+                                        } else {
+                                            //关注后
+                                            $(".focus-links").css("background-color", "#a9b5ac");
+                                            $(".focus-links").html("已关注");
+                                        }
+                                    }
+                                }
+                            })
+                        })
+
+                    }
+                }
+            });
+
+            //获取我的问题详情
+            let html = "<div id=\"questions\"><ul class=\"question-list\">";
+            $.ajax({
+                type: "get",
+                url: "/getMyQuestions",
+                async: false,
+                data: {username: queryUsername},
+                success: function (res) {
+                    if (res.status === 200) {
+                        //添加html
+                        if (res.data == null) {
+                            html += "<div style='font-size: 17px;font-weight: 300;'>您暂未发布消息</div>";
+                        } else {
+                            let questionArray = res.data;
+                            $.each(questionArray, function (i, item) {
+                                html += "                       <li>\n" +
+                                    "                                <div class=\"content\">\n" +
+                                    "                                    <a class=\"title\" target=\"_blank\" href=\"/question/" + item.id + "\">" + item.title + "</a>\n" +
+                                    "                                    <p class=\"abstract\">" + item.description + "</p>\n" +
+                                    "                                    <div class=\"meta\">\n" +
+                                    "                                        <a target=\"_blank\" href=\"#\">\n" +
+                                    "                                            <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n" +
+                                    "                                            <span>" + item.viewCount + "&nbsp;&nbsp;</span>\n" +
+                                    "                                        </a>\n" +
+                                    "                                        <span><i class=\"fa fa-comments\" aria-hidden=\"true\"></i>\n" +
+                                    "                                            <span>" + item.commentCount + "&nbsp;&nbsp;</span>\n" +
+                                    "                                        </span>\n" +
+                                    "                                        <a target=\"_blank\" href=\"#\">\n" +
+                                    "                                            <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n" +
+                                    "                                            <span>" + item.likeCount + "&nbsp;&nbsp;</span>\n" +
+                                    "                                        </a>\n" +
+                                    "\n" +
+                                    "                                        <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n" +
+                                    "                                            <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>\n" +
+                                    "                                            <span> " + item.gmtCreate + "</span>\n" +
+                                    "                                        </span>\n" +
+                                    "                                    </div>\n" +
+                                    "                                </div>\n" +
+                                    "                            </li>";
+                            });
+                        }
+                    }
+                }
+            });
+            html += "</ul></div>";
+            $("#myQuestions").html(html);
+        }
+
+    });
+
+    //查询用户头像
+    function getAvatar(username) {
+        $.ajax({
+            type: "get",
+            url: "/getavatar",
+            data: {username: username},
+            success: function (res) {
+                $("#useravatar").attr("src", res.data);  //从数据库中读取
+                $(".user-small-avatar").attr("src", res.data);
+            },
+            error: function () {
+                layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
+            }
+        });
+    }
+
+    function getFollow() {
+        let username = [[${session.username}]];
+        let queryUsername = [[${username}]];
+        if (username === queryUsername) {
+            window.location.href = "/myfollow?choose=follow";
+        }
+    }
+
+    function getFans() {
+        let username = [[${session.username}]];
+        let queryUsername = [[${username}]];
+        if (username === queryUsername) {
+            window.location.href = "/myfollow?choose=fans";
+        }
+    }
 
 </script>
 </body>

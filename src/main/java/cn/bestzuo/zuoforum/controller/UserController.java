@@ -1,5 +1,6 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.admin.listener.MyHttpSessionListener;
 import cn.bestzuo.zuoforum.pojo.EmailInfo;
 import cn.bestzuo.zuoforum.pojo.User;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
@@ -190,6 +191,8 @@ public class UserController {
         String name = (String) request.getSession().getAttribute("username");
         if (name != null) {
             request.getSession().setAttribute("username", null);
+            request.getSession().removeAttribute("username");
+            request.getSession().invalidate();
         }
         return "redirect:/";
     }

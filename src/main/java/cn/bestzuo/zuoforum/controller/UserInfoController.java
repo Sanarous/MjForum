@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -88,7 +87,24 @@ public class UserInfoController {
     }
 
     /**
-     * 更新用户信息
+     * 根据用户ID查询用户信息
+     *
+     * @param uid
+     * @return
+     */
+    @GetMapping("/getUserInfoByUid")
+    @ResponseBody
+    public ForumResult getUserInfoByUid(@RequestParam("uid") Integer uid) {
+        UserInfo userInfo = userInfoService.selectUserInfoByUid(uid);
+        if (userInfo == null) {
+            return new ForumResult(500, "用户不存在", null);
+        }
+        return new ForumResult(200, "查询成功", userInfo);
+    }
+
+
+    /**
+     * 根据用户名更新用户信息
      *
      * @return
      */
@@ -103,5 +119,25 @@ public class UserInfoController {
             return new ForumResult(500, "更新信息失败", null);
         }
     }
+
+    /**
+     * 根据用户UID更新用户信息
+     *
+     * @return
+     */
+    @RequestMapping("/updateUserInfoByUid")
+    @ResponseBody
+    public ForumResult updateUserInfoByUid(UserInfo userInfo) {
+        System.out.println(userInfo.toString());
+        try {
+            userInfoService.updateUserInfoByUid(userInfo);
+            return new ForumResult(200, "更新信息成功", userInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ForumResult(500, "更新信息失败", null);
+        }
+    }
+
+
 }
 

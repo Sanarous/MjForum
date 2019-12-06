@@ -6,7 +6,6 @@ import cn.bestzuo.zuoforum.pojo.CommentLike;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.CommentLikeService;
 import cn.bestzuo.zuoforum.service.CommentService;
-import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +17,9 @@ import org.thymeleaf.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 评论点赞Controller
+ */
 @Controller
 public class CommentLikeController {
 
@@ -33,7 +35,7 @@ public class CommentLikeController {
     /**
      * 查询某一评论下的点赞数
      *
-     * @param commentId
+     * @param commentId  评论ID
      * @return
      */
     @RequestMapping("/getLikeCount")
@@ -51,10 +53,10 @@ public class CommentLikeController {
     /**
      * 查询点赞状态
      *
-     * @param username
-     * @param commentId
-     * @param commentUsername
-     * @param questionId
+     * @param username  用户名
+     * @param commentId   评论ID
+     * @param commentUsername   评论用户名
+     * @param questionId   问题ID
      * @return
      */
     @RequestMapping("/getLikeStatus")
@@ -97,10 +99,10 @@ public class CommentLikeController {
     /**
      * 新增一条评论点赞信息
      *
-     * @param username
-     * @param commentId
-     * @param commentUsername
-     * @param questionId
+     * @param username   用户名
+     * @param commentId   评论ID
+     * @param commentUsername  评论用户名
+     * @param questionId    问题ID
      * @return
      */
     @RequestMapping("/like")

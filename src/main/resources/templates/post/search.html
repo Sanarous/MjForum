@@ -66,7 +66,88 @@
     <footer th:replace="common/footer"></footer>
 </div>
 <script th:inline="javascript">
-    layui.use(['element','form','laypage','jquery'],function(){let element=layui.element;let form=layui.form;let laypage=layui.laypage;$=layui.jquery;let totalCount=[[${totalCount}]];let questionArray=[[${questions}]];let html="";laypage.render({elem:'ques-pagination',count:questionArray.length,page:true,layout:['count','prev','page','next','skip'],jump:function(obj){if(questionArray.length===0){html+="<div style='margin: 20px 0;'>暂无相关问题哦</div>";$("#ques-pagination").hide()}else{$.each(questionArray,function(i,item){html+=" <li>\n                    <div class=\"content\">\n                        <a class=\"title\" target=\"_blank\" href=\"/question/"+item.id+"\">"+item.title+"</a>\n                        <p class=\"abstract\">"+item.description+"</p>\n                        <div class=\"meta\">\n                            <a target=\"_blank\" href=\"#\">\n                                <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n                                <span>"+item.viewCount+"&nbsp;&nbsp;</span>\n                            </a>\n                            <span>\n                                <i class=\"fa fa-comments\" aria-hidden=\"true\"></i>                                <span>"+item.commentCount+"&nbsp;&nbsp;</span>\n                            </span>\n                            <a target=\"_blank\" href=\"#\">\n                                <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n                                <span >"+item.likeCount+"&nbsp;&nbsp;</span>\n                            </a>\n                            <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n                                   <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i><span> "+item.gmtCreate+"</span>\n                            </span>\n                        </div>\n                    </div>\n                </li>"})}$(".question-list").html(html)}})});$(document).ready(function(){let username=[[${session.username}]];let token=[[${session.id}]];$("#username").attr("value",username);init(username,token);let keywords=[[${keywords}]];$("#keywords").val(keywords)});function getAvatar(username){$.ajax({type:"get",url:"/getavatar",data:{username:username},success:function(res){$("#useravatar").attr("src",res.data);$(".user-small-avatar").attr("src",res.data)},error:function(){layer.alert("系统错误，请稍后再试",{icon:5,time:2000})}})}
+    layui.use(['element', 'form', 'laypage', 'jquery'], function () {
+        let element = layui.element;
+        let form = layui.form;
+        let laypage = layui.laypage;
+        $ = layui.jquery;
+
+        //分页
+        let totalCount = [[${totalCount}]];
+        let questionArray = [[${questions}]];
+        let html = "";
+        laypage.render({
+            elem: 'ques-pagination'
+            , count: questionArray.length
+            , page: true
+            , layout: ['count', 'prev', 'page', 'next', 'skip']
+            , jump: function (obj) {
+                // pageQuery(obj.curr, obj.limit);
+                if (questionArray.length === 0) {
+                    html += "<div style='margin: 20px 0;'>暂无相关问题哦</div>";
+                    $("#ques-pagination").hide();
+                } else {
+                    $.each(questionArray, function (i, item) {
+                        html += " <li>\n" +
+                            "                    <div class=\"content\">\n" +
+                            "                        <a class=\"title\" target=\"_blank\" href=\"/question/" + item.id + "\">" + item.title + "</a>\n" +
+                            "                        <p class=\"abstract\">" + item.description + "</p>\n" +
+                            "                        <div class=\"meta\">\n" +
+                            "                            <a target=\"_blank\" href=\"#\">\n" +
+                            "                                <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n" +
+                            "                                <span>" + item.viewCount + "&nbsp;&nbsp;</span>\n" +
+                            "                            </a>\n" +
+                            "                            <span>\n" +
+                            "                                <i class=\"fa fa-comments\" aria-hidden=\"true\"></i>" +
+                            "                                <span>" + item.commentCount + "&nbsp;&nbsp;</span>\n" +
+                            "                            </span>\n" +
+                            "                            <a target=\"_blank\" href=\"#\">\n" +
+                            "                                <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n" +
+                            "                                <span >" + item.likeCount + "&nbsp;&nbsp;</span>\n" +
+                            "                            </a>\n" +
+                            "                            <span class=\"time\" data-shared-at=\"2019-07-15T14:24:48+08:00\">\n" +
+                            "                                   <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i><span> " + item.gmtCreate + "</span>\n" +
+                            "                            </span>\n" +
+                            "                        </div>\n" +
+                            "                    </div>\n" +
+                            "                </li>";
+                    })
+                }
+                $(".question-list").html(html);
+            }
+        });
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        let username = [[${session.username}]];
+        let token = [[${session.id}]];
+        //赋值给输入框
+        $("#username").attr("value", username);
+
+        init(username,token);
+
+        //获取后端传入的keywords;
+        let keywords = [[${keywords}]];
+        $("#keywords").val(keywords);
+
+    });
+
+    //查询用户头像
+    function getAvatar(username) {
+        $.ajax({
+            type: "get",
+            url: "/getavatar",
+            data: {username: username},
+            success: function (res) {
+                $("#useravatar").attr("src", res.data);  //从数据库中读取
+                $(".user-small-avatar").attr("src", res.data);
+            },
+            error: function () {
+                layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
+            }
+        });
+    }
 
 </script>
 </body>

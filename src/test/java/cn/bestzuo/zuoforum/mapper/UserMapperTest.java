@@ -19,6 +19,7 @@ public class UserMapperTest {
     @Autowired
     private CommentLikeMapper commentLikeMapper;
 
+
     @Test
     public void test() {
         int status = 1;

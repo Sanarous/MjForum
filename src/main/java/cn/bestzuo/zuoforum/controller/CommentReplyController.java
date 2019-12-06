@@ -5,7 +5,6 @@ import cn.bestzuo.zuoforum.pojo.CommentReply;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.CommentReplyService;
-import cn.bestzuo.zuoforum.service.CommentService;
 import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-
+/**
+ * 评论楼中楼回复Controller
+ */
 @Controller
 public class CommentReplyController {
 
@@ -99,7 +98,7 @@ public class CommentReplyController {
     /**
      * 查询一个评论下所有的回复数
      *
-     * @param parentCommentId
+     * @param parentCommentId  父评论ID
      * @return
      */
     @RequestMapping("/getReplyNum")

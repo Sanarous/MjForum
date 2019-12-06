@@ -117,4 +117,14 @@ public class UserServiceImpl implements UserService {
         userMapper.updatePassword(username,MD5Password.md5Password(newPassword));
         return 1;
     }
+
+    /**
+     * 根据用户Id删除用户信息
+     * @param id
+     * @return
+     */
+    @Override
+    public int deleteUserById(Integer id) {
+        return userMapper.deleteUserById(id);
+    }
 }

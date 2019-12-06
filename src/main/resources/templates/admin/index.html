@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - 码匠论坛后台管理系统</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <style type="text/css">
+        .highcharts-credits {
+            display: none;
+        }
+        .layui-layout-admin .layui-body{
+            top: 50px;
+        }
+        .layui-tab-card{
+            border-bottom: 1px solid #fff;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <div class="layui-header">
+        <div class="layui-logo">
+            <div class="layui-logo">
+                <a href="/admin"><img src="https://bestzuo.cn/images/forum/mjforum-logo-index.png"
+                                      style="width: 150px;height: auto;"></a>
+            </div>
+        </div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">内容管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" data-url="/rough" data-id="rough" data-title="总体概览"
+                           class="site-demo-active" data-type="tabAdd">总体概览</a></dd>
+                    <dd><a href="/systemUsersManage">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    <span id="username">admin</span>
+
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" data-url="/userInfoManage" data-id="userInfo" data-title="个人信息"
+                           class="site-demo-active" data-type="tabAdd">个人信息</a></dd>
+                    <dd><a href="javascript:;" data-url="/securitySetting" data-id="securitySetting" data-title="安全设置"
+                           class="site-demo-active" data-type="tabAdd">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/login">退出</a></li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="">
+            <!--            layui-side-scroll-->
+            <ul class="layui-nav layui-nav-tree ">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户信息管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="/adminUser" data-id="adminUser" data-title="用户管理"
+                               class="site-demo-active" data-type="tabAdd">用户管理</a></dd>
+                        <dd><a href="javascript:;" data-url="#" data-id="detail" data-title="邮箱管理"
+                               class="site-demo-active" data-type="tabAdd">邮箱管理</a></dd>
+                        <dd><a href="javascript:;" data-url="" data-id="detail" data-title="权限管理"
+                               class="site-demo-active" data-type="tabAdd">权限管理</a></dd>
+                        <dd><a href="javascript:;" data-url="" data-id="detail" data-title="举报管理"
+                               class="site-demo-active" data-type="tabAdd">举报管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">问题信息管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="#" data-id="initMeter" data-title="问题管理"
+                               class="site-demo-active" data-type="tabAdd">问题管理</a></dd>
+                        <dd><a href="javascript:;" data-url="#" data-id="evaluateMeter" data-title="分类管理"
+                               class="site-demo-active" data-type="tabAdd">分类管理</a></dd>
+                        <dd><a href="javascript:;" data-url="#" data-id="evaluateMeterHistory" data-title="标签管理"
+                               class="site-demo-active" data-type="tabAdd">标签管理</a></dd>
+                        <dd><a href="javascript:;" data-url="#" data-id="evaluateMeterHistory" data-title="置顶管理"
+                               class="site-demo-active" data-type="tabAdd">置顶管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">论坛公告管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="#" data-id="subwayMonitor" data-title="公告信息"
+                               class="site-demo-active" data-type="tabAdd">公告信息</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:" data-url="/help" data-id="help" data-title="帮助" class="site-demo-active"
+                       data-type="tabAdd">帮助</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体-->
+        <div class="layui-tab layui-tab-card" lay-filter="demo" lay-allowclose="true" style="height: 100%">
+            <ul class="layui-tab-title" >
+                <li class="layui-this" lay-id="">论坛概览</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show" >
+                    <iframe src="/summary"  frameborder="0" style="position:absolute;width: 100%;height: 100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © 2019 Sanarous · 版本所有 - 鄂ICP备19008535号
+    </div>
+</div>
+<script th:inline="javascript">
+    let onlineUser = 0;
+    layui.use(['element', 'table'], function () {
+        let element = layui.element;
+        let table = layui.table;
+
+        //触发事件
+        let active = {
+            //在这里给active绑定几项事件，后面可通过active调用这些事件
+            tabAdd: function (url, id, name) {
+                //新增一个Tab项 传入三个参数，分别对应其标题，tab页面的地址，还有一个规定的id，是标签中data-id的属性值
+                //关于tabAdd的方法所传入的参数可看layui的开发文档中基础方法部分
+                element.tabAdd('demo', {
+                    title: name,
+                    content: '<iframe data-frameid="' + id + '" frameborder="0" src="' + url + '" style="position:absolute;width: 100%;height: 100%"></iframe>',
+                    id: id
+                });
+                element.render('tab');
+            },
+            tabChange: function (id) {
+                //切换到指定Tab项
+                element.tabChange('demo', id);  //根据传入的id传入到指定的tab项
+            },
+            tabDelete: function (id) {
+                element.tabDelete("demo", id); //删除
+            },
+            tabDeleteAll: function (ids) { //删除所有
+                $.each(ids, function (i, item) {
+                    element.tabDelete("demo", item); //ids是一个数组，里面存放了多个id，调用tabDelete方法分别删除
+                })
+            }
+        };
+        //当点击有site-demo-active属性的标签时，即左侧菜单栏中内容 ，触发点击事件
+        $('.site-demo-active').on('click', function () {
+            let dataid = $(this);
+
+            //这时会判断右侧.layui-tab-title属性下的有lay-id属性的li的数目，即已经打开的tab项数目
+            if ($(".layui-tab-title li[lay-id]").length <= 0) {
+                //如果比零小，则直接打开新的tab项
+                active.tabAdd(dataid.attr("data-url"), dataid.attr("data-id"), dataid.attr("data-title"));
+            } else {
+                //否则判断该tab项是否以及存在
+                let isData = false; //初始化一个标志，为false说明未打开该tab项 为true则说明已有
+                $.each($(".layui-tab-title li[lay-id]"), function () {
+                    //如果点击左侧菜单栏所传入的id 在右侧tab项中的lay-id属性可以找到，则说明该tab项已经打开
+                    if ($(this).attr("lay-id") === dataid.attr("data-id")) {
+                        isData = true;
+                    }
+                });
+                if (isData === false) {
+                    //标志为false 新增一个tab项
+                    active.tabAdd(dataid.attr("data-url"), dataid.attr("data-id"), dataid.attr("data-title"));
+                }
+            }
+            //最后不管是否新增tab，最后都转到要打开的选项页面上
+            active.tabChange(dataid.attr("data-id"));
+        });
+
+        table.render({
+            elem: '#ip-info'
+            , url: '/getAdminLoginInfo'
+            , cellMinWidth: 80
+            , cols: [
+                [
+                    {field: 'ip', width: 200, align: 'center', title: 'IP 登录地址'}
+                    , {field: 'info', width: 210, align: 'center', title: 'IP 详细信息'}
+                    , {field: 'time', width: 200, align: 'center', title: '登入时间'}
+                ]
+            ]
+        });
+
+
+    });
+
+    //注册人数
+    Highcharts.chart('container-register', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '2019年7月-12月，码匠论坛的的注册人数'
+        },
+        subtitle: {
+            text: '码匠论坛2019年下半年注册人数统计'
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: '注册人数'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y} 人'
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>人<br/>'
+        },
+        series: [{
+            name: '注册人数',
+            colorByPoint: true,
+            data: [{
+                name: '2019 年 7 月',
+                y: 1,
+                drilldown: '2019 年 7 月'
+            }, {
+                name: '2019 年 8 月',
+                y: 5,
+                drilldown: '2019 年 8 月'
+            }, {
+                name: '2019 年 9 月',
+                y: 2,
+                drilldown: '2019 年 9 月'
+            }, {
+                name: '2019 年 10 月',
+                y: 9,
+                drilldown: '2019 年 10 月'
+            }, {
+                name: '2019 年 11 月',
+                y: 15,
+                drilldown: '2019 年 11 月'
+            }, {
+                name: '2019 年 12 月',
+                y: 30,
+                drilldown: '2019 年 12 月'
+            }]
+        }],
+        drilldown: {
+            series: [{
+                name: 'Microsoft Internet Explorer',
+                id: 'Microsoft Internet Explorer',
+                data: [
+                    [
+                        'v11.0',
+                        24.13
+                    ],
+                    [
+                        'v8.0',
+                        17.2
+                    ],
+                    [
+                        'v9.0',
+                        8.11
+                    ],
+                    [
+                        'v10.0',
+                        5.33
+                    ],
+                    [
+                        'v6.0',
+                        1.06
+                    ],
+                    [
+                        'v7.0',
+                        0.5
+                    ]
+                ]
+            }, {
+                name: 'Chrome',
+                id: 'Chrome',
+                data: [
+                    [
+                        'v40.0',
+                        5
+                    ],
+                    [
+                        'v41.0',
+                        4.32
+                    ],
+                    [
+                        'v42.0',
+                        3.68
+                    ],
+                    [
+                        'v39.0',
+                        2.96
+                    ],
+                    [
+                        'v36.0',
+                        2.53
+                    ],
+                    [
+                        'v43.0',
+                        1.45
+                    ],
+                    [
+                        'v31.0',
+                        1.24
+                    ],
+                    [
+                        'v35.0',
+                        0.85
+                    ],
+                    [
+                        'v38.0',
+                        0.6
+                    ],
+                    [
+                        'v32.0',
+                        0.55
+                    ],
+                    [
+                        'v37.0',
+                        0.38
+                    ],
+                    [
+                        'v33.0',
+                        0.19
+                    ],
+                    [
+                        'v34.0',
+                        0.14
+                    ],
+                    [
+                        'v30.0',
+                        0.14
+                    ]
+                ]
+            }, {
+                name: 'Firefox',
+                id: 'Firefox',
+                data: [
+                    [
+                        'v35',
+                        2.76
+                    ],
+                    [
+                        'v36',
+                        2.32
+                    ],
+                    [
+                        'v37',
+                        2.31
+                    ],
+                    [
+                        'v34',
+                        1.27
+                    ],
+                    [
+                        'v38',
+                        1.02
+                    ],
+                    [
+                        'v31',
+                        0.33
+                    ],
+                    [
+                        'v33',
+                        0.22
+                    ],
+                    [
+                        'v32',
+                        0.15
+                    ]
+                ]
+            }, {
+                name: 'Safari',
+                id: 'Safari',
+                data: [
+                    [
+                        'v8.0',
+                        2.56
+                    ],
+                    [
+                        'v7.1',
+                        0.77
+                    ],
+                    [
+                        'v5.1',
+                        0.42
+                    ],
+                    [
+                        'v5.0',
+                        0.3
+                    ],
+                    [
+                        'v6.1',
+                        0.29
+                    ],
+                    [
+                        'v7.0',
+                        0.26
+                    ],
+                    [
+                        'v6.2',
+                        0.17
+                    ]
+                ]
+            }, {
+                name: 'Opera',
+                id: 'Opera',
+                data: [
+                    [
+                        'v12.x',
+                        0.34
+                    ],
+                    [
+                        'v28',
+                        0.24
+                    ],
+                    [
+                        'v27',
+                        0.17
+                    ],
+                    [
+                        'v29',
+                        0.16
+                    ]
+                ]
+            }]
+        }
+    });
+
+    //全局变量
+    let chart = null;
+    $(document).ready(function () {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        chart = Highcharts.chart('container', {
+            chart: {
+                type: 'spline',
+                marginRight: 100,
+                marginLeft: 100,
+                events: {
+                    load: requestData // 图表加载完毕后执行的回调函数
+                }
+            },
+            title: {
+                text: ' '
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150,
+            },
+            yAxis: {
+                title: {
+                    text: '在线人数',
+                    // margin: 80
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) + '<br/>' +
+                        Highcharts.numberFormat(this.y, 0);
+                }
+            },
+            series: [{
+                name: '码匠在线人数',
+                data: []
+            }]
+        });
+    });
+
+    function requestData() {
+        $.ajax({
+            url: '/online',
+            success: function (point) {
+                let series = chart.series[0],
+                    shift = series.data.length > 10; // 当数据点数量超过 20 个，则指定删除第一个点
+                // 新增点操作
+                //具体的参数详见：https://api.hcharts.cn/highcharts#Series.addPoint
+                let x = (new Date()).getTime();
+                y = point.data;
+                chart.series[0].addPoint([x, y], true, shift);
+
+                // 2秒后继续调用本函数
+                setTimeout(requestData, 2000);
+            },
+            cache: false
+        });
+    }
+
+</script>
+</body>
+</html>

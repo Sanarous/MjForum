@@ -35,4 +35,11 @@ public interface UserMapper {
      * @return
      */
     int updatePassword(String username,String newPassword);
+
+    /**
+     * 根据用户Id删除用户信息
+     * @param id
+     * @return
+     */
+    int deleteUserById(Integer id);
 }

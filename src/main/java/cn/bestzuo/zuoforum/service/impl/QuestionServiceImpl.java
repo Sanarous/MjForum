@@ -116,9 +116,10 @@ public class QuestionServiceImpl implements QuestionService {
                 res.setCategoryId(m.getValue());
                 tagMapper.insertNewTag(res);
 
-                //插入分类和标签的对应关系
+               //插入分类和标签的对应关系
                 tagMapper.insertQuestionAndTag(res.getId(), question.getId());
             }
+
             //插入问题和标签的关系
             for (String t : tags) {
                 //查询标签ID

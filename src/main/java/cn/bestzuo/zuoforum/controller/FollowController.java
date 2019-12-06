@@ -15,6 +15,9 @@ import org.thymeleaf.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 关注Controller
+ */
 @Controller
 public class FollowController {
 
@@ -27,8 +30,8 @@ public class FollowController {
     /**
      * 查询关注状态
      *
-     * @param userName
-     * @param followName
+     * @param userName    被关注者用户名
+     * @param followName   关注者用户名
      * @return
      */
     @RequestMapping("/getFollowStatus")
@@ -117,8 +120,8 @@ public class FollowController {
     /**
      * 用户展示页的关注按钮，逻辑稍微不同于普通关注按钮
      *
-     * @param userName
-     * @param followName
+     * @param userName   被关注者用户名
+     * @param followName   关注者用户名
      * @return
      */
     @RequestMapping("/myFollow")

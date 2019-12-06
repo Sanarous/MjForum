@@ -21,6 +21,25 @@ public class UserInfoServiceImpl implements UserInfoService {
     private EmailMapper emailMapper;
 
     /**
+     * 查询所有用户信息
+     * @return 用户信息集合
+     */
+    @Override
+    public List<UserInfo> queryAllUserInfo() {
+        return userInfoMapper.queryAllUserInfo();
+    }
+
+    /**
+     * 根据邮箱查询用户信息
+     * @param email
+     * @return
+     */
+    @Override
+    public List<UserInfo> queryUserInfoByEmail(String email) {
+        return userInfoMapper.queryUserInfoByEmail(email);
+    }
+
+    /**
      * 根据用户名获取用户信息
      * @param username  用户名
      * @return  用户信息
@@ -40,7 +59,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /**
-     * 更新用户信息
+     * 根据用户名更新用户信息
      * @param userInfo 用户信息
      */
     @Override
@@ -51,6 +70,17 @@ public class UserInfoServiceImpl implements UserInfoService {
             emailMapper.updateEmailByUsername(userInfo.getEmail(),userInfo.getUsername());
         }
         userInfoMapper.updateByUsernameSelective(userInfo);
+    }
+
+    /**
+     * 根据用户ID修改用户信息
+     * @param userInfo 用户信息
+     */
+    @Override
+    @Transactional
+    public void updateUserInfoByUid(UserInfo userInfo) {
+        //可以不修改邮箱信息
+        userInfoMapper.updateByUidSelective(userInfo);
     }
 
     /**
@@ -80,5 +110,15 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfo selectUserInfoByUid(Integer uid) {
         return userInfoMapper.selectUserInfoByUid(uid);
+    }
+
+    /**
+     * 根据用户ID删除对应用户信息
+     * @param uid
+     * @return
+     */
+    @Override
+    public int deleteUserInfoByUid(Integer uid) {
+        return userInfoMapper.deleteUserInfoByUid(uid);
     }
 }

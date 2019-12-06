@@ -7,6 +7,19 @@ import java.util.List;
 public interface UserInfoMapper {
 
     /**
+     * 查询所有的用户信息
+     * @return
+     */
+    List<UserInfo> queryAllUserInfo();
+
+    /**
+     * 通过邮箱查询用户信息
+     * @param email
+     * @return
+     */
+    List<UserInfo> queryUserInfoByEmail(String email);
+
+    /**
      * 有选择的插入用户信息
      *
      * @param record
@@ -36,6 +49,15 @@ public interface UserInfoMapper {
      * @return
      */
     void updateByUsernameSelective(UserInfo record);
+
+
+    /**
+     * 根据用户UID有选择的更新用户信息
+     *
+     * @param record
+     * @return
+     */
+    void updateByUidSelective(UserInfo record);
 
 
     /**
@@ -81,4 +103,11 @@ public interface UserInfoMapper {
      * @return
      */
     UserInfo selectUserInfoByUid(Integer uid);
+
+    /**
+     * 根据UID删除用户
+     * @param uid
+     * @return
+     */
+    int deleteUserInfoByUid(Integer uid);
 }

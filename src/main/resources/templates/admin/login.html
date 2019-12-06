@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>管理员登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/static/admin/login.css}" media="all">
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+</head>
+<body>
+<div id="login-box">
+    <div class="site-logo">
+        <div class="layui-form-item">
+            <a href="/"><img src="https://bestzuo.cn/images/forum/mjforum-logo.png"
+                             style="width: 35%;margin: 10px 0 0 20px"></a>
+        </div>
+    </div>
+    <div class="login-header">
+        <form class="layui-form layui-form-pane" method="post" style="border-radius: 4px;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">管理员账户</label>
+                <div class="layui-input-inline" id="input-username" style="width: 222px">
+                    <input type="text" id="username" name="username" lay-verify="username" class="layui-input"
+                           autofocus="true"
+                           style="width: 98%"
+                           placeholder="请输入用户名 / 邮箱" required>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline" id="input-password" style="width: 222px">
+                    <input type="password" id="password" name="password" lay-verify="password" placeholder="请输入密码"
+                           style="width: 98%"
+                           class="layui-input" required>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline" style="width: 140px">
+                    <img id="verify_img" class="verifyCode" alt="验证码"
+                         onclick="this.src='/defaultKaptcha?d='+new Date()*1" src="/defaultKaptcha"
+                         width="133px"
+                         height="40px">
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" lay-verify="verifyCode" name="verifyCode" id="verifyCode"
+                           placeholder="验证码"
+                           autocomplete="off"
+                           class="captcha-input"
+                           style="height: 37px;width: 84%" required>
+                </div>
+            </div>
+
+            <div pane="">
+                <div class="layui-input-block" style="margin-left: -9px;">
+                    <input type="checkbox" name="remember_user" id="remember_user" lay-skin="primary" title="记住我">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-inline" style="width: 100%">
+                    <button class="layui-btn layui-btn-fluid" style="font-size: 20px;width: 92%" id="login"
+                            type="button" lay-submit lay-filter="login">登
+                        录
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="login-footer">
+        <span style="color:#666">管理员账户不可注册&nbsp;&nbsp;•&nbsp;&nbsp;<a href="/">回到论坛首页</a></span>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['form', 'jquery'], function () {
+        let form = layui.form, layer = layui.layer;
+        $ = layui.jquery;
+        form.render();
+        form.verify({
+            username: function (username) {
+                if (username == null || $.trim(username).length === 0) {
+                    return '管理员用户不能为空'
+                }
+            }, password: function (password) {
+                if (password == null || $.trim(password).length === 0) {
+                    return '密码不能为空'
+                }
+            },
+            verifyCode: function (verifyCode) {
+                if (verifyCode == null || $.trim(verifyCode).length === 0) {
+                    return '验证码不能为空'
+                }
+            }
+        });
+
+        form.on('submit(login)', function () {
+            //验证码
+            $.ajax({
+                type: "get",
+                url: "/imgvrifyControllerDefaultKaptcha",
+                async: false,
+                data: {verifyCode: $("#verifyCode").val()},
+                success: function (res) {
+                    if (res.status === 200) {
+                        //继续执行
+                        $.ajax({
+                            type: "post",
+                            url: "/admin/login",
+                            data: {username: $("#username").val(), password: $("#password").val()},
+                            success: function (res) {
+                                if (res.status === 200) {
+                                    window.location.href = "/admin";
+                                } else {
+                                    layer.alert(res.msg, {icon: 5, time: 2000})
+                                }
+                            },
+                            error: function () {
+                                layer.alert("登录失败，请稍后再试", {icon: 5, time: 2000})
+                            }
+                        });
+
+                    } else {
+                        layer.alert("验证码错误", {icon: 5, time: 2000})
+                    }
+                }
+            });
+            return false
+        })
+    });
+</script>
+</html>

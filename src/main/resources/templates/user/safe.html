@@ -83,7 +83,84 @@
     </div>
 </div>
 <script th:inline="javascript">
-    layui.use(['element','form','laydate','upload','jquery'],function(){var element=layui.element;var form=layui.form;$=layui.jquery;form.verify({oldPass:function(value){if($.trim(value).length<6||$.trim(value).length>12){return'密码必须6到12位，且不能出现空格'}},newPass:function(value){if($.trim(value).length<6||$.trim(value).length>12){return'密码必须6到12位，且不能出现空格'}},repeatNewPass:function(value){if($.trim(value).length<6||$.trim(value).length>12){return'密码必须6到12位，且不能出现空格'}},});let username=[[${session.username}]];form.on('submit(updatePass)',function(data){$.ajax({type:"post",url:"/safe",async:false,data:{username:username,oldPass:data.field.oldPass,newPass:data.field.newPass,repeatNewPass:data.field.repeatNewPass},success:function(res){if(res.status===200){layer.alert(res.msg,{icon:6,time:2000},function(){window.location.href="/login"})}else{layer.alert(res.msg,{icon:5,time:2000})}},error:function(){layer.alert("系统错误，请稍后再试",{icon:1,time:2000})}});return false})});$(document).ready(function(){let username=[[${session.username}]];let token=[[${session.uid}]];$("#username").attr("value",username);init(username,token)});function getAvatar(username){$.ajax({type:"get",url:"/getavatar",data:{username:username},success:function(res){$("#useravatar").attr("src",res.data);$(".user-small-avatar").attr("src",res.data)},error:function(){layer.alert("系统错误，请稍后再试",{icon:5,time:2000})}})}
+    layui.use(['element', 'form', 'laydate', 'upload', 'jquery'], function () {
+        var element = layui.element;
+        var form = layui.form;
+        $ = layui.jquery;
+
+        form.verify({
+            oldPass: function (value) {
+                if ($.trim(value).length < 6 || $.trim(value).length > 12) {
+                    return '密码必须6到12位，且不能出现空格';
+                }
+            },
+            newPass: function (value) {
+                if ($.trim(value).length < 6 || $.trim(value).length > 12) {
+                    return '密码必须6到12位，且不能出现空格';
+                }
+            },
+            repeatNewPass: function (value) {
+                if ($.trim(value).length < 6 || $.trim(value).length > 12) {
+                    return '密码必须6到12位，且不能出现空格';
+                }
+            },
+        });
+
+        //监听提交
+        let username = [[${session.username}]];
+        form.on('submit(updatePass)', function (data) {
+            $.ajax({
+                type: "post",
+                url: "/safe",
+                async: false,
+                data: {
+                    username: username,
+                    oldPass: data.field.oldPass,
+                    newPass: data.field.newPass,
+                    repeatNewPass: data.field.repeatNewPass
+                },
+                success: function (res) {
+                    if (res.status === 200) {
+                        layer.alert(res.msg, {icon: 6, time: 2000}, function () {
+                            window.location.href = "/login";
+                        });
+                    } else {
+                        layer.alert(res.msg, {icon: 5, time: 2000});
+                    }
+                },
+                error: function () {
+                    layer.alert("系统错误，请稍后再试", {icon: 1, time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        let username = [[${session.username}]];
+        let token = [[${session.uid}]];
+        //赋值给输入框
+        $("#username").attr("value", username);
+
+        init(username, token);
+    });
+
+    //查询用户头像
+    function getAvatar(username) {
+        $.ajax({
+            type: "get",
+            url: "/getavatar",
+            data: {username: username},
+            success: function (res) {
+                $("#useravatar").attr("src", res.data);  //从数据库中读取
+                $(".user-small-avatar").attr("src", res.data);
+            },
+            error: function () {
+                layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
+            }
+        });
+    }
 </script>
 </body>
 </html>

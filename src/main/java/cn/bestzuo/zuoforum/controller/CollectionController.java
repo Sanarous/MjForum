@@ -19,7 +19,7 @@ import java.util.Date;
 
 
 /**
- * 问题收藏Controlelr
+ * 问题收藏Controller
  */
 @Controller
 public class CollectionController {
@@ -35,10 +35,10 @@ public class CollectionController {
 
 
     /**
-     * 获取状态
+     * 获取收藏状态
      *
-     * @param username
-     * @param questionId
+     * @param username  用户名
+     * @param questionId  问题ID
      * @return
      */
     @RequestMapping("/getCollectionStatus")
@@ -69,14 +69,14 @@ public class CollectionController {
     /**
      * 收藏/取消收藏问题
      *
-     * @param username
-     * @param questionId
+     * @param username   用户名
+     * @param questionId  问题ID
      * @return
      */
     @RequestMapping("/collect")
     @ResponseBody
     public ForumResult collectQuestion(@RequestParam("username") String username,
-                                       @RequestParam("questionId") Integer questionId) {
+                                       @RequestParam("questionId") Integer questionId){
         //后端数据校验
         if (StringUtils.isEmpty(username) || questionId == null) {
             return new ForumResult(400, "内容不合法", null);

@@ -1,7 +1,10 @@
 package cn.bestzuo.zuoforum.config;
 
+import cn.bestzuo.zuoforum.admin.listener.MyHttpSessionListener;
 import cn.bestzuo.zuoforum.config.interceptors.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,6 +18,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     private LoginInterceptor loginInterceptor;
+
+    @Bean
+    public ServletListenerRegistrationBean listenerRegist() {
+        ServletListenerRegistrationBean srb = new ServletListenerRegistrationBean();
+        srb.setListener(new MyHttpSessionListener());
+        System.out.println("listener");
+        return srb;
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
