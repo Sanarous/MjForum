@@ -18,11 +18,11 @@ import java.util.Random;
 public class TencentCOS {
 
     // 此处填写的存储桶名称
-    private static final String bucketName = "forum-1258928558";
+    private static final String bucketName = "";
     // secretId
-    private static final String secretId = "AKID947wVo4gEWaJp59KFxa12oPq2KPOe7mB";
+    private static final String secretId = "";
     // secretKey
-    private static final String secretKey = "kIzWpujIfyKFJ7gDHWVFv6VnslOllHWb";
+    private static final String secretKey = "";
 
     // 1 初始化用户身份信息(secretId, secretKey，可在腾讯云后台中的API密钥管理中查看！
     private static COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
