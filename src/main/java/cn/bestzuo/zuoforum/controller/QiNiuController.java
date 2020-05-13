@@ -21,11 +21,11 @@ import java.io.PrintWriter;
 @RequestMapping("/api/open/qiNiu")
 public class QiNiuController {
     // 访问密钥
-    private static final String ACCESS_KEY = "wQu-9N1NBXhZqfmwwAEG9MZzIfizMjej3rwq083z";
+    private static final String ACCESS_KEY = "";
     // 应用编码
-    private static final String SECRET_KEY = "byjc-2899hcURMiw2-F5Cm3rM4aKZjXxU3rBkaXl";
+    private static final String SECRET_KEY = "";
     // 访问空间
-    private static final String BUCKET_NAME = "forum-bestzuo";
+    private static final String BUCKET_NAME = "";
 
     /**
      * 后端获取七牛云存储桶的token
