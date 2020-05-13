@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>标签 - 码匠论坛</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/index.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/Source Han Sans CN Regular.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/swiper/swiper.min.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/js/forum.js}"></script>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <header th:replace="common/header"></header>
+
+    <div class="layui-fluid">
+        <!-- 左侧主体部分 -->
+        <div class="layui-col-md8 my-height">
+            <div class="layui-tab layui-tab-brief" lay-filter="tab-questions">
+                <ul class="layui-tab-title forum-nav">
+                    <i class="layui-icon layui-icon-note"
+                       style="font-size: 18px;vertical-align: bottom;margin-right: 12px;margin-left:20px;font-weight: 900;">&nbsp;<span
+                            style="font-size: 22px;font-weight: 400" th:utext="'标签：' + ${tagName}"></span></i>
+                    <li class="layui-this">最新</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show" id="newQues"></div>
+                    <!-- 分页插件 -->
+                    <div id="ques-pagination"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧部分 -->
+<!--        <div class="layui-col-md4" style="margin-top: 20px">-->
+<!--            <div class="right-header">🔖&nbsp;热门标签</div>-->
+<!--            <div style="margin-left: 40px;margin-top: 10px" id="hot-tags">-->
+<!--                <div class="hot_tag">-->
+<!--                    <div><a class="tagname" href="javascript:;"><span></span></a></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash;热门推荐&ndash;&gt;-->
+<!--            <div class="right-header"  style="margin-top:20px">🌏&nbsp;热门推荐</div>-->
+<!--            <div style="margin-left: 40px;margin-top: 10px">-->
+<!--                <ul class="recommend-list">-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+
+<!--    <footer th:replace="common/footer"></footer>-->
+</div>
+<script th:inline="javascript">
+    let totalCount = 0;  //数据总条数
+    let loginUserInfo = [[${session.loginUserInfo}]];
+    init(loginUserInfo);
+
+    layui.use(['element', 'carousel', 'laypage', 'layer', 'form'], function () {
+        let element = layui.element;
+        let carousel = layui.carousel;
+        let laypage = layui.laypage;
+        let form = layui.form;
+
+        let tagName = [[${tagName}]];
+
+        //面包屑使用
+        let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>标签</cite></a><span lay-separator=\"\">&gt;</span><a><cite>"+ tagName +"</cite></a>";
+        $(".layui-breadcrumb a").last().after(currPoisition);
+        element.init();
+
+        let currId = "#newQues";
+        let currURL = "/getQuestionByTag";
+
+        //分页
+        laypage.render({
+            elem: 'ques-pagination'
+            , count: totalCount
+            , page: true
+            , layout: ['count', 'prev', 'page', 'next', 'skip']
+            , jump: function (obj) {
+                pageQuery(obj.curr, obj.limit,tagName, currURL, currId);
+            }
+        });
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        let tagName = [[${tagName}]];
+
+        $(".searchQues").hover(function () {
+            $(".layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after").css("background-color", "");
+        });
+
+        //获取数据库中包含该标签的问题的总数
+        $.ajax({
+            type: "get",
+            url: "/getQuestionByTagTotalCount",
+            data:{
+                "tagName": tagName
+            },
+            success: function (res) {
+                if (res.status === 200) {
+                    totalCount = res.data;
+                }
+            }
+        });
+
+        //查询推荐文章信息
+        $.get("/getRecommendQuestion", function (res) {
+            let recommendHtml = "";
+            if (res.status === 200) {
+                $.each(res.data, function (i, item) {
+                    recommendHtml += "<li class=\"list-group-item\"><a href=\"/question/" + item.id + "\">" + item.title + "</a><span>浏览量：" + item.viewCount + "</span></li>";
+                })
+            }
+            $(".recommend-list").html(recommendHtml);
+        });
+
+        //查询标签推荐
+        $.get("/getMostReferTag", function (res) {
+            let html = "";
+            if (res.status === 200) {
+                $.each(res.data, function (i, item) {
+                    html += "    <div class=\"hot_tag\">\n" +
+                        "            <div><a class=\"tagname\" href=\"/tag?tagname=\""+ item +"><span><i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i>&nbsp;" + item + "</span></a></div>\n" +
+                        "        </div>";
+                });
+
+                $("#hot-tags").html(html);
+            }
+        })
+    });
+
+    //查询分页信息
+    function pageQuery(currPage, pageSize,tagName, url, id) {
+        //页面加载完成后去查询数据库中问题信息，渲染到页面上
+        $.ajax({
+            type: "get",
+            url: url,
+            async: false,
+            data: {
+                "currPage": currPage,
+                "pageSize": pageSize,
+                "tagName": tagName
+            },
+            success: function (res) {
+                //取出所有的问题信息
+                let questionArray = res.data;
+                let html = "";
+                for (let i = 0; i < questionArray.length; i++) {
+                    let quesHtml = "          <li class=\"boxContent\">\n" +
+                        "                        <div>\n" +
+                        "                            <div class=\"user_bar\">\n" +
+                        "                                <div class='hook' style=\"display: inline-block;float: left;\">\n" +
+                        "                                    <a href=\"/user/" + questionArray[i].uid + "\" style=\"text-decoration: none;height: 45px;width: 45px;\">\n" +
+                        "                                        <img src=" + questionArray[i].avatar + "\n" +
+                        "                                             alt=\"\" style=\"height: 48px;width: 48px;border-radius: 10px;\">\n" +
+                        "                                    </a>\n" +
+                        "                                </div>\n" +
+                        "                                <div class='userToolTip'><div class=\"arrow\"></div>\n" +
+                        "                                    <span>这是一个提示框</span>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"floatR\" style=\"\">\n" +
+                        "                                    <a href=\"/question/" + questionArray[i].id + "\">\n" +
+                        "                                        <div class=\"title\" style=\"display: inline-block;\">" + questionArray[i].title + "</div>\n" +
+                        "                                    </a>\n" +
+                        "                                    <div style=\"font-size: 13px;margin-top: 10px;\">\n" +
+                        "                                        <span class='question-tags'>"+ questionArray[i].tag +"</span>&nbsp;\n" +
+                        "                                        <span><span>提问者：<a href='/user/"+ questionArray[i].uid  +"'>" + questionArray[i].publisher + "</a></span></span>\n" +
+                        "                                        <span>&nbsp;&nbsp;&nbsp;浏览量：<span>" + questionArray[i].viewCount + "</span></span>\n" +
+                        "                                        <span>&nbsp;&nbsp;&nbsp;评论数：<span>" + questionArray[i].commentCount + "</span></span>\n" +
+                        "                                        <span>&nbsp;&nbsp;&nbsp;发布于：<span>" + questionArray[i].gmtCreate + "</span></span>\n" +
+                        "                                    </div>\n" +
+                        "                                </div>\n" +
+                        "                            </div>\n" +
+                        "                        </div>\n" +
+                        "                    </li>";
+                    html += quesHtml;
+                }
+                $(id).html(html);
+
+            },
+            error: function () {
+                layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
+            }
+        });
+    }
+</script>
+</body>
+</html>

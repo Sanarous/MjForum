@@ -1,0 +1,86 @@
+# 热部署
+spring:
+  thymeleaf:
+    cache: false
+  mvc:
+    static-path-pattern: /static/**
+    async:
+      request-timeout: 20000
+
+  # 热启动
+  devtools:
+    restart:
+      enabled: true
+
+  # 文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+  # 邮箱配置
+  mail:
+    host: smtp.qq.com
+    username: mjforum@foxmail.com
+    password: tgkjkezqtyzubbgf
+    protocol: smtp
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.port: 465
+    properties.mail.display.sendmail: 码匠论坛
+    properties.mail.display.sendname: 码匠论坛的管理员
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+    from: mjforum@foxmail.com
+
+  # 数据源
+  datasource:
+    url: jdbc:mysql://localhost:3306/forum?useUnicode=true&characterEncoding=utf-8&
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+
+  # redis服务
+  redis:
+    #数据库索引
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        #最大连接数
+        max-active: 8
+        #最大阻塞等待时间(负数表示没限制)
+        max-wait: -1
+        #最大空闲
+        max-idle: 8
+        #最小空闲
+        min-idle: 0
+    #连接超时时间
+    timeout: 10000
+
+# 端口号
+server:
+  port: 8888
+
+# mybatis配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+
+# 分页插件配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+
+# 腾讯云地址
+tencent:
+  path: https://forum-1258928558.cos.ap-guangzhou.myqcloud.com/
+
+
+
+

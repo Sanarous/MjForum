@@ -1,0 +1,336 @@
+/** index.html 对应的css文件 **/
+
+body{
+    font-family: "Linux Biolinum",'Noto Serif SC',sans-serif;
+}
+
+.layui-tab-brief>.layui-tab-more li.layui-this:after, .layui-tab-brief>.layui-tab-title .layui-this:after{
+    border-bottom: 2px solid #49b1f5 !important;
+}
+
+.layui-tab-brief>.layui-tab-title .layui-this {
+    color: #49b1f5;
+}
+
+.forum-nav li{
+    float: right;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/*轮播图*/
+.swiper-container {
+    margin: 10px 10px 0 10px;
+    width: 94%;
+    height: 23%;
+    border-radius: 10px;
+}
+
+.swiper-slide img{
+    width: 100%;
+    height: auto;
+}
+
+/*首页标题*/
+.index-title{
+    margin-left: 10px;
+    margin-top:20px;
+    font-size: 22px;
+    font-weight: 500
+}
+
+.index-title-body{
+    margin-left: 15px;
+    margin-top: 10px
+}
+
+.topics{
+    margin-bottom: 5px
+}
+
+.topic-avatar img{
+    border-radius: 10px;
+    width: 45px;
+    height: 45px;
+}
+
+.topic-info{
+    font-size: 12px;
+    margin-top: 1px
+}
+
+#wechat{
+    margin-left: 52px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#author{
+    margin-left: 132px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.userToolTip {
+    display: none;
+}
+.arrow {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 10px solid;
+    border-bottom: 10px solid transparent;
+    position: absolute;
+    margin-left: -10px;
+    margin-top: 10px;
+    border-right-color: maroon;
+}
+
+.question-tags{
+    text-decoration-line: none;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    padding: 1px 3px;
+    background-color: #48a761;
+    font-size: 12px;
+    color: #fff !important;
+    border-radius: 4px;
+    /*margin: 3px;*/
+}
+
+.hot_tag {
+    text-decoration-line: none;
+    cursor: pointer;
+    /*display: inline-block;*/
+    height: 20px;
+    line-height: 21px;
+    padding: 3px 5px;
+    background-color: #6777e6;
+    font-size: 13px;
+    color: #fff !important;
+    border-radius: 4px;
+    margin: 3px;
+}
+
+.hot_tag a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.right-header{
+    /*margin-left: 40px;*/
+    font-size: 22px;
+    font-weight: 500
+}
+
+.recommend-list li a{
+    color: #50adea
+}
+
+.recommend-list li a:hover{
+    color: #ea5050
+}
+
+
+.recommend-list li span{
+    float: right;
+    font-size: 14px;
+    color: #666;
+}
+
+.hot-topics li{
+    margin-top: 13px;
+    /*padding: 5px 5px;*/
+    /*border-bottom: 1px solid #f4f4f4;*/
+}
+
+.topic-avatar {
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+    display: block;
+    cursor: pointer;
+}
+.topics{
+    position: relative;
+    display: flow-root;
+}
+
+.topic-info {
+    color: #555;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    margin-top: 1px;
+    display: block;
+    text-decoration: none;
+}
+
+span.focus-links{
+    cursor: pointer;
+    font-style: normal;
+    margin-left: 10px;
+    position: unset;
+    left: 0;
+    padding: 0 7px;
+    font-size: 11px;
+    border-color: #42c02e;
+    border-radius: 16px;
+    line-height: 21px;
+    height: 20px;
+    color: #fff!important;
+    background-color: #42c02e;
+    display: inline-block;
+}
+
+span.focus-links:hover{
+    background-color: #42a532;
+}
+
+.layui-layout-admin .layui-logo{
+    font-family: 'Comic Sans MS',sans-serif;
+    /*color: #fff;*/
+    font-weight: bolder;
+    vertical-align: top;
+    font-size: 20px;
+}
+
+.floatR {
+    padding-left: 65px;
+    font-size: 17px;
+    color: #8a8a8a;
+    margin-top: 5px;
+}
+
+div#test1 {
+    margin-left: 40px;
+}
+
+.boxContent {
+    padding: 12px 24px;
+    margin-bottom: 9px;
+    border-bottom: 1px solid #f4f4f4;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,.12);
+    border-radius: 6px;
+    transition-duration: .15s;
+}
+
+.boxContent:hover{
+    background-color: #9999991f;
+    transform: scale(1.05);
+}
+
+.floatR a:hover{
+    color: #0ca0e6;
+}
+
+.layui-carousel {
+    margin-top: 10px;
+    margin-left: 10px !important;
+    border-radius: 50px;
+}
+
+.layui-carousel > [carousel-item] {
+    border-radius: 10px;
+}
+
+.list-group {
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    margin-right: 40px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+#ques-pagination{
+    margin-bottom: 50px;
+    margin-left: 24px;
+}
+
+.ding{
+    vertical-align: 2px;
+    font-style: normal;
+    margin-left: 10px;
+    padding: 2px 5px;
+    font-size: 11px;
+    border-color: #d82c10;
+    border-radius: 4px;
+    line-height: 18px;
+    height: 28px;
+    color: #fff!important;
+    background-color: #ea1d1df2;
+}
+
+.jing{
+    vertical-align: 2px;
+    font-style: normal;
+    margin-left: 10px;
+    padding: 2px 5px;
+    font-size: 11px;
+    border-color: #d82c10;
+    border-radius: 4px;
+    line-height: 18px;
+    height: 28px;
+    color: #fff!important;
+    background-color: #ea1d1df2;
+}
+
+.topic-title{
+    display: inline-block;
+    margin-right: 8px;
+    padding: 2px 4px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 18px;
+    background-color: #f89d4a;
+    border-radius: 2px;
+}
+
+.topic-index{
+    cursor: pointer;
+}
+
+.topic-focus{
+    margin-left: 10px;
+    cursor: pointer;
+    font-style: normal;
+    padding: 0 7px;
+    font-size: 13px;
+    border-color: #7c5dc7;
+    border-radius: 16px;
+    line-height: 19px;
+    height: 19px;
+    color: #fff!important;
+    background-color: #7c5dc7;
+    display: inline-block;
+}
+
+.topic-info-title{
+    font-size: 17px;
+}
+
+.topic-focus-info{
+    margin-top: 5px;
+    margin-left: 53px;
+}
+
+.topic-focus-info span{
+    color: #999;
+}

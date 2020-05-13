@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.bestzuo.zuoforum.pojo.UserInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="u_id" jdbcType="INTEGER" property="uId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="birthday" jdbcType="VARCHAR" property="birthday" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="hobby" jdbcType="VARCHAR" property="hobby" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="site" jdbcType="VARCHAR" property="site" />
+    <result column="github" jdbcType="VARCHAR" property="github" />
+    <result column="weibo" jdbcType="VARCHAR" property="weibo" />
+    <result column="university" jdbcType="VARCHAR" property="university" />
+    <result column="majority" jdbcType="VARCHAR" property="majority" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="job_title" jdbcType="VARCHAR" property="jobTitle" />
+    <result column="register_date" jdbcType="VARCHAR" property="registerDate" />
+    <result column="isOpen" jdbcType="VARCHAR" property="isopen" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, u_id, username, sex, birthday, email, area, hobby, comment, avatar, site, github, 
+    weibo, university, majority, company, job_title, register_date, isOpen
+  </sql>
+  <!-- 根据主键查询用户信息 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 根据用户名查询用户信息 -->
+  <select id="selectUserInfoByName" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_user_info
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 获取最新的注册用户信息 -->
+    <select id="getNewUserInfo" resultType="cn.bestzuo.zuoforum.pojo.UserInfo">
+      select * from tb_user_info order by id desc limit 5
+    </select>
+
+  <!-- 根据用户名查询发起的问题数 -->
+  <select id="selectPublishedQuestionByUsername" parameterType="string" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM tb_question WHERE publisher = #{username} limit 30
+  </select>
+
+  <!-- 根据用户ID查询用户信息 -->
+    <select id="selectUserInfoByUid" resultType="cn.bestzuo.zuoforum.pojo.UserInfo">
+      select * from tb_user_info where u_id = #{uid}
+    </select>
+
+  <!--查询所有用户信息-->
+  <select id="queryAllUserInfo" resultType="cn.bestzuo.zuoforum.pojo.UserInfo">
+    select * from tb_user_info
+  </select>
+
+  <!--根据邮箱查询用户信息-->
+  <select id="queryUserInfoByEmail" resultType="cn.bestzuo.zuoforum.pojo.UserInfo">
+    select * from tb_user_info where email = #{email}
+  </select>
+
+  <!--根据主键删除用户信息-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_user_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!--根据UID删除用户信息-->
+  <delete id="deleteUserInfoByUid">
+    delete from tb_user_info where u_id = #{uid}
+  </delete>
+
+  <!--新增用户信息-->
+  <insert id="insert" parameterType="cn.bestzuo.zuoforum.pojo.UserInfo">
+    insert into tb_user_info (id, u_id, username, 
+      sex, birthday, email, 
+      area, hobby, comment, 
+      avatar, site, github, 
+      weibo, university, majority, 
+      company, job_title, register_date, isOpen
+      )
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{area,jdbcType=VARCHAR}, #{hobby,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, 
+      #{avatar,jdbcType=VARCHAR}, #{site,jdbcType=VARCHAR}, #{github,jdbcType=VARCHAR}, 
+      #{weibo,jdbcType=VARCHAR}, #{university,jdbcType=VARCHAR}, #{majority,jdbcType=VARCHAR}, 
+      #{company,jdbcType=VARCHAR}, #{jobTitle,jdbcType=VARCHAR}, #{registerDate,jdbcType=VARCHAR},#{isopen,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <!--有选择的新增用户信息-->
+  <insert id="insertSelective" parameterType="cn.bestzuo.zuoforum.pojo.UserInfo">
+    insert into tb_user_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="uId != null">
+        u_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="area != null">
+        area,
+      </if>
+      <if test="hobby != null">
+        hobby,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="site != null">
+        site,
+      </if>
+      <if test="github != null">
+        github,
+      </if>
+      <if test="weibo != null">
+        weibo,
+      </if>
+      <if test="university != null">
+        university,
+      </if>
+      <if test="majority != null">
+        majority,
+      </if>
+      <if test="company != null">
+        company,
+      </if>
+      <if test="jobTitle != null">
+        job_title,
+      </if>
+      <if test="registerDate != null">
+        register_date,
+      </if>
+      <if test="isopen != null">
+        isOpen,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uId != null">
+        #{uId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="hobby != null">
+        #{hobby,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null">
+        #{site,jdbcType=VARCHAR},
+      </if>
+      <if test="github != null">
+        #{github,jdbcType=VARCHAR},
+      </if>
+      <if test="weibo != null">
+        #{weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="university != null">
+        #{university,jdbcType=VARCHAR},
+      </if>
+      <if test="majority != null">
+        #{majority,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null">
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="jobTitle != null">
+        #{jobTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="registerDate != null">
+        #{registerDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isopen != null">
+        #{isopen,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 根据用户名修改用户头像 -->
+  <update id="updateUserAvatarByName" parameterType="string">
+    update tb_user_info set avatar = #{avatar} where username = #{username}
+  </update>
+
+  <!-- 根据用户名有选择的进行更新 -->
+  <update id="updateByUsernameSelective" parameterType="cn.bestzuo.zuoforum.pojo.UserInfo">
+    update tb_user_info
+    <set>
+      <if test="uId != null">
+        u_id = #{uId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="hobby != null">
+        hobby = #{hobby,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null">
+        site = #{site,jdbcType=VARCHAR},
+      </if>
+      <if test="github != null">
+        github = #{github,jdbcType=VARCHAR},
+      </if>
+      <if test="weibo != null">
+        weibo = #{weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="university != null">
+        university = #{university,jdbcType=VARCHAR},
+      </if>
+      <if test="majority != null">
+        majority = #{majority,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null">
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="jobTitle != null">
+        job_title = #{jobTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="registerDate != null">
+        register_date = #{registerDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isopen != null">
+        isOpen = #{isopen,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+
+  <!--根据用户Id有选择的进行更新-->
+  <update id="updateByUidSelective">
+    update tb_user_info
+    <set>
+      <if test="uId != null">
+        u_id = #{uId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="hobby != null">
+        hobby = #{hobby,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="site != null">
+        site = #{site,jdbcType=VARCHAR},
+      </if>
+      <if test="github != null">
+        github = #{github,jdbcType=VARCHAR},
+      </if>
+      <if test="weibo != null">
+        weibo = #{weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="university != null">
+        university = #{university,jdbcType=VARCHAR},
+      </if>
+      <if test="majority != null">
+        majority = #{majority,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null">
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="jobTitle != null">
+        job_title = #{jobTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="registerDate != null">
+        register_date = #{registerDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isopen != null">
+        isOpen = #{isopen,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where u_id = #{uId,jdbcType=INTEGER}
+  </update>
+</mapper>

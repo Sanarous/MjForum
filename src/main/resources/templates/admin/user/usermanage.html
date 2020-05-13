@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - 码匠论坛后台管理系统</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <style type="text/css">
+        .highcharts-credits {
+            display: none;
+        }
+
+        .layui-table-view {
+            width: 100% !important;
+        }
+
+        .layui-table-main {
+            height: 100% !important;
+        }
+
+        .layui-form {
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-body" style="left: 0;top:0">
+        <div class="demoTable">
+            搜索用户：
+            <div class="layui-inline">
+                <input class="layui-input" name="id" id="demoReload" autocomplete="off" placeholder="用户名 / 邮箱">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
+        <div style="width: 100%">
+            <table class="layui-table"
+                   lay-data="{width: 892, height:330, url:'/getUsers', page:true, limit: 20,limits: [20, 25, 30, 35, 40],  loading: true,id:'idTest',defaultToolbar: ['filter', 'print', 'exports']}"
+                   lay-filter="users-info">
+                <thead>
+                <tr>
+                    <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                    <th lay-data="{field:'id', width:60, sort: true, fixed: true}">ID</th>
+                    <th lay-data="{field:'username',  width:150}">用户名</th>
+                    <th lay-data="{field:'sex',  width:70}">性别</th>
+                    <th lay-data="{field:'birthday', width:120}">生日</th>
+                    <th lay-data="{field:'email',  width:180}">邮箱</th>
+                    <th lay-data="{field:'area',  width:130}">城市</th>
+                    <th lay-data="{field:'site', width:150}">网站</th>
+                    <th lay-data="{field:'university', width:150}">学校</th>
+                    <th lay-data="{field:'majority',width:150}">专业</th>
+                    <th lay-data="{field:'company', width:150}">公司</th>
+                    <th lay-data="{field:'jobTitle', width:150}">职位</th>
+                    <th lay-data="{field:'isopen',  width:80}">公开</th>
+                    <th lay-data="{fixed: 'right', align: 'center', width:178, align:'center', toolbar: '#barDemo'}">
+                        操作
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use('table', function () {
+        let table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(users-info)', function (obj) {
+            console.log(obj)
+        });
+
+        //监听工具条
+        table.on('tool(users-info)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'detail') {
+                layer.msg('查看：' + data.id + ' 的信息');
+            } else if (obj.event === 'del') {
+                layer.confirm('确定删除用户' + data.username + '吗？', function (index) {
+                    obj.del();
+                    //触发单个删除请求
+                    $.ajax({
+                        type: "get",
+                        url: "/deleteUser",
+                        data: {
+                            uid: data.id
+                        },
+                        async: false,
+                        success: function (res) {
+                            if (res.status === 200) {
+                                layer.alert("删除成功!", {icon: 6, time: 2000});
+                            }else{
+                                layer.alert(res.msg, {icon: 5, time: 2000});
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+
+            } else if (obj.event === 'edit') {
+                // layer.alert('编辑行：<br>' + JSON.stringify(data));
+                //iframe层
+                layer.open({
+                    type: 2,
+                    title: '用户信息编辑',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['800px', '90%'],
+                    content: '/editUserInfo?uid=' + data.id //iframe的url
+                });
+            }
+        });
+
+        let $ = layui.$, active = {
+            getCheckData: function () { //获取选中数据
+                let checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+            , getCheckLength: function () { //获取选中数目
+                let checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                layer.msg('选中了：' + data.length + ' 个');
+            }
+            , isAll: function () { //验证是否全选
+                let checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选' : '未全选')
+            }
+
+            , reload: function () {
+                let demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('idTest', {
+                    page: {
+                        curr: 1
+                    }
+                    , where: {
+                        key: {
+                            username: demoReload.val()
+                        }
+                    }
+                }, 'data');
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            let type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+    //打开编辑窗口
+    function openModak() {
+        $("[name='testname']").val("xxxxxxxxxxxxxxx");//向模态框中赋值
+        layui.use(['layer'], function () {
+            let layer = layui.layer, $ = layui.$;
+            layer.open({
+                type: 1,//类型
+                area: ['400px', '300px'],//定义宽和高
+                title: '查看详细信息',//题目
+                shadeClose: false,//点击遮罩层关闭
+                content: $('#motaikunag')//打开的内容
+            });
+        })
+    }
+
+</script>
+</body>
+</html>

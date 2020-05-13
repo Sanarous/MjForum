@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/userinfo.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/js/forum.js}"></script>
+    <style type="text/css">
+        .d1 button{
+            top: 12px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <header th:replace="common/header"></header>
+
+    <div style="width:800px;margin: 0 auto;padding: 10px 20px 0 400px;">
+        <h2 style="margin-bottom: 16px">修改密码</h2>
+        <form class="layui-form layui-form-pane" method="post" lay-filter="userinfo" style="margin-bottom: 10%">
+            <div class="layui-form-item">
+                <label class="layui-form-label">原密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="oldPass" lay-verify="oldPass" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">新密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="newPass" lay-verify="newPass" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">再次输入</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="repeatNewPass" lay-verify="repeatNewPass" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="updatePass">立即修改</button>
+                </div>
+            </div>
+        </form>
+<!--        <footer th:replace="common/footer"></footer>-->
+    </div>
+</div>
+<script th:inline="javascript">
+    let loginUserInfo = [[${session.loginUserInfo}]];
+    init(loginUserInfo);
+
+    layui.use(['element', 'form', 'laydate', 'upload', 'jquery'], function () {
+        let element = layui.element;
+        let form = layui.form;
+        $ = layui.jquery;
+
+        //面包屑使用
+        let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>安全设置</cite></a>";
+        $(".layui-breadcrumb a").last().after(currPoisition);
+
+        $("#title-user").addClass("layui-this");
+
+        form.verify({
+            oldPass: function (value) {
+                if ($.trim(value).length < 6 || $.trim(value).length > 12) {
+                    return '密码必须6到12位，且不能出现空格';
+                }
+            },
+            newPass: function (value) {
+                if ($.trim(value).length < 6 || $.trim(value).length > 12) {
+                    return '密码必须6到12位，且不能出现空格';
+                }
+            },
+            repeatNewPass: function (value) {
+                if ($.trim(value).length < 6 || $.trim(value).length > 12) {
+                    return '密码必须6到12位，且不能出现空格';
+                }
+            },
+        });
+
+        //监听提交
+        let username = loginUserInfo.username;
+        form.on('submit(updatePass)', function (data) {
+            $.ajax({
+                type: "post",
+                url: "/safe",
+                async: false,
+                data: {
+                    username: username,
+                    oldPass: data.field.oldPass,
+                    newPass: data.field.newPass,
+                    repeatNewPass: data.field.repeatNewPass
+                },
+                success: function (res) {
+                    if (res.status === 200) {
+                        layer.alert(res.msg, {icon: 6, time: 2000}, function () {
+                            window.location.href = "/login";
+                        });
+                    } else {
+                        layer.alert(res.msg, {icon: 5, time: 2000});
+                    }
+                },
+                error: function () {
+                    layer.alert("系统错误，请稍后再试", {icon: 1, time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

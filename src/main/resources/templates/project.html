@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/userinfo.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/follower.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/user.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/js/forum.js}"></script>
+    <style type="text/css">
+        /* 搜索样式 */
+        .d1 button{
+            top: 12px !important;
+        }
+
+        #project {
+            text-align: justify;
+            letter-spacing: 1px;
+            overflow-wrap: break-word;
+            text-indent: 2rem;
+            line-height: 25px;
+        }
+
+        a {
+            color: #155faa;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <header th:replace="common/header"></header>
+
+    <div id="project" class="layui-col-md8 layui-col-md-offset2" style="margin-bottom: 80px">
+        <h2 style="margin-top: 30px;margin-bottom: 10px;font-weight: 600;">1. 写在前面</h2>
+        <div>码匠论坛是一个功能基本全面的内部交流使用论坛平台，提供发布问题、个人资料展示、评论、回复、搜索、接收消息通知等基本功能。后端采用了 SpringBoot + MyBatis + MySQL进行构建，前端采用了
+            Thymeleaf + Layui 进行展示。界面风格简洁，尚未进行深度美化。如有 BUG 请尽快联系作者提交问题，不胜感激！<br/>
+            <img style="margin-left: 88px;margin-top: 10px" width="1200px" height="auto"
+                 src="https://bestzuo.cn/images/forum/forum.jpg">
+            <br/>
+        </div>
+
+        <h2 style="margin-top: 30px;margin-bottom: 10px;font-weight: 600;">2. 技术选型</h2>
+        <div style="margin: 10px 0 0 0">
+            <img src="https://bestzuo.cn/images/forum/project/springboot.svg">
+            <img src="https://bestzuo.cn/images/forum/project/mybatis.svg">
+            <img src="https://bestzuo.cn/images/forum/project/thymeleaf.svg">
+            <img src="https://bestzuo.cn/images/forum/project/layui.svg">
+            <img src="https://bestzuo.cn/images/forum/project/jquery.svg">
+            <img src="https://bestzuo.cn/images/forum/project/mysql.svg">
+        </div>
+
+        <div>
+            <h3 style="font-weight: 600;margin: 10px 0">后端选型</h3>
+            <ul>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• SpringBoot</li>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• MySQL</li>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• MyBatis</li>
+            </ul>
+
+            <h3 style="font-weight: 600;">前端选型</h3>
+            <ul>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• Thymeleaf</li>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• Layui</li>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• JQuery</li>
+            </ul>
+
+            <h3 style="font-weight: 600;">开发环境</h3>
+            <ul>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• IDE：IDEA 2018.3</li>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• 语言：JDK1.8</li>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• 依赖管理：Maven</li>
+            </ul>
+
+            <h3 style="font-weight: 600;">项目运行环境</h3>
+            <ul>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• 服务器：Ubuntu 16.03</li>
+                <li style="margin-left: 2rem;margin-top: 10px;margin-bottom: 10px">• 语言：OpenJDK</li>
+            </ul>
+
+            <h3 style="font-weight: 600;margin: 10px 0">后期更新计划</h3>
+            <div style="margin-left: 2rem">2019.11.25：拟采用 Redis、WebSocket 等缓解数据库压力，提高论坛的承受能力。</div>
+        </div>
+
+        <h2 style="margin-top: 30px;margin-bottom: 10px;font-weight: 600;">3. 关注作者</h2>
+        <div>
+            <div style="margin: 10px">Github：<a href="https://github.com/Sanarous">https://github.com/Sanarous</a></div>
+            <div style="margin: 10px">博客：<a href="https://bestzuo.cn/about">https://bestzuo.cn/about</a></div>
+            <div style="margin: 10px">Java 学习笔记：<a href="https://study.bestzuo.cn">https://study.bestzuo.cn</a></div>
+        </div>
+<!--        <footer th:replace="common/footer"></footer>-->
+    </div>
+</div>
+<script th:inline="javascript">
+    let loginUserInfo = [[${session.loginUserInfo}]];
+    init(loginUserInfo);
+
+    layui.use(['element', 'form', 'upload', 'jquery'], function () {
+        let element = layui.element;
+        $ = layui.jquery;
+        let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>项目简介</cite></a>";
+        $(".layui-breadcrumb a").last().after(currPoisition);
+
+        $("#title-project").addClass("layui-this");
+    });
+</script>
+</body>
+</html>

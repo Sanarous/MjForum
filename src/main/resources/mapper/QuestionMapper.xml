@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.QuestionMapper">
+    <resultMap id="BaseResultMap" type="cn.bestzuo.zuoforum.pojo.Question">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified"/>
+        <result column="publisher" jdbcType="VARCHAR" property="publisher"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.bestzuo.zuoforum.pojo.Question">
+        <result column="description" jdbcType="LONGVARCHAR" property="description"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, title, gmt_create, gmt_modified, publisher, comment_count, view_count, like_count, 
+    tag
+  </sql>
+    <sql id="Blob_Column_List">
+    description
+  </sql>
+    <!-- 查询所有的问题信息 -->
+    <select id="getAllQuestions" resultMap="ResultMapWithBLOBs">
+        select * from tb_question order by id desc
+    </select>
+
+    <!-- 根据关键字查询问题信息 -->
+    <select id="getAllQuestionsWithKeyword" resultMap="ResultMapWithBLOBs" parameterType="string">
+        select * from tb_question where publisher like concat('%',#{keyword},'%') or title like concat('%',#{keyword},'%') order by id desc
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from tb_question
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <!-- 根据浏览量查询问题信息 -->
+    <select id="selectQuestionInfoByViewCount" resultType="cn.bestzuo.zuoforum.pojo.Question">
+      select * from tb_question order by view_count desc limit 10
+    </select>
+    <!-- 推荐 -->
+    <select id="getAllQuestionsByViewCount" resultMap="ResultMapWithBLOBs">
+      select * from tb_question order by view_count desc
+  </select>
+    <!-- 热门 -->
+    <select id="getAllQuestionsByCommentCount" resultMap="ResultMapWithBLOBs">
+    SELECT * FROM tb_question ORDER BY comment_count DESC,view_count DESC
+  </select>
+    <!-- 消灭零回复 -->
+    <select id="getAllQuestionsByZeroComment" resultMap="ResultMapWithBLOBs">
+    select * from tb_question where comment_count = 0
+  </select>
+    <!-- 根据问题ID查询标签名 -->
+    <select id="queryTagByQuestionId" resultType="java.lang.String">
+      select tag from tb_question where id = #{questionId}
+    </select>
+    <!-- 根据发布者获取发布的问题 -->
+    <select id="getAllQuestionsByPublisher" resultType="cn.bestzuo.zuoforum.pojo.Question">
+      select * from tb_question where publisher = #{publisher} order by id desc
+    </select>
+    <!-- 获取我发布的最热的6个问题 -->
+    <select id="selectMyHotQuestions" resultType="cn.bestzuo.zuoforum.pojo.Question">
+        select * from tb_question where publisher = #{username} order by view_count desc,comment_count desc
+    </select>
+    <!-- 查询论坛推荐问题 -->
+    <select id="selectForumRecommendQuestions" resultType="cn.bestzuo.zuoforum.pojo.Question">
+        select * from tb_question where publisher = "码匠论坛" order by id desc limit 3
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_question
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="cn.bestzuo.zuoforum.pojo.Question">
+    insert into tb_question (id, title, gmt_create, 
+      gmt_modified, publisher, comment_count, 
+      view_count, like_count, tag, 
+      description)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=VARCHAR}, 
+      #{gmtModified,jdbcType=VARCHAR}, #{publisher,jdbcType=VARCHAR}, #{commentCount,jdbcType=INTEGER}, 
+      #{viewCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, #{tag,jdbcType=VARCHAR}, 
+      #{description,jdbcType=LONGVARCHAR})
+  </insert>
+    <!-- 有选择的插入问题，并返回主键id的值 -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
+            parameterType="cn.bestzuo.zuoforum.pojo.Question">
+        insert into tb_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+            <if test="publisher != null">
+                publisher,
+            </if>
+            <if test="commentCount != null">
+                comment_count,
+            </if>
+            <if test="viewCount != null">
+                view_count,
+            </if>
+            <if test="likeCount != null">
+                like_count,
+            </if>
+            <if test="tag != null">
+                tag,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null">
+                #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="commentCount != null">
+                #{commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="viewCount != null">
+                #{viewCount,jdbcType=INTEGER},
+            </if>
+            <if test="likeCount != null">
+                #{likeCount,jdbcType=INTEGER},
+            </if>
+            <if test="tag != null">
+                #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--更新阅读量-->
+    <update id="updateByPrimaryKeySelective" parameterType="cn.bestzuo.zuoforum.pojo.Question">
+        update tb_question
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null">
+                publisher = #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="commentCount != null">
+                comment_count = #{commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="viewCount != null">
+                view_count = #{viewCount,jdbcType=INTEGER},
+            </if>
+            <if test="likeCount != null">
+                like_count = #{likeCount,jdbcType=INTEGER},
+            </if>
+            <if test="tag != null">
+                tag = #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--更新问题信息-->
+    <update id="updateQuestionInfoByIdSelective" parameterType="cn.bestzuo.zuoforum.pojo.Question">
+        update tb_question
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null">
+                publisher = #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="commentCount != null">
+                comment_count = #{commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="viewCount != null">
+                view_count = #{viewCount,jdbcType=INTEGER},
+            </if>
+            <if test="likeCount != null">
+                like_count = #{likeCount,jdbcType=INTEGER},
+            </if>
+            <if test="tag != null">
+                tag = #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateLikeCountById" parameterType="int">
+        update tb_question set like_count = #{likeCount} where id=#{questionId}
+    </update>
+
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.bestzuo.zuoforum.pojo.Question">
+    update tb_question
+    set title = #{title,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      view_count = #{viewCount,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=VARCHAR},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="cn.bestzuo.zuoforum.pojo.Question">
+    update tb_question
+    set title = #{title,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      view_count = #{viewCount,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

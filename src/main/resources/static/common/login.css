@@ -1,0 +1,45 @@
+body {
+    background: #1d598e;
+}
+.layui-input {
+    height: 45px;
+    width: 87%;
+    padding-left: 5px;
+    font-size: 16px;
+    display: inline-block;
+}
+
+.layui-btn {
+    height: 45px;
+}
+
+.captcha-input {
+    height: 45px;
+    padding-left: 5px;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.layui-form {
+    width: 20%;
+    height: 20%;
+    margin: 10% auto 0;
+    padding: 15px 28px 0;
+    background: #fff;
+}
+
+.layui-input-block {
+    margin-left: 0;
+}
+
+.layui-input-block a {
+    color: blue;
+    float: right;
+    line-height: 30px;
+    font-size: 14px;
+}
+
+h1 {
+    text-align: center;
+    color: #1d598e;
+}

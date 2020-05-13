@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>码匠论坛后台管理系统</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <style type="text/css">
+        .highcharts-credits {
+            display: none;
+        }
+
+        .layui-table-view {
+            width: 100% !important;
+        }
+
+        .layui-table-main {
+            height: 100% !important;
+        }
+
+        .layui-form {
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-body" style="left: 0;top:0">
+        <div class="demoTable">
+            搜索问题：
+            <div class="layui-inline">
+                <input class="layui-input" name="id" id="demoReload" autocomplete="off" placeholder="问题关键字 / 提问用户名">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
+        <div style="width: 100%">
+            <table class="layui-table"
+                   lay-data="{width: 892, height:330, url:'/getAdminQuestion', page:true, limit: 20,limits: [20, 25, 30, 35, 40],  loading: true,id:'idTest',defaultToolbar: ['filter', 'print', 'exports']}"
+                   lay-filter="question-info">
+                <thead>
+                <tr>
+                    <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                    <th lay-data="{field:'id', width:50, sort: true, fixed: true}">ID</th>
+                    <th lay-data="{field:'title',  width:150}">标题</th>
+                    <th lay-data="{field:'publisher',  width:70}">提问者</th>
+                    <th lay-data="{field:'description', width:120}">内容</th>
+                    <th lay-data="{field:'gmtCreate',  width:130}">发布时间</th>
+                    <th lay-data="{field:'gmtModified',  width:130}">修改时间</th>
+                    <th lay-data="{field:'commentCount', width:50}">评论数</th>
+                    <th lay-data="{field:'viewCount', width:50}">浏览数</th>
+                    <th lay-data="{field:'tag',width:100}">标签</th>
+                    <th lay-data="{field:'isDing', width:50}">置顶</th>
+                    <th lay-data="{field:'isJing', width:50}">加精</th>
+                    <th lay-data="{fixed: 'right', align: 'center', width:178, align:'center', toolbar: '#barDemo'}">
+                        操作
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="ding">置顶</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="jing">加精</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use('table', function () {
+        let table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(question-info)', function (obj) {
+            console.log(obj)
+        });
+
+        //监听工具条
+        table.on('tool(question-info)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'ding') {
+                $.ajax({
+                    type: "post",
+                    url: "/updateDingForQuestionById",
+                    data: {questionId: data.id},
+                    async: false,
+                    success: function (res) {
+                        if(res.status === 200){
+                            layer.alert("更新置顶状态成功",{icon: 6, time: 2000})
+                        }else if(res.status === 500){
+                            layer.alert(res.msg,{icon: 5, time: 2000});
+                        }else{
+                            layer.alert("系统错误，请稍后再试",{icon: 5, time: 2000});
+                        }
+                    }
+                });
+
+            } else if (obj.event === 'del') {
+                layer.confirm('确定删除用户' + data.username + '吗？', function (index) {
+                    obj.del();
+                    //触发单个删除请求
+                    $.ajax({
+                        type: "get",
+                        url: "/deleteUser",
+                        data: {
+                            uid: data.id
+                        },
+                        async: false,
+                        success: function (res) {
+                            if (res.status === 200) {
+                                layer.alert("删除成功!", {icon: 6, time: 2000});
+                            }else{
+                                layer.alert(res.msg, {icon: 5, time: 2000});
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+
+            } else if (obj.event === 'jing') {
+                $.ajax({
+                    type: "post",
+                    url: "/updateJingForQuestionById",
+                    data: {questionId: data.id},
+                    async: false,
+                    success: function (res) {
+                        if(res.status === 200){
+                            layer.alert("更新加精状态成功",{icon: 6, time: 2000})
+                        }else if(res.status === 500){
+                            layer.alert(res.msg,{icon: 5, time: 2000});
+                        }else{
+                            layer.alert("系统错误，请稍后再试",{icon: 5, time: 2000});
+                        }
+                    }
+                });
+            }
+        });
+
+        let $ = layui.$, active = {
+            getCheckData: function () { //获取选中数据
+                let checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+            , getCheckLength: function () { //获取选中数目
+                let checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                layer.msg('选中了：' + data.length + ' 个');
+            }
+            , isAll: function () { //验证是否全选
+                let checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选' : '未全选')
+            }
+
+            , reload: function () {
+                let demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('idTest', {
+                    page: {
+                        curr: 1
+                    }
+                    , where: {
+                        key: {
+                            username: demoReload.val()
+                        }
+                    }
+                }, 'data');
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            let type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+    //打开编辑窗口
+    function openModak() {
+        $("[name='testname']").val("xxxxxxxxxxxxxxx");//向模态框中赋值
+        layui.use(['layer'], function () {
+            let layer = layui.layer, $ = layui.$;
+            layer.open({
+                type: 1,//类型
+                area: ['400px', '300px'],//定义宽和高
+                title: '查看详细信息',//题目
+                shadeClose: false,//点击遮罩层关闭
+                content: $('#motaikunag')//打开的内容
+            });
+        })
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>码匠论坛</title>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/swiper/swiper.min.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/index.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/fancybox.min.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/Source Han Sans CN Regular.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/fancybox.min.js}"></script>
+    <script th:src="@{/static/swiper/swiper.min.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
+    <script th:src="@{/static/js/forum.js}"></script>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <header th:replace="common/header"></header>
+
+    <div class="layui-fluid">
+        <!-- 左侧 -->
+        <div class="layui-col-md3">
+            <!-- 轮播图 -->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/forum-gonggao.png"></div>
+                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/forum1.png"></div>
+                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/forum2.png"></div>
+                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/issue.png"></div>
+                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/mjforum-index.png"></div>
+                </div>
+                <!-- 分页器 -->
+                <div class="swiper-pagination"></div>
+            </div>
+            <!-- 热门话题 -->
+            <div style="box-shadow: -1px 0px 10px 3px rgba(0,0,0,.12);padding: 0 0 20px 0;margin-right: 15px;border-radius: 5px;">
+                <div style="padding-top: 10px;padding-bottom: 5px;" class="index-title">💬&nbsp;推荐专题</div>
+                <div class="index-title-body">
+                    <ul class="hot-topics">
+                        <li class="topic-index">
+                            <span class="topic-title">专题</span>
+                            <span class="topic-info-title">秋招求职攻略</span>
+                        </li>
+                        <li class="topic-index">
+                            <span class="topic-title">专题</span>
+                            <span class="topic-info-title">Java多线程知识点</span>
+                        </li>
+                        <li class="topic-index">
+                            <span class="topic-title">专题</span>
+                            <span class="topic-info-title">Java虚拟机知识点</span>
+                        </li>
+                        <li class="topic-index">
+                            <span class="topic-title">专题</span>
+                            <span class="topic-info-title">Spring专题</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 快速通道 -->
+            <div style="box-shadow: -1px 0px 10px 3px rgba(0,0,0,.12);padding: 0 0 10px 0px;margin-right:15px;border-radius: 5px;">
+                <div style="padding-top: 10px" class="index-title">☎&nbsp;联系方式</div>
+                <div class="index-title-body">
+                    <div>
+                        <div>
+                            <a data-fancybox="gallery" href="https://bestzuo.cn/images/forum/gongzhonghao.png">
+                                <img style="display: inline;margin-left: 20px" width="135" height="135"
+                                 src="https://bestzuo.cn/images/forum/gongzhonghao.png"/>
+                            </a>
+                            <a data-fancybox="gallery" href="https://bestzuo.cn/images/forum/forum-blog.png">
+                            <img style="display: inline;margin-left: 50px" width="150" height="150"
+                                 src="https://bestzuo.cn/images/forum/forum-blog.png"/>
+                            </a>
+                        </div>
+                        <div>
+                            <span id="wechat">微信公众号</span>
+                            <span id="author">作者博客</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 公告部分 -->
+            <div style="box-shadow: -1px 0px 10px 3px rgba(0,0,0,.12);padding: 0 0 10px 0px;margin-right: 15px;border-radius: 5px;">
+                <div style="padding-top: 10px;padding-bottom: 10px;" class="index-title">📢&nbsp;论坛发展</div>
+                <div class="index-title-body">
+                    <ul class="layui-timeline">
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2020 年 4 月 29 日，优化论坛展示细节</div>
+                            </div>
+                        </li>
+
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019 年 11 月 25 日，码匠论坛 v1.0 测试版本发布</div>
+                            </div>
+                        </li>
+
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019 年 11 月 24 日，码匠论坛基本功能完善</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019 年 11 月 13 日，开始搭建论坛</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">更久前，独立博客时代。Hexo、Hugo等</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间主体部分 -->
+        <div class="layui-col-md6 my-height">
+            <div class="layui-tab layui-tab-brief" lay-filter="tab-questions">
+                <ul class="layui-tab-title forum-nav">
+                    <i class="layui-icon layui-icon-spread-left"
+                       style="font-size: 24px;vertical-align: bottom;margin-right: 12px">&nbsp;
+                        <span style="font-size: 22px;font-weight: 200">发现</span>
+                    </i>
+                    <li><font color="red">精品</font></li>
+                    <li>热门</li>
+                    <li>推荐</li>
+                    <li class="layui-this" id="deftab">最新</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item" id="jingQues"></div>
+                    <div class="layui-tab-item" id="hotQues"></div>
+                    <div class="layui-tab-item" id="recommendQues"></div>
+                    <div class="layui-tab-item layui-show" id="newQues"></div>
+                    <!-- 分页插件 -->
+                    <div style="text-align: center;" id="ques-pagination"></div>
+                </div>
+            </div>
+            <!--页脚-->
+            <div>
+                <div style="font-size: 15px;text-align: center;margin-bottom: 10px">© 2020 Sanarous · 版本所有 -
+                    鄂ICP备19008535号
+                </div>
+                <div style="color: #999;font-size: 14px;text-align: center;">感谢以下平台给本站提供技术支持</div>
+                <div style="text-align: center">
+                    <img style="margin-top: 5px;margin-right: 20px;"
+                         src="https://bestzuo.cn/images/forum/tencentyun.svg" width="100" height="50">
+                    <img src="https://bestzuo.cn/images/forum/spring.svg" width="100" height="50">
+                </div>
+            </div>
+        </div>
+        <!-- 右侧 -->
+        <div class="layui-col-md3">
+            <div style="box-shadow: -1px 0px 10px 3px rgba(0,0,0,.12);padding: 0 0 10px 0px;margin-left: 15px;border-radius: 5px;">
+                <div style="padding-top: 10px;" class="right-header index-title">🏷️&nbsp;热门标签</div>
+                <div class="index-title-body" id="hot-tags">
+                    <div class="hot_tag">
+                        <div><a class="tagname" href="#"><span></span></a></div>
+                    </div>
+                </div>
+            </div>
+            <!--热门推荐-->
+            <div style="box-shadow: -1px 0px 10px 3px rgba(0,0,0,.12);padding: 0 0 10px 0px;margin-left: 15px;border-radius: 5px;">
+                <div style="padding-top: 10px;" class="right-header index-title">🔥&nbsp;论坛热议</div>
+                <div class="index-title-body">
+                    <ul class="recommend-list">
+                    </ul>
+                </div>
+            </div>
+            <!--积分排行-->
+            <div style="box-shadow: -1px 0px 10px 3px rgba(0,0,0,.12);padding: 0 0 1px 0px;margin-left: 15px;border-radius: 5px;">
+                <div style="padding-top: 10px;" class="right-header index-title">👨‍🎓&nbsp;积分排行</div>
+                <div class="index-title-body">
+                    <ul class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    let totalCount = 0;
+    let jingCount = 0;
+    let loginUserInfo = [[${session.loginUserInfo}]];
+
+    //初始化信息
+    init(loginUserInfo);
+
+    layui.use(['element', 'carousel', 'laypage', 'layer'], function () {
+        let element = layui.element;
+        let carousel = layui.carousel;
+        let laypage = layui.laypage;
+
+        //轮播图
+        let mySwiper = new Swiper('.swiper-container', {
+            direction: 'horizontal',
+            autoplay: true,
+            grabCursor: true,
+            parallax: true,
+            loop: true,
+
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+            },
+        });
+
+        //监听选项卡切换事件
+        element.on('tab(tab-questions)', function (data) {
+            let currId = "";
+            let currURL = "";
+            if (data.index === 3) {
+                //最新
+                currId = "#newQues";
+                currURL = "/getAllQuestions";
+                laypage.render({
+                    elem: 'ques-pagination'
+                    , count: totalCount
+                    , page: true
+                    , layout: ['count', 'prev', 'page', 'next', 'skip']
+                    , jump: function (obj) {
+                        pageQuery(obj.curr, obj.limit, currURL, currId);
+                    }
+                });
+            } else if (data.index === 2) {
+                //推荐
+                currId = "#recommendQues";
+                currURL = "/getAllQuestionsByViewCount";
+                laypage.render({
+                    elem: 'ques-pagination'
+                    , count: totalCount
+                    , page: true
+                    , layout: ['count', 'prev', 'page', 'next', 'skip']
+                    , jump: function (obj) {
+                        pageQuery(obj.curr, obj.limit, currURL, currId);
+                    }
+                });
+            } else if (data.index === 1) {
+                //热门
+                currId = "#hotQues";
+                currURL = "/getAllQuestionsByCommentCount";
+                laypage.render({
+                    elem: 'ques-pagination'
+                    , count: totalCount
+                    , page: true
+                    , layout: ['count', 'prev', 'page', 'next', 'skip']
+                    , jump: function (obj) {
+                        pageQuery(obj.curr, obj.limit, currURL, currId);
+                    }
+                });
+            } else if (data.index === 0) {
+                //精华帖
+                currId = "#jingQues";
+                currURL = "/getAllJingQuestions";
+                laypage.render({
+                    elem: 'ques-pagination'
+                    , count: jingCount
+                    , page: true
+                    , layout: ['count', 'prev', 'page', 'next', 'skip']
+                    , jump: function (obj) {
+                        pageQuery(obj.curr, obj.limit, currURL, currId);
+                    }
+                });
+            }
+        });
+
+        //默认放置在最新处
+        $("#deftab").click();
+
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        //导航栏停留在首页
+        $("#index").addClass("layui-this");
+
+        //搜索框样式优化
+        $(".searchQues").hover(function () {
+            $(".layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after").css("background-color", "");
+        });
+
+        //专题鼠标放置效果
+        $(".topic-index").hover(function () {
+            $(this).children(".topic-info-title").css("color", "#7c5dc7");
+            //添加html
+            $(this).children(".topic-info-title").after("<span class='topic-focus'><i class='fa fa-plus' aria-hidden='true'></i>&nbsp;关注</span><div class='topic-focus-info'><span>20条内容 · 25人关注</span></div>");
+        }, function () {
+            $(this).children(".topic-info-title").css("color", "black");
+            $(this).children(".topic-focus").remove();
+            $(this).children(".topic-focus-info").remove();
+        })
+
+        //获取数据库中总条数
+        $.get("/getTotalCount", function (res) {
+            if (res.status === 200) {
+                totalCount = res.data;
+            }
+        });
+
+        $.get("/getJingCount", function (res) {
+            if (res.status === 200) {
+                jingCount = res.data;
+            }
+        });
+
+        //获取积分排行最高的用户信息
+        $.ajax({
+            type: "get",
+            url: "/getTopRateUserInfo",
+            success: function (res) {
+                if (res.status === 200) {
+                    let html = "";
+                    $.each(res.data, function (i, item) {
+
+                        html += " <li style='padding:10px 1px;margin-bottom: 0;border: 1px none #9999997d;border-bottom-style: dashed;' class=\"list-group-item\" style=\"list-style: none;\">\n" +
+                            "           <a style=\"margin-right: 5px;\" href=\"/user/" + item.uid + "\">\n" +
+                            "              <img style='border-radius: 50%' class=\"img-rounded\" width=\"30\" height='30' \n" +
+                            "                    src=\"" + item.avatar + "\">\n" +
+                            "           </a>\n" +
+                            "           <small style=\"font-size: 14px;color: #303030;\">" + item.username + "</small>\n" +
+                            "           <small style=\"float: right;font-size: 14px;color: #666;\">积分:&nbsp;&nbsp; <span\n" +
+                            "                                class=\"iconfont icon-fensi2\"></span>" + item.rate + "\n" +
+                            "                        </small>\n" +
+                            "      </li>";
+                    });
+                    $(".list-group").html(html);
+
+                    $(".index-title-body ul li .img-rounded").hover(function () {
+                        $(this).attr("class","layui-anim layui-anim-rotate layui-anim-loop")
+                    },function () {
+                        $(this).attr("class","");
+                    });
+                }
+            }
+        });
+
+        //查询推荐文章信息
+        $.get("/getRecommendQuestion", function (res) {
+            let recommendHtml = "";
+            if (res.status === 200) {
+                $.each(res.data, function (i, item) {
+                    recommendHtml += "<li style='padding:10px 1px;margin-bottom: 0;border: 1px none #9999997d;border-bottom-style: dashed;' class=\"list-group-item\"><i class=\"layui-icon layui-icon-triangle-r\" style=\"color: #999999ab;\"></i>&nbsp;" +
+                        "<a href=\"/question/" + item.id + "\">" + item.title + "</a></li>";
+                })
+            }
+            $(".recommend-list").html(recommendHtml);
+        });
+
+        //查询标签推荐
+        $.get("/getMostReferTag", function (res) {
+            let html = "";
+            if (res.status === 200) {
+                $.each(res.data, function (i, item) {
+                    html += "    <div class=\"hot_tag\">\n" +
+                        "            <div><a class=\"tagname\" href=\"/tag?tagname=" + item + "\"><span><i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i>&nbsp;" + item + "</span></a></div>\n" +
+                        "        </div>";
+                });
+
+                $("#hot-tags").html(html);
+            }
+        })
+    });
+
+    //查询分页信息
+    function pageQuery(currPage, pageSize, url, id) {
+        //页面加载完成后去查询数据库中问题信息，渲染到页面上
+        $.ajax({
+            type: "get",
+            url: url,
+            async: false,
+            data: {
+                "currPage": currPage,
+                "pageSize": pageSize
+            },
+            success: function (res) {
+                //取出所有的问题信息
+                let questionArray = res.data;
+                let html = "";
+
+                for (let i = 0; i < questionArray.length; i++) {
+                    let zhiding = "";
+                    let jiajing = "";
+                    if (url === "/getAllQuestions" && questionArray[i].isDing === 1) {
+                        zhiding = "<span class='ding'>置顶</span>";
+                    }
+
+                    if (questionArray[i].isJing === 1) {
+                        jiajing = "<span class='jing'>精品</span>";
+                    }
+
+                    let quesHtml = "          <li class=\"boxContent\">\n" +
+                        "                        <div>\n" +
+                        "                            <div class=\"user_bar\">\n" +
+                        "                                <div class='hook' style=\"display: inline-block;float: left;\">\n" +
+                        "                                    <a href=\"/user/" + questionArray[i].uid + "\" style=\"text-decoration: none;height: 45px;width: 45px;\">\n" +
+                        "                                        <img src=" + questionArray[i].avatar + "\n" +
+                        "                                             alt=\"\" style=\"height: 48px;width: 48px;border-radius: 10px;\">\n" +
+                        "                                    </a>\n" +
+                        "                                </div>\n" +
+                        "                                <div class='userToolTip'><div class=\"arrow\"></div>\n" +
+                        "                                    <span>这是一个提示框</span>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"floatR\" style=\"\">\n" +
+                        "                                    <a href=\"/question/" + questionArray[i].id + "\">\n" +
+                        "                                        <div class=\"title\" style=\"display: inline-block;\">" + questionArray[i].title + zhiding + jiajing + "</div>\n" +
+                        "                                    </a>\n" +
+                        "                                    <div style=\"font-size: 13px;margin-top: 10px;\">\n" +
+                        "                                        <span class='question-tags' style='margin-right: 15px'><i class=\"fa fa-tags\" aria-hidden=\"true\"></i>&nbsp;" + questionArray[i].tag + "</span>&nbsp;\n" +
+                        "                                        <span style='margin-right: 15px'><span><i title='发帖用户' class=\"fa fa-graduation-cap\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<a style='color: #c7ab1f;' href='/user/" + questionArray[i].uid + "'>" + questionArray[i].publisher + "</a></span></span>\n" +
+                        "                                        <span title='浏览量：" + questionArray[i].viewCount + "' style='margin-right: 15px'><i class=\"fa fa-eye\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<span>" + questionArray[i].viewCount + "</span></span>\n" +
+                        "                                        <span title='评论数：" + questionArray[i].commentCount + "' style='margin-right: 15px'><i class=\"fa fa-commenting-o\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<span>" + questionArray[i].commentCount + "</span></span>\n" +
+                        "                                        <span title='收藏数：" + questionArray[i].likeCount + "' style='margin-right: 15px'><i class=\"fa fa-heartbeat\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<span>" + questionArray[i].likeCount + "</span></span>\n" +
+                        "                                        <span title='发布日期：" + questionArray[i].gmtCreate + "' ><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<span>" + questionArray[i].gmtCreate + "</span></span>\n" +
+                        "                                    </div>\n" +
+                        "                                </div>\n" +
+                        "                            </div>\n" +
+                        "                        </div>\n" +
+                        "                    </li>";
+                    html += quesHtml;
+                }
+                $(id).html(html);
+
+            },
+            error: function () {
+                layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
+            }
+        });
+    }
+</script>
+</body>
+</html>

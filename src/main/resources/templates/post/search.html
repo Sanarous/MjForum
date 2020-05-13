@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>搜索 - 码匠论坛</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/search.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
+    <script th:src="@{/static/js/forum.js}"></script>
+    <style type="text/css">
+        /* 搜索样式 */
+        #search{
+            margin-left: 60px;
+        }
+        .content .title{
+            color:#2d5bc3;
+        }
+
+        .content .title:hover{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <header th:replace="common/header"></header>
+    <div class="layui-col-md5 layui-col-md-offset4">
+        <input id="keywords" type="hidden" value="${keywords}"/>
+        <div id="questions">
+            <blockquote id="result" style="margin-top: 20px;font-size: 17px;font-weight: 700;" class="layui-elem-quote"></blockquote>
+            <ul style="margin-top: 20px" class="question-list">
+            </ul>
+        </div>
+
+        <!-- 分页插件 -->
+        <div id="ques-pagination"></div>
+    </div>
+<!--    <footer th:replace="common/footer"></footer>-->
+</div>
+<script th:inline="javascript">
+    let loginUserInfo = [[${session.loginUserInfo}]];
+    init(loginUserInfo);
+    layui.use(['element', 'form', 'laypage', 'jquery'], function () {
+        let element = layui.element;
+        let form = layui.form;
+        let laypage = layui.laypage;
+        $ = layui.jquery;
+
+        //面包屑使用
+        let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>搜索结果</cite></a>";
+        $(".layui-breadcrumb a").last().after(currPoisition);
+
+        let keyword = [[${keywords}]];
+        $("#result").html("搜索关键字：" + "<font color='red'>" + keyword + "</font>" + "&nbsp;&nbsp;结果如下");
+
+
+        //分页
+        let totalCount = [[${totalCount}]];
+        let questionArray = [[${questions}]];
+        let html = "";
+        laypage.render({
+            elem: 'ques-pagination'
+            , count: questionArray.length
+            , page: true
+            , layout: ['count', 'prev', 'page', 'next', 'skip']
+            , jump: function (obj) {
+                if (questionArray.length === 0) {
+                    html += "<div style='margin: 20px 0;font-size: 19px;color: #999;'>没有搜索到相关问题哦</div>";
+                    $("#ques-pagination").hide();
+                } else {
+                    $.each(questionArray, function (i, item) {
+                        html += " <li>\n" +
+                            "                    <div class=\"content\">\n" +
+                            "                        <a class=\"title\" target=\"_blank\" href=\"/question/" + item.id + "\">" + item.title + "</a>\n" +
+                            "                        <p class=\"abstract\">" + item.description + "</p>\n" +
+                            "                        <div class=\"meta\">\n" +
+                            "                            <span>\n" +
+                            "                                <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\n" +
+                            "                                <span style='margin: 0 20px 0 5px;'>" + item.publisher + "</span>\n" +
+                            "                            </span>\n" +
+                            "                            <span>\n" +
+                            "                                <i class=\"fa fa-eye\" aria-hidden=\"true\"></i>\n" +
+                            "                                <span style='margin: 0 20px 0 5px;'>" + item.viewCount + "</span>\n" +
+                            "                            </span>\n" +
+                            "                            <span>\n" +
+                            "                                <i class=\"fa fa-comments\" aria-hidden=\"true\"></i>" +
+                            "                                <span style='margin: 0 20px 0 5px;'>" + item.commentCount + "</span>\n" +
+                            "                            </span>\n" +
+                            "                            <span>\n" +
+                            "                                <i class=\"fa fa-heart\" aria-hidden=\"true\"></i>\n" +
+                            "                                <span style='margin: 0 20px 0 5px;'>" + item.likeCount + "</span>\n" +
+                            "                            </span>\n" +
+                            "                            <span class=\"time\">\n" +
+                            "                                   <i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i>" +
+                            "                                   <span style='margin: 0 20px 0 5px;'> " + item.gmtCreate + "</span>\n" +
+                            "                            </span>\n" +
+                            "                        </div>\n" +
+                            "                    </div>\n" +
+                            "                </li>";
+                    })
+                }
+                $(".question-list").html(html);
+            }
+        });
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        //获取后端传入的keywords;
+        let keywords = [[${keywords}]];
+        $("#keywords").val(keywords);
+
+    });
+</script>
+</body>
+</html>

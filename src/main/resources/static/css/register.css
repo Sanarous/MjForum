@@ -1,0 +1,58 @@
+body {
+    /*background: #1d598e;*/
+    background: url("https://bestzuo.cn/images/login_bg.jpg") no-repeat;
+}
+
+#register-box {
+    width: 714px;
+    margin: 200px auto;
+    background-color: #fff;
+    border: 1px solid #b3b3b3;
+    border-radius: 3px;
+}
+
+.register-footer {
+    height: 70px;
+    line-height: 70px;
+    background-color: #f5f5f5;
+    padding: 0 60px;
+    color: #66b7ff;
+}
+
+.register-footer a{
+    color: #66b7ff;
+}
+
+.layui-btn {
+    height: 45px;
+}
+
+.captcha-input {
+    height: 45px;
+    padding-left: 5px;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+/*.layui-form-item .layui-input-inline{*/
+    /*width: 264px;*/
+/*}*/
+
+.layui-form {
+    width: 50%;
+    height: 20%;
+    margin: 10px 20px 10px 170px;
+    padding: 15px 28px 5px;
+    background: #fff;
+}
+
+.layui-input-block {
+    margin-left: 0;
+}
+
+.layui-input-block a {
+    color: blue;
+    float: right;
+    line-height: 30px;
+    font-size: 14px;
+}

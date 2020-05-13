@@ -1,0 +1,22 @@
+.un-follow{
+    float: right;
+    border-radius: 20px;
+    margin-top: 0px;
+    padding: 8px 10px;
+    border: 1px solid #969696;
+}
+
+.follow{
+    float: right;
+    border-radius: 20px;
+    margin-top: 0px;
+    padding: 8px 10px;
+    border: 1px solid #3db922;
+    background: #3db922;
+    color: #fff;
+}
+
+.follow:hover{
+    background: #2a7a1d;
+    border: 1px solid #2a7a1d;
+}

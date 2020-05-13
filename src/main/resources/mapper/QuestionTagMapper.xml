@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.QuestionTagMapper">
+    <!-- 增问题和标签的对应卦象-->
+    <insert id="insertQuestionTag" parameterType="cn.bestzuo.zuoforum.pojo.QuestionTag">
+        insert into tb_question_tag(tag_id,question_id) values(#{tagId},#{questionId})
+    </insert>
+
+    <!-- 查询引用次数最多的tag前20条 -->
+    <select id="selectMostReferTag" resultType="java.lang.Integer">
+        SELECT tag_id FROM tb_question_tag GROUP BY tag_id ORDER BY COUNT(*) DESC;
+    </select>
+
+    <!-- 根据问题ID查询对应的标签-->
+    <select id="selectTagByQuestionId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT tag_id from tb_question_tag where question_id=#{questionId}
+    </select>
+
+    <!-- 根据标签ID删除问题和标签对应的关系-->
+    <delete id="deleteQuestionAndTagInfo" parameterType="java.lang.Integer">
+        DELETE FROM tb_question_tag where question_id=#{questionId} and tag_id=#{tagId}
+    </delete>
+
+    <!--查询包括特定标签的问题ID-->
+    <select id="selectQuestionIdByTagId" parameterType="int" resultType="int">
+        SELECT DISTINCT question_id from tb_question_tag where tag_id = #{tagId} ORDER BY question_id DESC
+    </select>
+
+</mapper>

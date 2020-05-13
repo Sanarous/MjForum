@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.UserRateMapper">
+
+    <select id="selectTopRateUser" resultType="cn.bestzuo.zuoforum.pojo.UserRate">
+        select * from tb_user_rate order by rate desc limit 8
+    </select>
+    <select id="selectRateById" parameterType="int" resultType="cn.bestzuo.zuoforum.pojo.UserRate">
+        select * from tb_user_rate where user_id = #{userId}
+    </select>
+
+    <insert id="insertUserRate" parameterType="cn.bestzuo.zuoforum.pojo.UserRate">
+        insert into tb_user_rate(user_id,rate) values(#{userId},#{rate})
+    </insert>
+
+    <update id="updateRateById" parameterType="int">
+        update tb_user_rate set rate=#{rate} where user_id = #{userId}
+    </update>
+</mapper>

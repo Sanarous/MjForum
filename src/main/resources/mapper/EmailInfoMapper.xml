@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.EmailMapper">
+    <select id="selectEmailInfoByUsername" parameterType="string" resultType="cn.bestzuo.zuoforum.pojo.EmailInfo">
+        select * from tb_email where username = #{username}
+    </select>
+
+    <select id="selectEmailInfoByUid" parameterType="string" resultType="cn.bestzuo.zuoforum.pojo.EmailInfo">
+        select * from tb_email where u_id = #{uid}
+    </select>
+
+    <select id="selectEmailCheckStatusByUsername" parameterType="string" resultType="int">
+        select `check` from tb_email where username = #{username}
+    </select>
+    <select id="queryAllEmails" resultType="java.lang.String">
+        select email from tb_email where `check` = 1
+    </select>
+    <select id="selectEmailInfoByEmail" resultType="cn.bestzuo.zuoforum.pojo.EmailInfo">
+        select * from tb_email where email = #{email}
+    </select>
+
+    <insert id="insertEmailInfo" parameterType="cn.bestzuo.zuoforum.pojo.EmailInfo">
+        insert into tb_email(u_id,username,email,`check`) values (#{uid},#{username},#{email},#{check})
+    </insert>
+
+    <update id="updateEmailByUsername" parameterType="string">
+        update tb_email set email = #{email} where username = #{username}
+    </update>
+
+    <update id="updateEmailStatusByEmail">
+        update tb_email set `check` = #{check} where email = #{email}
+    </update>
+</mapper>

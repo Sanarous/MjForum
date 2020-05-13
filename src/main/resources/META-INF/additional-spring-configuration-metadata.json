@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "devtools.restart.enabled",
+      "type": "java.lang.String",
+      "description": "Description for devtools.restart.enabled."
+  }
+] }

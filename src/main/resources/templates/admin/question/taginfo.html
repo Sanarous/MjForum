@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>码匠论坛后台管理系统</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-body" style="left: 0;top:0">
+        <div id="test9" class="demo-tree demo-tree-box" style="width: 100%; height: 100%; overflow: scroll;"></div>
+    </div>
+</div>
+<script>
+    layui.use(['tree', 'util'], function () {
+        let tree = layui.tree
+            ,layer = layui.layer
+            ,util = layui.util
+
+            //模拟数据1
+            let data = [{
+                title: '江西'
+                ,id: 1
+                ,children: [{
+                    title: '南昌'
+                    ,id: 1000
+                    ,children: [{
+                        title: '青山湖区'
+                        ,id: 10001
+                    },{
+                        title: '高新区'
+                        ,id: 10002
+                    }]
+                },{
+                    title: '九江'
+                    ,id: 1001
+                },{
+                    title: '赣州'
+                    ,id: 1002
+                }]
+            },{
+                title: '广西'
+                ,id: 2
+                ,children: [{
+                    title: '南宁'
+                    ,id: 2000
+                },{
+                    title: '桂林'
+                    ,id: 2001
+                }]
+            },{
+                title: '陕西'
+                ,id: 3
+                ,children: [{
+                    title: '西安'
+                    ,id: 3000
+                },{
+                    title: '延安'
+                    ,id: 3001
+                }]
+            }]
+
+        //开启节点操作图标
+        tree.render({
+            elem: '#test9'
+            ,data: data
+            ,edit: ['add', 'update', 'del'] //操作节点的图标
+            ,click: function(obj){
+                // layer.msg(JSON.stringify(obj.data));
+                layer.msg(JSON.stringify(obj.state));
+            }
+        });
+
+        //按钮事件
+        util.event('lay-demo', {
+            getChecked: function(othis){
+                var checkedData = tree.getChecked('demoId1'); //获取选中节点的数据
+
+                layer.alert(JSON.stringify(checkedData), {shade:0});
+                console.log(checkedData);
+            }
+            ,setChecked: function(){
+                tree.setChecked('demoId1', [12, 16]); //勾选指定节点
+            }
+            ,reload: function(){
+                //重载实例
+                tree.reload('demoId1', {
+
+                });
+
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

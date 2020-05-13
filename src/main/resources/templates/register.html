@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>用户注册 - 码匠论坛</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/static/css/register.css}" media="all">
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+</head>
+<body>
+<div id="register-box">
+    <div class="site-logo">
+        <div class="layui-form-item">
+            <a href="/"><img src="https://bestzuo.cn/images/forum/mjforum-logo.png"
+                             style="width: 35%;margin: 10px 0 0 20px"></a>
+        </div>
+    </div>
+    <div class="register-header">
+        <form class="layui-form layui-form-pane" method="post" style="border-radius: 4px;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline" id="input-username" style="width: 222px">
+                    <input type="text" id="username" name="username" lay-verify="username" class="layui-input"
+                           autofocus="true"
+                           style="width: 98%"
+                           placeholder="请输入用户名" required>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline" id="input-password" style="width: 222px">
+                    <input type="password" id="password" name="password" lay-verify="password" placeholder="请输入密码"
+                           style="width: 98%"
+                           class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline" id="input-repeatPassword" style="width: 222px">
+                    <input type="password" id="repeatPassword" lay-verify="repeatPassword" name="repeatPassword"
+                           placeholder="请再次输入密码" class="layui-input" style="width: 98%" required>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline" style="width: 140px">
+                    <img id="verify_img" class="verifyCode" onclick="changeCode()" src="getVerifyCode" alt="验证码"
+                         width="133px"
+                         height="40px">
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" lay-verify="verifyCode" name="verifyCode" id="verifyCode"
+                           placeholder="验证码"
+                           autocomplete="off"
+                           class="captcha-input"
+                           style="height: 37px;width: 84%" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-inline" style="width: 100%">
+                    <button class="layui-btn layui-btn-fluid" style="font-size: 20px;width: 92%" id="register"
+                            type="button" lay-submit lay-filter="register">注
+                        册
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="register-footer">
+        <span style="color:#666">已有账号？</span><a href="/login">去登录</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a href="/">游客访问</a>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['form'], function () {
+        let form = layui.form, layer = layui.layer;
+        form.render();
+        form.verify({
+            username: function (username) {
+                if (username == null || username === "") {
+                    $(".verifyCode").click();
+                    return '用户名或密码不能为空';
+                }
+                if (/^\d+\d+\d$/.test(username)) {
+                    $(".verifyCode").click();
+                    return '用户名不能全为数字';
+                }
+                if (!/^[a-z0-9A-Z\u4e00-\u9fa5]+$/.test(username) || (username.substr(0, 1) >= '0' && username.substr(0, 1) <= '9')) {
+                    $(".verifyCode").click();
+                    return '用户名只能包含中文、字母和数字，且数字不能在最前面'
+                }
+                if (username.length < 2 || username.length > 12) {
+                    $(".verifyCode").click();
+                    return '用户名长度必须在2~12个字符之间';
+                }
+            },
+            password: [
+                /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
+            ],
+            repeatPassword: [
+                /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
+            ],
+            verifyCode: function (verifyCode) {
+                if (verifyCode == null || verifyCode === "") {
+                    $(".verifyCode").click();
+                    return '验证码不能为空';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(register)', function () {
+            $.ajax({
+                type: "post",
+                url: "/register",
+                data: {
+                    username: $("#username").val(),
+                    password: $("#password").val(),
+                    verifyCode: $("#verifyCode").val()
+                },
+                success: function (res) {
+                    if (res.status === 200) {
+                        layer.open({
+                            title: "系统消息",
+                            content: "恭喜您注册成功，快去登录吧！",
+                            btn: ['确定'],
+                            shadeClose: true,
+                            yes: function (index, layero) {
+                                self.location = '/login';  //确定按钮跳转地址
+                            },
+                            cancel: function (index, layero) {  //按右上角“X”按钮跳转首页
+                                self.location = '/';
+                            }
+                        });
+                    } else {
+                        $(".verifyCode").click();
+                        layer.alert(res.msg, {icon: 5, time: 2000});
+                    }
+                }
+            });
+            return false;
+        });
+
+        //失去焦点时验证用户名格式，同时给出tips
+        $("#username").blur(function () {
+            let username = $("#username").val();
+            $("#input-username").after("");
+            if (username.length < 2 || username.length > 12) {
+                $("input[name=username]").css({"box-shadow": "inset 0px 0px 5px 0px rgba(204, 25, 25, 0.76"});
+                layer.tips("用户名长度必须在2-12个字符以内", "#username");
+                return;
+            }
+            if (/^\d+\d+\d$/.test(username)){
+                $("input[name=username]").css({"box-shadow": "inset 0px 0px 5px 0px rgba(204, 25, 25, 0.76"});
+                layer.tips("用户名不能全为数字", "#username");
+                return;
+            }
+
+            if (!/^[a-z0-9A-Z\u4e00-\u9fa5]+$/.test(username) || (username.substr(0, 1) >= '0' && username.substr(0, 1) <= '9')) {
+                $("input[name=username]").css({"box-shadow": "inset 0px 0px 5px 0px rgba(204, 25, 25, 0.76"});
+                layer.tips("用户名只能包含中文、字母和数字，且数字不能在最前面", "#username");
+                return;
+            }
+
+            //上述验证通过才可以去查询数据库
+                $.ajax({
+                    type: "get",
+                    url: "/getUserByName",
+                    async: false,
+                    data: {username: username},
+                    success: function (res) {
+                        if (res.status === 200) {
+                            let html = "<i style=\"color: #40cd72;line-height: 35px;\" class=\"layui-icon layui-icon-ok-circle\"></i>";
+                            $("#input-username").after(html);
+                        } else if (res.status === 500) {
+                            $("input[name=username]").css({"box-shadow": "inset 0px 0px 5px 0px rgba(204, 25, 25, 0.76"});  //红色虚化背景提示错误
+                            layer.tips("该用户名已被注册", "#username");
+                        }
+                    }
+                });
+        });
+
+        //聚焦时
+        $("#username").focus(function () {
+            $("#input-username").parent().children("i").hide();
+            $("input[name=username]").css({"box-shadow": "none"});
+        });
+
+        //验证密码
+        $("#password").blur(function () {
+            if ($.trim($("#password").val()).length < 6 || $.trim($("#password").val()).length > 12) {
+                $("input[name=password]").css({"box-shadow": "inset 0px 0px 5px 0px rgba(204, 25, 25, 0.76"});
+                layer.tips("密码必须在6-12位", "#password");
+            } else {
+                var html = "<i style=\"color: #40cd72;line-height: 35px;\" class=\"layui-icon layui-icon-ok-circle\"></i>";
+                $("#input-password").after(html);
+            }
+        });
+
+        $("#password").focus(function () {
+            $("#input-password").parent().children("i").hide();
+            $("input[name=password]").css({"box-shadow": "none"});
+        });
+
+        //校验重复密码
+        $("#repeatPassword").blur(function () {
+            if ($("#password").val() !== $("#repeatPassword").val()) {
+                $("input[name=repeatPassword]").css({"box-shadow": "inset 0px 0px 5px 0px rgba(204, 25, 25, 0.76"});
+                layer.tips("输入密码不一致", "#repeatPassword");
+            } else {
+                var html = "<i style=\"color: #40cd72;line-height: 35px;\" class=\"layui-icon layui-icon-ok-circle\"></i>";
+                $("#input-repeatPassword").after(html);
+            }
+        });
+
+        $("#repeatPassword").focus(function () {
+            $("#input-repeatPassword").parent().children("i").hide();
+            $("input[name=repeatPassword]").css({"box-shadow": "none"});
+        });
+    });
+
+    //验证码刷新
+    function changeCode() {
+        let src = " getVerifyCode?" + new Date().getTime();
+        $('.verifyCode').attr("src", src);
+    }
+</script>
+</html>

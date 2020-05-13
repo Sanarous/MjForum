@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/userinfo.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/follower.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/user.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/js/forum.js}"></script>
+    <style type="text/css">
+        .d1 button{
+            top: 12px !important;
+        }
+
+        #java {
+            text-align: justify;
+            letter-spacing: 1px;
+            overflow-wrap: break-word;
+            text-indent: 2rem;
+            line-height: 25px;
+        }
+
+        a{
+            color: #155faa;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <header th:replace="common/header"></header>
+
+    <div id="java" class="layui-col-md8 layui-col-md-offset2" style="margin-bottom: 80px">
+        <h1 style="margin: 15px 0">1. Java 就业方向</h1>
+        <img src="https://bestzuo.cn/images/forum/java/java.png" width="1200px" height="auto">
+        <hr/>
+
+        <h1 style="margin: 15px 0">2. Java 应用学习路线</h1>
+        <div>
+            web 后端开发属于当前主流的 B/S （浏览器/服务器）架构，需求量较大，但学习后端开发的人非常多（初级渣比较多），后端开发主要难于系统架构以及业务逻辑上。目前大型企业应用后台均使用 Java
+            语言开发，如淘宝等。当前使用主流框架为 SpringBoot。Java 自身存在三个规范，即 JavaSE（Java桌面应用程序开发）、JavaME（Java手机端开发）、JavaEE（Java企业级开发），其中
+            JavaME 早已被时代淘汰，取而代之的是 Android 开发，而 JavaSE 也很少用来进行桌面应用程序开发。当前 JavaEE 开发仍然是时代主流，且未来一段时间不会被第二种语言取代，因此以下路线均针对于
+            web 后端开发。
+            <br/>
+            <img align="center" style="margin-left: 22%" src="https://bestzuo.cn/images/forum/java/s.png" width="800px"
+                 height="auto">
+
+            <div>
+                <h2>2.1 JavaSE 学习路线</h2>
+                <div style="margin: 10px 0">
+                    以下泛指 Java基础，主要内容如下图所示。
+                    <div>
+                        推荐阅读：<a href="https://book.douban.com/subject/2000732/">《HeadFirst Java》</a>
+                                <a href="https://book.douban.com/subject/26880667/">《Java 核心技术 卷Ⅰ》</a>
+                    </div>
+                    <div>
+                        推荐视频：<a href="https://www.bilibili.com/video/av31472464?from=search&seid=12405885636310866806">浙江大学 翁恺教授</a>
+                        <a href="https://www.bilibili.com/video/av59814573?from=search&seid=322200369530420009">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高琪 Java 300集</a>
+                    </div>
+                    <br/>
+                    <img src="https://bestzuo.cn/images/forum/java/JavaSE.png" width="1200px" height="auto">
+                </div>
+
+                <h2>2.2 前端基础学习</h2>
+                <div>
+                    前后端开发自身是从：前后端耦合（使用 JSP、Thyemleaf、Freemarker等模板引擎）、前后端半分离（Ajax 异步请求 json
+                    数据）、前后端完全分离（Node.js等），在我们学习的过程中，开发一些常用的前端页面是难以避免的，因此学习前端三大骨架是有必要的（不然一个简单的网页都写不出来）。
+                    <div>
+                        推荐视频：各类培训班视频
+                    </div>
+                    <br/>
+                    <img style="margin-left: 10%" src="https://bestzuo.cn/images/forum/java/qianduan.png" width="1000px"
+                         height="auto">
+                </div>
+
+                <h2>2.3 数据库基础学习</h2>
+                <div>
+                    数据库是 web 后端开发的立身之本，一般大型公司都有专门的 DBA（数据库开发工程师）来进行数据库的管理，但是后端开发人员也必须完全掌握数据库。并且后端开发 95% 都是在做
+                    CRUD（即对数据的增删改查），而操作的就是数据库中存储的数据，数据库的性能和优化也是需要注意的重点。
+                    <div>
+                        推荐视频：<a href="https://www.bilibili.com/video/av22912367?from=search&seid=7293441176119710392">尚硅谷 李玉婷《MySQL基础》</a>
+                    </div>
+                    <br/>
+                    <img style="margin-left: 20%" src="https://bestzuo.cn/images/forum/java/sql.png" width="800px"
+                         height="auto">
+                </div>
+
+                <h2>2.4 JavaWeb 学习路线</h2>
+                <div>
+                    JavaWeb 主要学习 web 后端开发的基础知识和规范，当前主流框架都是在 JavaWeb 的基础上进行封装再封装，有扎实的基础之后，使用框架才会得心应手。
+                    <div>
+                        推荐视频：<a href="https://www.bilibili.com/video/av37452727?from=search&seid=5869862186715374827">黑马 崔希凡《JavaWeb基础》</a>
+                    </div>
+                    <div>
+                        推荐阅读：<a href="https://book.douban.com/subject/11534695/">《JavaWeb 从入门到精通》</a>
+                                <a href="https://book.douban.com/subject/25953851/">《深入分析 JavaWeb 内幕》</a>
+                    </div>
+                    <br/>
+                    <img style="margin-left: 10%" src="https://bestzuo.cn/images/forum/java/JavaWeb.png" width="1200px"
+                         height="auto">
+                </div>
+
+                <h2>2.5 主流框架学习</h2>
+                <div>
+                    当前主流应用框架为：SSM（即Spring、SpringMVC、MyBatis整合），由于时代更新，目前使用的为 SpringBoot 框架，但 SpringBoot 仍然以 Spring 和
+                    SpringMVC 为核心。
+                    <div>
+                        推荐阅读：<a href="https://book.douban.com/subject/27090950/">《Java EE互联网轻量级框架整合开发》</a>
+                        <a href="https://book.douban.com/subject/26762595/">《JavaEE开发的颠覆者: Spring Boot实战》</a>
+                    </div>
+                    <br/>
+                    <img style="margin-left: 10%" src="https://bestzuo.cn/images/forum/java/kuangjia.png" width="1200px"
+                         height="auto">
+                </div>
+
+                <h2>2.6 其它应用</h2>
+                <div>
+                    在我们开发 web 应用时，很多组件的使用是必不可少的，web 应用承受流量越大，系统架构难度呈指数难度增长，如 12306
+                    的后台架构是当下全球最牛x的后台，没有之一，这同样归功于下面某些组件。<br/>
+                    <img style="margin-left: 10%" src="https://bestzuo.cn/images/forum/java/other.png" width="1200px"
+                         height="auto">
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <h1 style="margin: 15px 0">3. Java 找工作学习路线</h1>
+        <div>
+            以上是 Java 应用层面的学习路线，但是在应届秋招/春招时，单纯有上述会用经验是不足以通过面试的，<font color="red">在面试时，只是会用/了解一门技术的话，在面试官眼里是等于不会用的。</font>面试中更看重的是原理层面的理解深度，比如在 Java 基础中，Java 字符串 String 使用 “+” 拼接字符串，那么使用 StringBuilder/StringBuffer 可以获取一样的结果，那我们什么时候用 String 的拼接，什么时候用 StringBuilder 呢？或者再举个例子，HashMap 和 ConcurrentHashMap 有什么区别呢？这些原理性的知识考察的不是死记硬背，而是在后面工作中，出现了 BUG 可以通过你的理解快速定位可能是哪里出现了问题，而不是随缘找原因。而数据结构和算法的知识也是应届生必定会考察的一个知识，写代码非常讲究逻辑思考能力，具备一定的算法能力，可以在逻辑上简化代码复杂度，让程序的运行速度更快。
+        </div>
+        <div>
+            <h2 style="margin: 10px 0">3.1 数据结构与算法</h2>
+        </div>
+    </div>
+
+<!--    <footer th:replace="common/footer"></footer>-->
+</div>
+<script th:inline="javascript">
+    let loginUserInfo = [[${session.loginUserInfo}]];
+    init(loginUserInfo);
+
+    layui.use(['element', 'form', 'upload', 'jquery'], function () {
+        let element = layui.element;
+        $ = layui.jquery;
+
+        //面包屑使用
+        let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>Java学习路线</cite></a>";
+        $(".layui-breadcrumb a").last().after(currPoisition);
+
+        $("#title-java").addClass("layui-this");
+    });
+
+</script>
+</body>
+</html>

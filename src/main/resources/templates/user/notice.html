@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/css/notice.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/js/forum.js}"></script>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <header th:replace="common/header"></header>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">我的通知</a>
+                    <dl class="layui-nav-child">
+                        <dd><a id="commentMe" class="layui-this" href="javascript:;">评论我的</a></dd>
+                        <dd><a id="collectMe" href="javascript:;">收藏我的</a></dd>
+                        <dd><a id="followMe" href="javascript:;">关注我的</a></dd>
+                        <dd><a id="praiseMe" href="javascript:;">赞了我的</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">系统通知</a>
+                    <dl class="layui-nav-child">
+                        <dd><a id="mjpost" href="javascript:;">码匠信箱</a></dd>
+                        <dd><a id="report" href="javascript:;">举报反馈</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a id="otherInfo" href="javascript:;">其它通知</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 主体部分 -->
+    <div id="notice-body" style="width:800px;margin: 0 auto;padding: 10px 20px 0 0;"></div>
+</div>
+<script th:inline="javascript">
+    let loginUserInfo = [[${session.loginUserInfo}]];
+    init(loginUserInfo);
+
+    let des = [[${destination}]];
+
+    layui.use(['element', 'form', 'jquery','flow'], function () {
+        let element = layui.element;
+        let form = layui.form;
+        $ = layui.jquery;
+        let flow = layui.flow;
+
+        $("#title-notice").addClass("layui-this");
+
+        // 流加载评论通知
+        $("#commentMe").click(function () {
+            let username = loginUserInfo.username;
+            $("#notice-body").html("");
+            flow.load({
+                elem: '#notice-body',
+                isAuto: false,
+                end: '<div style="font-size: 16px;color: #999;margin-bottom: 50px">到底了，已经没有更多可以展示了</div>',
+                done: function(page, next){
+                    let lis = ["<div id=\"reply\"><ul class=\"reply-list\">"];
+                    let html = "";
+                    $.get('/commentNotice?username='+ username +'&page='+ page, function(res){
+                        if(res.status === 200){
+                            if(res.data === null){
+                                // lis.push("<div style='font-size: 20px;font-weight: 300;'>暂无评论消息</div>");
+                                lis.push("");
+                            }else{
+                                //假设你的列表返回在data集合中
+                                layui.each(res.data, function(index, item){
+                                    if (item.status === 0) {
+                                        let html = "           <li>\n" +
+                                            "                    <div class=\"content\">\n" +
+                                            "                        <div class=\"author\">\n" +
+                                            "                            <a class=\"avatar\" href=\"#\">\n" +
+                                            "                                <img style=\"width: 40px;height: 40px;border-radius: 50%\"\n" +
+                                            "                                     src=\"" + item.commentAvatar + "\"\n" +
+                                            "                                     alt=\"180\">\n" +
+                                            "                            </a>\n" +
+                                            "                            <div class=\"info\">\n" +
+                                            "                                <a class=\"nickname\" href=\"#\">" + item.username + "</a>\n" +
+                                            "                                <span data-type=\"share_note\" data-datetime=\"2019-06-11T16:56:18+08:00\"> 在 <a style=\"color:#3194d0;;\" href=\"/question/" + item.questionId + "\">《" + item.title + "》</a>帖子中评论了你 · " + item.time + "</span>\n" +
+                                            "                            </div>\n" +
+                                            "                        </div>\n" +
+                                            "                        <p class=\"comment\" style=\"margin-bottom: 10px;\">" + item.content + "</p>\n" +
+                                            "                        <a class=\"add-sub-comment\" id='data-click-add-" + index + "' href=\"javascript:;\"><i style=\"font-size: 13px;color: #969696;\" class=\"layui-icon layui-icon-dialogue\">&nbsp;回复</i></a>&nbsp;&nbsp;&nbsp;\n" +
+                                            "                        <a href=\"/question/" + item.questionId + "\"><i style=\"font-size: 13px;color: #969696;\" class=\"layui-icon layui-icon-release\">&nbsp;查看对话</i></a>\n" +
+                                            "                    </div>\n" +
+                                            "                    <div class=\"sub-comment-box\" id='data-click-box-" + index + "' style=\"display: none\">\n" +
+                                            "                        <div class=\"sub-comment-list\">\n" +
+                                            "                            <div class=\"sub-comment-input\" style=\"margin-top: 10px;\">\n" +
+                                            "                                <textarea id='box-data-input-" + index + "' replyfor='" + item.username + "' class=\"sub-comment-input-text\" placeholder=\" 评论一下...\" style=\"width: 100%;height:50px;border-radius: 5px;padding: 2px 0 0 4px;\"></textarea>\n" +
+                                            "                                <div class=\"sub-comment-input-submit\" style=\"margin-top:10px;\">\n" +
+                                            "                                    <span id='data-click-submit-" + index + "' reply-user='" + item.username + "' reply-id='" + item.questionId + "' reply-comment-id='" + item.parentCommentId + "' class=\"sub-comment-button-comment\">回复</span>\n" +
+                                            "                                    <span id='data-click-cancel-" + index + "' class=\"sub-comment-button-cancel\">取消\n" +
+                                            "                        </span></div>\n" +
+                                            "                            </div>\n" +
+                                            "                        </div>\n" +
+                                            "                    </div>\n" +
+                                            "                </li>";
+
+                                            lis.push(html);
+                                    } else if (item.status === 1) {
+                                        let html = "                <li>\n" +
+                                            "                    <div class=\"content\" style=\"color: #969696;\">\n" +
+                                            "                        <div class=\"author\">\n" +
+                                            "                            <a class=\"avatar\" href=\"#\">\n" +
+                                            "                                <img style=\"width: 40px;height: 40px;border-radius: 50%\"\n" +
+                                            "                                     src=\"" + item.commentAvatar + "\"\n" +
+                                            "                                     alt=\"180\">\n" +
+                                            "                            </a>\n" +
+                                            "                            <div class=\"info\">\n" +
+                                            "                                <a class=\"nickname\" href=\"#\">" + item.username + "</a>\n" +
+                                            "                                <span data-type=\"share_note\" data-datetime=\"2019-06-11T16:56:18+08:00\"> 在 <a style=\"color:#3194d0;;\" href=\"/question/" + item.questionId + "\">" + item.title + "</a>帖子中回复了你 · " + item.time + "</span>\n" +
+                                            "                            </div>\n" +
+                                            "                        </div>\n" +
+                                            "                        <p class=\"comment\" style=\"margin-bottom: 10px;\">" + item.content + "</p>\n" +
+                                            "                        <a class=\"add-sub-comment\" id='data-click-add-" + index + "' href=\"javascript:;\"><i style=\"font-size: 13px;color: #969696;\" class=\"layui-icon layui-icon-dialogue\">&nbsp;回复</i></a>&nbsp;&nbsp;&nbsp;\n" +
+                                            "                        <a href=\"/question/" + item.questionId + "\"><i style=\"font-size: 13px;color: #969696;\" class=\"layui-icon layui-icon-release\">&nbsp;查看对话</i></a>\n" +
+                                            "                    </div>\n" +
+                                            "                    <div class=\"sub-comment-box\" id='data-click-box-" + index + "' style=\"display: none\">\n" +
+                                            "                        <div class=\"sub-comment-list\">\n" +
+                                            "                            <div class=\"sub-comment-input\" style=\"margin-top: 10px;\">\n" +
+                                            "                                <textarea id='box-data-input-" + index + "' replyfor='" + item.username + "' class=\"sub-comment-input-text\" placeholder=\" 评论一下...\" style=\"width: 100%;height:50px;border-radius: 5px;\"></textarea>\n" +
+                                            "                                <div class=\"sub-comment-input-submit\" style=\"margin-top:10px;\">\n" +
+                                            "                                    <span id='data-click-submit-" + index + "'  reply-user='" + item.username + "' reply-id='" + item.questionId + "' class=\"sub-comment-button-comment\">回复</span>\n" +
+                                            "                                    <span id='data-click-cancel-" + index + "' class=\"sub-comment-button-cancel\">取消\n" +
+                                            "                        </span></div>\n" +
+                                            "                            </div>\n" +
+                                            "                        </div>\n" +
+                                            "                    </div>\n" +
+                                            "                </li>";
+
+                                        lis.push(html);
+
+                                    }
+                                });
+                            }
+                        }
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.pages);
+                        lis.push("</ul></div>");
+
+                        //点击回复弹起/收起回复框
+                        $(".add-sub-comment").on('click', function () {
+                            //获取当前点击的这个的ID
+                            let id = $(this).attr("id");
+                            $("#data-click-box-" + id.split("-")[id.split("-").length - 1]).toggle();
+                        });
+
+                        //遍历评论框
+                        $(".sub-comment-input-text").each(function () {
+                            let replyfor = $(this).attr("replyfor");
+                            $(this).html("@" + replyfor + "：");
+                        });
+
+                        //点击取消收起回复框
+                        $(".sub-comment-button-cancel").click(function () {
+                            let id = $(this).attr("id");
+                            $("#data-click-box-" + id.split("-")[id.split("-").length - 1]).hide();
+                        });
+
+                        //点击回复评论
+                        $(".sub-comment-button-comment").click(function () {
+                            let click = $(this);
+                            let qId = $(this).attr("reply-id");    //问题ID
+                            let parentCommentId = $(this).attr("reply-comment-id");  //父评论ID
+                            //获取指定输入框中的内容
+                            let reply = $(this).parent(".sub-comment-input-submit").siblings(".sub-comment-input-text").val();  //回复内容
+
+                            //获取回复对象用户名
+                            let replyUsername = $(this).attr("reply-user");
+
+                            //数据校验
+                            if ($.trim(username).length === 0) {
+                                layer.alert("用户未登录", {icon: 5, time: 1500});
+                            }
+
+                            if (($.trim(reply).length === 0)) {
+                                layer.alert("回复内容不能为空哦", {icon: 5, time: 1500});
+                            }
+
+                            if (reply.indexOf("@" + replyUsername + "：") === -1) {
+                                reply = "@" + replyUsername + "：" + reply;
+                            }
+
+                            $.ajax({
+                                type: "post",
+                                url: "/reply",
+                                data: {
+                                    questionId: qId,
+                                    username: username,
+                                    content: reply,
+                                    parentCommentId: parentCommentId,   //父评论ID
+                                    replyfor: replyUsername
+                                },
+                                success: function (res) {
+                                    if (res.status === 200) {
+                                        //成功
+                                        layer.alert("回复成功!", {icon: 6, time: 2000});
+                                        click.siblings(".sub-comment-button-cancel").click();
+                                    } else {
+                                        layer.alert("回复失败!", {icon: 5, time: 2000});
+                                    }
+                                },
+                                error: function () {
+                                    layer.alert("回复失败，请稍后再试", {icon: 5, time: 2000});
+                                }
+                            });
+                        });
+
+                    });
+                }
+            });
+        });
+
+        $("#commentMe").click();
+
+        //流加载收藏通知
+        $("#collectMe").click(function () {
+            let username = loginUserInfo.username;
+            $("#notice-body").html("");
+            flow.load({
+                elem: '#notice-body',
+                isAuto: false,
+                end: '<div style="font-size: 16px;color: #999;margin-bottom: 50px">到底了，已经没有更多可以展示了</div>',
+                done: function(page, next){
+                    let lis = ["<div><ul class=\"collection-list\">"];
+                    let html = "";
+                    $.get('/collectionNotice?username='+ username +'&page='+ page, function(res){
+                        if(res.status === 200){
+                            if(res.data === null){
+                                // lis.push("<div style='font-size: 20px;font-weight: 300;'>暂无收藏消息</div>");
+                                lis.push("");
+                            }else{
+                                layui.each(res.data, function(index, item){
+                                        html = "         <li class=\"collection\" style=\"margin-bottom: 5px\">\n" +
+                                        "                    <a class=\"collection-avatar\" href=\"#\" target=\"_blank\">\n" +
+                                        "                        <img style=\"border-radius: 50%\" width=\"45\" height=\"45\"\n" +
+                                        "                             src=\"" + item.avatar + "\">\n" +
+                                        "                    </a>\n" +
+                                        "                    <span style=\"font-size: 18px;font-weight: 100;\"><a href=\"/question/" + item.questionId + "\">" + item.username + "</a> 收藏了你的帖子<a href=\"#\" style=\"color: #3194d0;\">《" + item.title + "》</a></span>\n" +
+                                        "                    <div class=\"collection-time\" style=\"font-size: 12px;margin-top: 1px\">\n" +
+                                        "                        " + item.time + "\n" +
+                                        "                    </div>\n" +
+                                        "              </li>";
+                                    lis.push(html);
+                                });
+                            }
+                        }
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.pages);
+                        lis.push("</ul></div>");
+                    });
+                }
+            });
+        });
+
+        //流加载关注通知
+        $("#followMe").click(function () {
+            let username = loginUserInfo.username;
+            $("#notice-body").html("");
+            flow.load({
+                elem: '#notice-body',
+                isAuto: false,
+                end: '<div style="font-size: 16px;color: #999;margin-bottom: 50px">到底了，已经没有更多可以展示了</div>',
+                done: function(page, next){
+                    let lis = ["<div><ul class=\"collection-list\">"];
+                    let html = "";
+                    $.get('/followNotice?username='+ username +'&page='+ page, function(res){
+                        if(res.status === 200){
+                            if(res.data === null){
+                                // lis.push("<div style='font-size: 20px;font-weight: 300;'>暂无关注消息</div>");
+                                lis.push("");
+                            }else{
+                                layui.each(res.data, function(index, item){
+                                    html = "         <li class=\"collection\" style=\"margin-bottom: 5px\">\n" +
+                                        "                    <a class=\"collection-avatar\" href=\"/user/" + item.uid + "\" target=\"_blank\">\n" +
+                                        "                        <img style=\"border-radius: 50%\" width=\"45\" height=\"45\"\n" +
+                                        "                             src=\"" + item.avatar + "\">\n" +
+                                        "                    </a>\n" +
+                                        "                    <span style=\"font-size: 18px;font-weight: 100;\"><a style='color: #50adea;' href='/user/" + item.uid + "'>" + item.username + "</a> 开始关注了你</span>" +
+                                        "                    <div class=\"collection-time\" style=\"font-size: 12px;margin-top: 1px\">\n" +
+                                        "                        " + item.time + "\n" +
+                                        "                    </div>\n" +
+                                        "              </li>";
+                                    lis.push(html);
+                                });
+                            }
+                        }
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.pages);
+                        lis.push("</ul></div>");
+                    });
+                }
+            });
+        });
+
+        //流加载点赞通知
+        $("#praiseMe").click(function () {
+            let username = loginUserInfo.username;
+            $("#notice-body").html("");
+            flow.load({
+                elem: '#notice-body',
+                isAuto: false,
+                end: '<div style="font-size: 16px;color: #999;margin-bottom: 50px">到底了，已经没有更多可以展示了</div>',
+                done: function(page, next){
+                    let lis = ["<div><ul class=\"collection-list\">"];
+                    let html = "";
+                    $.get('/praiseNotice?username='+ username +'&page='+ page, function(res){
+                        if(res.status === 200){
+                            if(res.data === null){
+                                // lis.push("<div style='font-size: 20px;font-weight: 300;'>还没有人给你点赞哦</div>");
+                                lis.push("");
+                            }else{
+                                layui.each(res.data, function(index, item){
+                                    html = "         <li class=\"collection\" style=\"margin-bottom: 5px\">\n" +
+                                        "                    <a class=\"collection-avatar\" href=\"/user/" + item.uid + "\" target=\"_blank\">\n" +
+                                        "                        <img style=\"border-radius: 50%\" width=\"45\" height=\"45\"\n" +
+                                        "                             src=\"" + item.avatar + "\">\n" +
+                                        "                    </a>\n" +
+                                        "                    <span style=\"font-size: 18px;font-weight: 100;\"><a href='/user/" + item.uid + "'>" + item.username + "</a> 在帖子<a href=\"/question/" + item.questionId + "\" style=\"color: #3194d0;\">《" + item.title + "》</a>中赞了你的评论  ·  " + item.time + "</span>\n" +
+                                        "                    <div class=\"collection-time\" style=\"font-size: 12px;margin-top: 1px\">\n" +
+                                        "                        " + item.content + "\n" +
+                                        "                    </div>\n" +
+                                        "              </li>";
+                                    lis.push(html);
+                                });
+                            }
+                        }
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.pages);
+                        lis.push("</ul></div>");
+                    });
+                }
+            });
+        });
+
+        if($.trim(des).length > 0){
+            if(des === "comment"){
+                $("#commentMe").click();
+            }
+            if(des === "collection"){
+                $("#collectMe").click();
+            }
+
+            if(des === "follow"){
+                $("#followMe").click();
+            }
+
+            if(des === "praise"){
+                $("#praiseMe").click();
+            }
+
+            if(des === "majiang"){
+                $("#mjpost").click();
+            }
+
+            if(des === "report"){
+                $("#report").click();
+            }
+
+            if(des === "other"){
+                $("#otherInfo").click();
+            }
+        }
+    });
+
+    //页面加载完成就开始
+    $(document).ready(function () {
+        let username = loginUserInfo.username;
+
+        $("#mjpost").click(function () {
+            $("#notice-body").html("");
+            let html = "<div style='font-size: 20px;font-weight: 300;'>暂无系统邮件</div>";
+            $("#notice-body").html(html);
+        });
+
+        $("#report").click(function () {
+            $("#notice-body").html("");
+            let html = "<div style='font-size: 20px;font-weight: 300;'>暂无举报反馈消息</div>";
+            $("#notice-body").html(html);
+        });
+
+        $("#otherInfo").click(function () {
+            $("#notice-body").html("");
+            let html = "<div style='font-size: 20px;font-weight: 300;'>暂无其它通知消息</div>";
+            $("#notice-body").html(html);
+        });
+
+        //跳转操作
+        if($.trim(des).length > 0){
+            if(des === "majiang"){
+                $("#mjpost").click();
+            }
+
+            if(des === "report"){
+                $("#report").click();
+            }
+
+            if(des === "other"){
+                $("#otherInfo").click();
+            }
+        }
+    });
+</script>
+</body>
+</html>

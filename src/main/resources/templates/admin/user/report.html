@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>码匠论坛后台管理系统</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
+    <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <style type="text/css">
+        .highcharts-credits {
+            display: none;
+        }
+
+        .layui-table-view {
+            width: 100% !important;
+        }
+
+        .layui-table-main {
+            height: 100% !important;
+        }
+
+        .layui-form {
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-body" style="left: 0;top:0">
+        <div class="demoTable">
+            搜索用户：
+            <div class="layui-inline">
+                <input class="layui-input" name="id" id="demoReload" autocomplete="off" placeholder="用户名">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
+        <div style="width: 100%">
+            <table class="layui-table"
+                   lay-data="{width: 892, height:330, url:'/getReport', page:true, limit: 20,limits: [20, 25, 30, 35, 40],  loading: true,id:'idTest',defaultToolbar: ['filter', 'print', 'exports']}"
+                   lay-filter="report-info">
+                <thead>
+                <tr>
+                    <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                    <th lay-data="{field:'id', width:60, sort: true, fixed: true}">ID</th>
+                    <th lay-data="{field:'username',  width:100}">举报用户</th>
+                    <th lay-data="{field:'rusername',  width:100}">被举报用户</th>
+                    <th lay-data="{field:'rquestion',  width:150}">被举报问题标题</th>
+                    <th lay-data="{field:'reason',  width:150}">举报理由</th>
+                    <th lay-data="{field:'isProcess',  width:100}">是否已处理</th>
+                    <th lay-data="{field:'processResult',  width:180}">处理结果</th>
+                    <th lay-data="{fixed: 'right', align: 'center', width:178, align:'center', toolbar: '#barDemo'}">
+                        操作
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="process">处理</a>
+</script>
+<script>
+    layui.use('table', function () {
+        let table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(report-info)', function (obj) {
+            console.log(obj)
+        });
+
+        //监听工具条
+        table.on('tool(report-info)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'detail') {
+                layer.msg('查看：' + data.id + ' 的信息');
+            } else if (obj.event === 'process') {
+                // layer.alert('编辑行：<br>' + JSON.stringify(data));
+                layer.open({
+                    // type: 2,
+                    title: '处理该举报信息',
+                    closeBtn: '1',
+                    btn: ['确认', '取消'],
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['300px', '200px'],
+                    content: `  <div class="layui-form-item">
+                                    <div>选择处理结果：</div>
+                                    <div>
+                                        <input style="margin-left: 6px" type="radio" name="process" value="1" title="同意该举报请求" checked>&nbsp;&nbsp;同意该举报请求</br>
+                                        <input style="margin-left: 6px" type="radio" name="process" value="0" title="驳回该举报请求">&nbsp;&nbsp;驳回该举报请求</br>
+                                    </div>
+                                </div>`,
+                    yes: function (index, layero) {
+                        //先判断是否已经处理过该请求
+                        let result = $('input:radio:checked').val();
+                        if (result != 0 && result != 1) {
+                            layer.msg("处理结果不能为空哦");
+                        } else {
+                            $.ajax({
+                                type: "post",
+                                url: "/updateProcessResult",
+                                data: {
+                                    processFlag: result,
+                                    reportId: obj.data.id
+                                },
+                                async: false,
+                                success: function (res) {
+                                    if (res.status === 200) {
+                                        layer.msg("处理成功！");
+                                        location.reload(true);
+                                    } else {
+                                        layer.msg(res.msg);
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    }
+                });
+            }
+        });
+
+        let $ = layui.$, active = {
+            getCheckData: function () { //获取选中数据
+                let checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+            , getCheckLength: function () { //获取选中数目
+                let checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                layer.msg('选中了：' + data.length + ' 个');
+            }
+            , isAll: function () { //验证是否全选
+                let checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选' : '未全选')
+            }
+
+            , reload: function () {
+                let demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('idTest', {
+                    page: {
+                        curr: 1
+                    }
+                    , where: {
+                        key: {
+                            username: demoReload.val()
+                        }
+                    }
+                }, 'data');
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            let type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+    //打开编辑窗口
+    function openModak() {
+        $("[name='testname']").val("xxxxxxxxxxxxxxx");//向模态框中赋值
+        layui.use(['layer'], function () {
+            let layer = layui.layer, $ = layui.$;
+            layer.open({
+                type: 1,//类型
+                area: ['400px', '300px'],//定义宽和高
+                title: '查看详细信息',//题目
+                shadeClose: false,//点击遮罩层关闭
+                content: $('#motaikunag')//打开的内容
+            });
+        })
+    }
+
+</script>
+</body>
+</html>

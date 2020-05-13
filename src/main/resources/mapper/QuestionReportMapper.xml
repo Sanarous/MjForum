@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bestzuo.zuoforum.mapper.QuestionReportMapper">
+
+    <select id="queryReportById" parameterType="int" resultType="cn.bestzuo.zuoforum.pojo.QuestionReport">
+        select * from tb_question_report where id = #{id}
+    </select>
+
+    <!--查询未处理的举报信息-->
+    <select id="queryAllNotProcessReport" resultType="cn.bestzuo.zuoforum.pojo.QuestionReport">
+        select  * from tb_question_report where is_process = 0
+    </select>
+
+    <!--查询处理后的举报信息-->
+    <select id="queryAllProcessReport" resultType="cn.bestzuo.zuoforum.pojo.QuestionReport">
+        select  * from tb_question_report where is_process = 1
+    </select>
+
+    <!--查询带关键字的举报信息-->
+    <select id="queryAllReportWithKeyword" resultType="cn.bestzuo.zuoforum.pojo.QuestionReport">
+        select  * from tb_question_report where user_id = #{id} or r_user_id = #{id}
+    </select>
+
+    <!--根据举报用户ID和问题ID查询数据库中信息-->
+    <select id="selectReportByUserIdAndQuestionId" resultType="cn.bestzuo.zuoforum.pojo.QuestionReport">
+        select * from tb_question_report where user_id = #{userId} and r_question_id = #{questionId}
+    </select>
+
+    <!--新增举报信息-->
+    <insert id="insertQuestionReport">
+        insert into tb_question_report(user_id,r_user_id,r_question_id,report_reason,is_process,process_result)
+        values(#{userId},#{rUserId},#{rQuestionId},#{reportReason},#{isProcess},#{processResult})
+    </insert>
+
+    <!-- 更新处理结果-->
+    <update id="updateQuestionReportStatusById">
+        update tb_question_report set is_process=1,process_result = #{result} where id=#{id}
+    </update>
+</mapper>
