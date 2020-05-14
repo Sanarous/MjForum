@@ -4,6 +4,9 @@ import lombok.Data;
 
 /**
  * WangEditor图片上传封装结果
+ *
+ * @author zuoxiang
+ * @date 2019/11/20
  */
 @Data
 public class WangEditorResult {

@@ -12,31 +12,40 @@ import cn.bestzuo.zuoforum.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 首页跳转控制器
+ *
+ * @author zuoxiang
+ * @date 2019/11/15
  */
 @Controller
 public class IndexController {
 
-    @Autowired
-    private UserInfoService userInfoService;
+    private final UserInfoService userInfoService;
+
+    private final QuestionService questionService;
+
+    private final QuestionTagService questionTagService;
+
+    private final TagService tagService;
+
+    private final UserRateService userRateService;
 
     @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private QuestionTagService questionTagService;
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private UserRateService userRateService;
+    public IndexController(UserInfoService userInfoService, QuestionService questionService, QuestionTagService questionTagService, TagService tagService, UserRateService userRateService) {
+        this.userInfoService = userInfoService;
+        this.questionService = questionService;
+        this.questionTagService = questionTagService;
+        this.tagService = tagService;
+        this.userRateService = userRateService;
+    }
 
     @GetMapping("/")
     public String index() {
@@ -50,7 +59,8 @@ public class IndexController {
 
     /**
      * 跳转到Java页面
-     * @return
+     *
+     * @return 页面
      */
     @GetMapping("/java")
     public String getIndex() {
@@ -59,7 +69,8 @@ public class IndexController {
 
     /**
      * 跳转到项目简介页面
-     * @return
+     *
+     * @return 页面
      */
     @GetMapping("/project")
     public String getProjectIndex() {
@@ -68,20 +79,21 @@ public class IndexController {
 
     /**
      * 跳转到标签搜索页面
-     * @param tagname
-     * @param model
-     * @return
+     *
+     * @param tagname 标签名
+     * @param model   Model
+     * @return 页面
      */
     @GetMapping("/tag")
-    public String getTagInfo(String tagname, Model model){
-        model.addAttribute("tagName",tagname);
+    public String getTagInfo(String tagname, Model model) {
+        model.addAttribute("tagName", tagname);
         return "post/tag";
     }
 
     /**
      * 查询最新的三个用户信息
      *
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getNewUserInfo")
     @ResponseBody
@@ -97,14 +109,15 @@ public class IndexController {
 
     /**
      * 获取积分排行前几位的用户信息
+     *
      * @return 通用返回结果
      */
     @RequestMapping("/getTopRateUserInfo")
     @ResponseBody
-    public ForumResult getTopRateUserInfo(){
+    public ForumResult getTopRateUserInfo() {
         List<UserRate> userRates = userRateService.selectTopRateUserInfo();
         List<UserRateVO> res = new ArrayList<>();
-        for(UserRate rate : userRates){
+        for (UserRate rate : userRates) {
             UserInfo userInfo = userInfoService.selectUserInfoByUid(rate.getUserId());
             UserRateVO vo = new UserRateVO();
             vo.setUid(userInfo.getUId());
@@ -115,14 +128,14 @@ public class IndexController {
             vo.setAvatar(userInfo.getAvatar());
             res.add(vo);
         }
-        return new ForumResult(200,"查询成功",res);
+        return new ForumResult(200, "查询成功", res);
     }
 
     /**
      * 将UserInfo转换成VO对象
      *
-     * @param userInfo  后端用户信息
-     * @return  前端展示的用户信息
+     * @param userInfo 后端用户信息
+     * @return 前端展示的用户信息
      */
     private UserInfoVO convertUserInfoToVO(UserInfo userInfo) {
         UserInfoVO userInfoVO = new UserInfoVO();
@@ -165,15 +178,12 @@ public class IndexController {
      * 将Question转换成前端VO
      *
      * @param question 问题实体类
-     * @return  前端展示的问题信息
+     * @return 前端展示的问题信息
      */
     private UserIndexQuestionVO convertQuestionToVO(Question question) {
         UserIndexQuestionVO vo = new UserIndexQuestionVO();
         vo.setId(question.getId());
-        if (question.getTitle().length() > 20) {
-            vo.setTitle(question.getTitle().substring(0, 20) + "...");
-        } else
-            vo.setTitle(question.getTitle());
+        vo.setTitle(question.getTitle().length() > 20 ? question.getTitle().substring(0, 20) + "..." : question.getTitle());
         vo.setViewCount(question.getViewCount());
         return vo;
     }
@@ -194,7 +204,7 @@ public class IndexController {
             for (Integer i : list) {
                 //根据标签ID查询对应的标签信息，此处只需要默认存在的标签
                 Tags tagInfo = tagService.selectTagByTagId(i);
-                if(tagInfo.getIsOriginTag() == 1){
+                if (tagInfo.getIsOriginTag() == 1) {
                     tagNames.add(tagInfo.getTagsName());
                 }
             }

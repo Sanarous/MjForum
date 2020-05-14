@@ -10,7 +10,7 @@ import java.util.List;
  * 自定义全局响应结果包装体
  * 用于包装通用返回结果，响应给页面json解析
  *
- * @autor zuoxiang
+ * @author zuoxiang
  * @date 2019/11/15
  */
 @Data
@@ -70,9 +70,9 @@ public class ForumResult {
 
     /**
      * 将json对象转换成ForumResult对象
-     * @param jsonData
-     * @param clazz
-     * @return
+     * @param jsonData  json数据
+     * @param clazz   对象
+     * @return 包装结果
      */
     public static ForumResult formatToPojo(String jsonData,Class<?> clazz){
         try {
@@ -97,8 +97,8 @@ public class ForumResult {
 
     /**
      * 没有Object对象的转换
-     * @param json
-     * @return
+     * @param json  json数据
+     * @return 包装结果
      */
     public static ForumResult format(String json){
         try {
@@ -111,9 +111,9 @@ public class ForumResult {
 
     /**
      * 将json数据转换成集合对象
-     * @param jsonData
-     * @param clazz
-     * @return
+     * @param jsonData json数据
+     * @param clazz  对象
+     * @return 包装结果
      */
     public static ForumResult formatToList(String jsonData,Class<?> clazz){
         try {

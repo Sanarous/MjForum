@@ -1,15 +1,12 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
-import cn.bestzuo.zuoforum.common.LayuiFlowResult;
 import cn.bestzuo.zuoforum.pojo.CommentReply;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.CommentReplyService;
 import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,18 +17,25 @@ import java.util.List;
 
 /**
  * 评论楼中楼回复Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/21
  */
 @Controller
 public class CommentReplyController {
 
-    @Autowired
-    private CommentReplyService commentReplyService;
+    private final CommentReplyService commentReplyService;
+
+    private final UserInfoService userInfoService;
+
+    private final QuestionService questionService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private QuestionService questionService;
+    public CommentReplyController(CommentReplyService commentReplyService, UserInfoService userInfoService, QuestionService questionService) {
+        this.commentReplyService = commentReplyService;
+        this.userInfoService = userInfoService;
+        this.questionService = questionService;
+    }
 
     /**
      * 楼中楼回复
@@ -41,7 +45,7 @@ public class CommentReplyController {
      * @param content         回复内容
      * @param parentCommentId 父评论ID
      * @param replyfor        被回复者
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/reply")
     @ResponseBody
@@ -86,7 +90,7 @@ public class CommentReplyController {
      * 查询楼中楼回复
      *
      * @param parentCommentId 父评论ID
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/queryReply")
     @ResponseBody
@@ -99,7 +103,7 @@ public class CommentReplyController {
      * 查询一个评论下所有的回复数
      *
      * @param parentCommentId  父评论ID
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getReplyNum")
     @ResponseBody

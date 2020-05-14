@@ -4,6 +4,9 @@ import lombok.Data;
 
 /**
  * 富文本编辑器图片上传成功后返回的包装结果
+ *
+ * @author zuoxiang
+ * @date 2019/11/20
  */
 @Data
 public class LayEditUploadImageResult {

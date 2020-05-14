@@ -2,12 +2,13 @@ package cn.bestzuo.zuoforum.mapper;
 
 
 import cn.bestzuo.zuoforum.pojo.QuestionTag;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 问题与标签Mapper
+ */
 @Component
 public interface QuestionTagMapper {
 

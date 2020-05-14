@@ -7,7 +7,6 @@ import cn.bestzuo.zuoforum.service.IMailService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import cn.bestzuo.zuoforum.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,21 +21,28 @@ import java.util.regex.Pattern;
 
 /**
  * 邮箱验证Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/18
  */
 @Controller
 public class EmailCheckController {
 
-    @Autowired
-    private IMailService mailService;
+    private final IMailService mailService;
+
+    private final EmailService emailService;
+
+    private final UserInfoService userInfoService;
+
+    private final RedisUtil redisUtil;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private RedisUtil redisUtil;
+    public EmailCheckController(IMailService mailService, EmailService emailService, UserInfoService userInfoService, RedisUtil redisUtil) {
+        this.mailService = mailService;
+        this.emailService = emailService;
+        this.userInfoService = userInfoService;
+        this.redisUtil = redisUtil;
+    }
 
     /**
      * 验证邮件
@@ -77,7 +83,7 @@ public class EmailCheckController {
 
 
     /**
-     * 邮箱眼睁睁
+     * 邮箱验证
      * @param verifyCode  用户输入的验证码
      * @param username   用户名
      * @param email   邮箱

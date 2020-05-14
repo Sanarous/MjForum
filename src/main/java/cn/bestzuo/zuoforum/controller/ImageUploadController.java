@@ -5,7 +5,6 @@ import cn.bestzuo.zuoforum.common.LayEditUploadImageResult;
 import cn.bestzuo.zuoforum.common.WangEditorResult;
 import cn.bestzuo.zuoforum.pojo.UploadImage;
 import cn.bestzuo.zuoforum.service.UserInfoService;
-import cn.bestzuo.zuoforum.util.QiniuUtils;
 import cn.bestzuo.zuoforum.util.TencentCOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,9 @@ import java.io.IOException;
 
 /**
  * 图片上传Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/19
  */
 @Controller
 public class ImageUploadController {
@@ -28,8 +30,12 @@ public class ImageUploadController {
     @Value("${tencent.path}")
     private String IMAGE_PATH;
 
+    private final UserInfoService userInfoService;
+
     @Autowired
-    private UserInfoService userInfoService;
+    public ImageUploadController(UserInfoService userInfoService) {
+        this.userInfoService = userInfoService;
+    }
 
     /**
      * 上传头像
@@ -41,6 +47,7 @@ public class ImageUploadController {
         String fileName = multipartFile.getOriginalFilename();
 
         //判断有无后缀
+        assert fileName != null;
         if (fileName.lastIndexOf(".") < 0)
             return new ForumResult(500, "上传图片格式不正确", null);
 
@@ -90,8 +97,8 @@ public class ImageUploadController {
     /**
      * 富文本编辑器中上传图片信息
      *
-     * @param multipartFile
-     * @return
+     * @param multipartFile 文件
+     * @return 包装结果
      */
     @RequestMapping("/uploadImage")
     @ResponseBody
@@ -140,8 +147,8 @@ public class ImageUploadController {
      * 问题发布时的图片上传
      *
      * @param multipartFile  文件，限制为图片
-     * @return
-     * @throws IOException
+     * @return 包装结果
+     * @throws IOException 异常
      */
     @RequestMapping("/uploadQuestionImages")
     @ResponseBody
@@ -165,10 +172,6 @@ public class ImageUploadController {
         try {
             //调用腾讯云工具上传文件
             imageName = TencentCOS.uploadfile(excelFile, "info");
-
-            //调用七牛云工具上传图片
-//            QiniuUtils utils = new QiniuUtils();
-//            imageName = utils.uploadImg(excelFile,iName);
 
         } catch (Exception e) {
             e.printStackTrace();

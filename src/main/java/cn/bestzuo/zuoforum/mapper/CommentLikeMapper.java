@@ -1,11 +1,13 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.CommentLike;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 点赞Mapper
+ */
 @Component
 public interface CommentLikeMapper {
 
@@ -22,7 +24,7 @@ public interface CommentLikeMapper {
      * @param likeName
      * @return
      */
-    CommentLike selectCommentLike(Integer commentId,String likeName);
+    CommentLike selectCommentLike(Integer commentId, String likeName);
 
     /**
      * 更新点赞状态
@@ -31,7 +33,7 @@ public interface CommentLikeMapper {
      * @param time
      * @return
      */
-    int updateCommentLike(int status,String time,Integer id);
+    int updateCommentLike(int status, String time, Integer id);
 
     /**
      * 查询某个评论下的点赞数

@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 /**
  * 自定义404页面
  * @author zuoxiang
- * @version 1.0
  * @date 2020/5/5 22:15
  */
 @Configuration

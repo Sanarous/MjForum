@@ -1,26 +1,26 @@
 package cn.bestzuo.zuoforum.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import cn.bestzuo.zuoforum.common.ForumResult;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.thymeleaf.util.StringUtils;
+
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 
 /**
  * 弃用的图片验证码生成Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/18
  */
 @Controller
 public class KaptchaController {
@@ -28,8 +28,12 @@ public class KaptchaController {
     /**
      * 1、验证码工具
      */
+    private final DefaultKaptcha defaultKaptcha;
+
     @Autowired
-    DefaultKaptcha defaultKaptcha;
+    public KaptchaController(DefaultKaptcha defaultKaptcha) {
+        this.defaultKaptcha = defaultKaptcha;
+    }
 
     /**
      * 2、生成验证码

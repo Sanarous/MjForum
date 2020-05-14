@@ -3,8 +3,12 @@ package cn.bestzuo.zuoforum.controller;
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.common.LayuiFlowResult;
 import cn.bestzuo.zuoforum.pojo.*;
-import cn.bestzuo.zuoforum.pojo.vo.*;
+import cn.bestzuo.zuoforum.pojo.vo.FollowVO;
+import cn.bestzuo.zuoforum.pojo.vo.UserIndexCommentsVO;
+import cn.bestzuo.zuoforum.pojo.vo.UserIndexInfoVO;
+import cn.bestzuo.zuoforum.pojo.vo.UserIndexQuestionVO;
 import cn.bestzuo.zuoforum.service.*;
+import cn.bestzuo.zuoforum.util.CommonUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,40 +20,46 @@ import org.thymeleaf.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * 用户主页Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/22
  */
 @Controller
 public class UserIndexController {
 
-    @Autowired
-    private CollectionService collectionService;
+    private final CollectionService collectionService;
+
+    private final UserInfoService userInfoService;
+
+    private final QuestionService questionService;
+
+    private final CommentService commentService;
+
+    private final FollowService followService;
+
+    private final CommentLikeService commentLikeService;
+
+    private final UserRateService userRateService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private FollowService followService;
-
-    @Autowired
-    private CommentLikeService commentLikeService;
-
-    @Autowired
-    private UserRateService userRateService;
+    public UserIndexController(CollectionService collectionService, UserInfoService userInfoService, QuestionService questionService, CommentService commentService, FollowService followService, CommentLikeService commentLikeService, UserRateService userRateService) {
+        this.collectionService = collectionService;
+        this.userInfoService = userInfoService;
+        this.questionService = questionService;
+        this.commentService = commentService;
+        this.followService = followService;
+        this.commentLikeService = commentLikeService;
+        this.userRateService = userRateService;
+    }
 
     /**
      * 查询对应的用户名
      *
-     * @param token
-     * @return
+     * @param token  用户ID
+     * @return 用户名
      */
     @RequestMapping("/user/{token}")
     public String userIndex(@PathVariable(value = "token") String token, Model model) {
@@ -60,9 +70,7 @@ public class UserIndexController {
         int uid = Integer.parseInt(token);
         //查询用户ID
         UserInfo userInfo = userInfoService.selectUserInfoByUid(uid);
-        if (userInfo == null) {
-            return "404";
-        }
+        if (userInfo == null) return "404";
         //保存用户信息
         model.addAttribute("username", userInfo.getUsername());
         return "user/user";
@@ -72,8 +80,8 @@ public class UserIndexController {
     /**
      * 获取首页用户信息
      *
-     * @param username
-     * @return
+     * @param username  用户名
+     * @return 包装结果
      */
     @RequestMapping("/getUserIndexInfo")
     @ResponseBody
@@ -125,7 +133,7 @@ public class UserIndexController {
     /**
      * 获取我的问题信息
      *
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getMyQuestions")
     @ResponseBody
@@ -162,8 +170,8 @@ public class UserIndexController {
     /**
      * 将Question信息转换成前端VO
      *
-     * @param question
-     * @return
+     * @param question  问题信息
+     * @return 前端VO类
      */
     private UserIndexQuestionVO convertQuestionToVO(Question question) {
         UserIndexQuestionVO vo = new UserIndexQuestionVO();
@@ -174,51 +182,15 @@ public class UserIndexController {
         vo.setGmtCreate(question.getGmtCreate());
         vo.setViewCount(question.getViewCount());
 
-        String text = Html2Text(question.getDescription());
-        if (text.length() > 20) {
-            vo.setDescription(text.substring(0, 20) + "...");
-        } else
-            vo.setDescription(text);
+        String text = CommonUtils.Html2Text(question.getDescription());
+        vo.setDescription(text.length() > 20 ? text.substring(0, 20) + "..." : text);
         return vo;
-    }
-
-    //从html中提取纯文本
-    private String Html2Text(String inputString) {
-        String htmlStr = inputString; // 含html标签的字符串
-        String textStr = "";
-        Pattern p_script;
-        java.util.regex.Matcher m_script;
-        Pattern p_style;
-        java.util.regex.Matcher m_style;
-        Pattern p_html;
-        java.util.regex.Matcher m_html;
-        try {
-            String regEx_script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>"; // 定义script的正则表达式{或<script[^>]*?>[\\s\\S]*?<\\/script>
-            String regEx_style = "<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>"; // 定义style的正则表达式{或<style[^>]*?>[\\s\\S]*?<\\/style>
-            String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
-            p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
-            m_script = p_script.matcher(htmlStr);
-            htmlStr = m_script.replaceAll(""); // 过滤script标签
-            p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
-            m_style = p_style.matcher(htmlStr);
-            htmlStr = m_style.replaceAll(""); // 过滤style标签
-            p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
-            m_html = p_html.matcher(htmlStr);
-            htmlStr = m_html.replaceAll(""); // 过滤html标签
-            textStr = htmlStr;
-        } catch (Exception e) {
-            System.err.println("Html2Text: " + e.getMessage());
-        }
-        //剔除空格行
-        textStr = textStr.replaceAll("[ ]+", " ");
-        textStr = textStr.replaceAll("(?m)^\\s*$(\\n|\\r\\n)", "");
-        return textStr;// 返回文本字符串
     }
 
     /**
      * 获取我的评论信息
      *
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getMyCommentInfo")
     @ResponseBody
@@ -253,7 +225,7 @@ public class UserIndexController {
     /**
      * 将评论信息转换成前端VO
      *
-     * @param comment
+     * @param comment  评论信息
      */
     private UserIndexCommentsVO convertCommentToVO(Comment comment) {
         UserIndexCommentsVO vo = new UserIndexCommentsVO();
@@ -264,26 +236,17 @@ public class UserIndexController {
         vo.setQuestionId(comment.getQuestionId());
 
         //设置评论内容
-        String text = Html2Text(comment.getComment());
-        if (text.length() > 20) {
-            vo.setComment(text.substring(0, 20) + "...");
-        } else
-            vo.setComment(text);
+        String text = CommonUtils.Html2Text((comment.getComment()));
+        vo.setComment(text.length() > 20 ? text.substring(0, 20) + "..." : text);
 
         Question question = questionService.selectByPrimaryKey(comment.getQuestionId());
-        if (question.getTitle().length() > 20) {
-            vo.setTitle(question.getTitle().substring(0, 20) + "...");
-        } else
-            vo.setTitle(question.getTitle());
+        vo.setTitle(question.getTitle().length() > 20 ? question.getTitle().substring(0, 20) + "..." : question.getTitle());
 
         vo.setViewCount(question.getViewCount());
 
         //设置问题主体内容
-        String contents = Html2Text(question.getDescription());
-        if (contents.length() > 20) {
-            vo.setContents(contents.substring(0, 20) + "...");
-        } else
-            vo.setContents(text);
+        String contents = CommonUtils.Html2Text(question.getDescription());
+        vo.setContents(contents.length() > 20 ? contents.substring(0, 20) + "..." : text);
 
         vo.setViewCount(question.getViewCount());
         vo.setCommentCount(question.getCommentCount());
@@ -295,8 +258,8 @@ public class UserIndexController {
     /**
      * 我的收藏信息
      *
-     * @param username
-     * @return
+     * @param username  用户名
+     * @return 包装结果
      */
     @RequestMapping("/getMyCollection")
     @ResponseBody
@@ -333,7 +296,7 @@ public class UserIndexController {
      * 获取我的热门问题
      *
      * @param username 用户名
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getMyHotQuestions")
     @ResponseBody
@@ -367,7 +330,7 @@ public class UserIndexController {
     /**
      * 关注信息跳转
      *
-     * @return
+     * @return 页面
      */
     @GetMapping("/myfollow")
     public String index(@RequestParam(value = "choose", defaultValue = "follow") String choose, Model model) {
@@ -378,8 +341,8 @@ public class UserIndexController {
     /**
      * 获取我的关注人信息
      *
-     * @param username
-     * @return
+     * @param username  用户名
+     * @return 包装结果
      */
     @RequestMapping("/getFollowInfo")
     @ResponseBody
@@ -410,8 +373,8 @@ public class UserIndexController {
     /**
      * 将Follow转转成前端VO
      *
-     * @param follow
-     * @return
+     * @param follow  关注信息
+     * @return 前端VO
      */
     private FollowVO convertFollowToVO(Follow follow) {
         FollowVO vo = new FollowVO();
@@ -464,7 +427,7 @@ public class UserIndexController {
      * 获取粉丝信息
      *
      * @param username 用户名
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getFansInfo")
     @ResponseBody
@@ -496,7 +459,7 @@ public class UserIndexController {
      * 将Fans转转成前端VO
      *
      * @param follow 关注者
-     * @return
+     * @return 前端VO
      */
     private FollowVO convertFansToVO(Follow follow) {
         FollowVO vo = new FollowVO();

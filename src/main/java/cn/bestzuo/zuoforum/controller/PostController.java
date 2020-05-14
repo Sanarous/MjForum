@@ -1,49 +1,54 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
-import cn.bestzuo.zuoforum.mapper.QuestionEditMapper;
-import cn.bestzuo.zuoforum.mapper.UserInfoMapper;
-import cn.bestzuo.zuoforum.mapper.UserRateMapper;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.QuestionEdit;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.pojo.UserRate;
 import cn.bestzuo.zuoforum.pojo.vo.QuestionVO;
 import cn.bestzuo.zuoforum.service.*;
-import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 问题跳转Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/16
  */
 @Controller
 public class PostController {
 
-    @Autowired
-    private QuestionService questionService;
+    private final QuestionService questionService;
+
+    private final UserInfoService userInfoService;
+
+    private final UserRateService userRateService;
+
+    private final TagService tagService;
+
+    private final QuestionReportService questionReportService;
+
+    private final QuestionEditService questionEditService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private UserRateService userRateService;
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private QuestionReportService questionReportService;
-
-    @Autowired
-    private QuestionEditService questionEditService;
+    public PostController(QuestionService questionService, UserInfoService userInfoService, UserRateService userRateService, TagService tagService, QuestionReportService questionReportService, QuestionEditService questionEditService) {
+        this.questionService = questionService;
+        this.userInfoService = userInfoService;
+        this.userRateService = userRateService;
+        this.tagService = tagService;
+        this.questionReportService = questionReportService;
+        this.questionEditService = questionEditService;
+    }
 
     /**
      * 点击进入问题详情

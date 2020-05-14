@@ -4,7 +4,6 @@ import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.pojo.vo.QuestionVO;
-import cn.bestzuo.zuoforum.pojo.vo.UserIndexQuestionVO;
 import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.QuestionTagService;
 import cn.bestzuo.zuoforum.service.TagService;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,23 +22,26 @@ import java.util.List;
 /**
  * 标签管理Controller
  * @author zuoxiang
- * @version 1.0
  * @date 2020/5/1 22:27
  */
 @Controller
 public class TagController {
 
-    @Autowired
-    private TagService tagService;
+    private final TagService tagService;
+
+    private final QuestionTagService questionTagService;
+
+    private final QuestionService questionService;
+
+    private final UserInfoService userInfoService;
 
     @Autowired
-    private QuestionTagService questionTagService;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private UserInfoService userInfoService;
+    public TagController(TagService tagService, QuestionTagService questionTagService, QuestionService questionService, UserInfoService userInfoService) {
+        this.tagService = tagService;
+        this.questionTagService = questionTagService;
+        this.questionService = questionService;
+        this.userInfoService = userInfoService;
+    }
 
 
     /**

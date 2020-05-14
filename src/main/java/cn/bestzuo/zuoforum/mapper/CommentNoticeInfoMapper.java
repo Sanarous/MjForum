@@ -1,11 +1,13 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.CommentNoticeInfo;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 评论通知Mapper
+ */
 @Component
 public interface CommentNoticeInfoMapper {
     List<CommentNoticeInfo> selectCommentNoticeByName(String noticeName);

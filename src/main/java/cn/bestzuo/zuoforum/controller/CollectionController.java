@@ -9,6 +9,7 @@ import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,18 +21,25 @@ import java.util.Date;
 
 /**
  * 问题收藏Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/23
  */
 @Controller
 public class CollectionController {
 
-    @Autowired
-    private CollectionService collectionService;
+    private final CollectionService collectionService;
+
+    private final UserInfoService userInfoService;
+
+    private final QuestionService questionService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private QuestionService questionService;
+    public CollectionController(CollectionService collectionService, UserInfoService userInfoService, QuestionService questionService) {
+        this.collectionService = collectionService;
+        this.userInfoService = userInfoService;
+        this.questionService = questionService;
+    }
 
 
     /**
@@ -39,9 +47,9 @@ public class CollectionController {
      *
      * @param username  用户名
      * @param questionId  问题ID
-     * @return
+     * @return 包装结果
      */
-    @RequestMapping("/getCollectionStatus")
+    @GetMapping("/getCollectionStatus")
     @ResponseBody
     public ForumResult getCollectionStatus(@RequestParam("username") String username,
                                            @RequestParam("questionId") Integer questionId) {
@@ -61,7 +69,7 @@ public class CollectionController {
      *
      * @param username   用户名
      * @param questionId  问题ID
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/collect")
     @ResponseBody

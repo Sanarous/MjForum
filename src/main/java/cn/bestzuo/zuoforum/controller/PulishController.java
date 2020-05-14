@@ -1,9 +1,9 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.User;
 import cn.bestzuo.zuoforum.service.QuestionService;
-import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.service.QuestionTagService;
 import cn.bestzuo.zuoforum.service.TagService;
 import cn.bestzuo.zuoforum.service.UserService;
@@ -15,25 +15,32 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 
 /**
  * 发布问题Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/17
  */
 @Controller
 public class PulishController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    private final QuestionService questionService;
+
+    private final TagService tagService;
+
+    private final QuestionTagService questionTagService;
 
     @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private QuestionTagService questionTagService;
+    public PulishController(UserService userService, QuestionService questionService, TagService tagService, QuestionTagService questionTagService) {
+        this.userService = userService;
+        this.questionService = questionService;
+        this.tagService = tagService;
+        this.questionTagService = questionTagService;
+    }
 
     @GetMapping("/publish")
     public String index() {

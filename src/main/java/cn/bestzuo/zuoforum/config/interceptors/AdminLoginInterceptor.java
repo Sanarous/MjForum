@@ -13,7 +13,6 @@ import java.io.IOException;
 
 /**
  * @author zuoxiang
- * @version 1.0
  * @date 2020/5/5 21:39
  */
 @Component

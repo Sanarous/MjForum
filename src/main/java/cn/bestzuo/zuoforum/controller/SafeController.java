@@ -10,12 +10,19 @@ import org.thymeleaf.util.StringUtils;
 
 /**
  * 安全设置Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/16
  */
 @Controller
 public class SafeController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public SafeController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/safe")
     public String index(){

@@ -1,15 +1,14 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.UserRate;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * 用户积分Mapper
+ *
  * @author zuoxiang
- * @version 1.0
  * @date 2020/5/6 14:13
  */
 @Component

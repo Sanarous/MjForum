@@ -10,7 +10,7 @@
     </parent>
     <groupId>cn.bestzuo</groupId>
     <artifactId>zuoforum</artifactId>
-    <version>v2.0.101</version>
+    <version>v2.0.102</version>
     <name>zuoforum</name>
     <description>码匠论坛——程序员交流论坛</description>
 

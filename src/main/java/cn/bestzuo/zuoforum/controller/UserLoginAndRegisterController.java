@@ -1,5 +1,6 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.pojo.EmailInfo;
 import cn.bestzuo.zuoforum.pojo.User;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
@@ -7,10 +8,8 @@ import cn.bestzuo.zuoforum.pojo.vo.UserVO;
 import cn.bestzuo.zuoforum.service.EmailService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import cn.bestzuo.zuoforum.service.UserService;
-import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.util.MD5Password;
 import cn.bestzuo.zuoforum.util.VerifyCode;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,30 +21,33 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.awt.SystemColor.info;
 
 /**
  * 用户登录注册Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/16
  */
 @Controller
 public class UserLoginAndRegisterController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    private final EmailService emailService;
+
+    private final UserInfoService userInfoService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private UserInfoService userInfoService;
+    public UserLoginAndRegisterController(UserService userService, EmailService emailService, UserInfoService userInfoService) {
+        this.userService = userService;
+        this.emailService = emailService;
+        this.userInfoService = userInfoService;
+    }
 
     /**
      * 跳转到注册页面
      *
-     * @return
+     * @return 页面
      */
     @GetMapping("/register")
     public String register() {
@@ -55,7 +57,7 @@ public class UserLoginAndRegisterController {
     /**
      * 跳转到登录页面
      *
-     * @return
+     * @return 页面
      */
     @GetMapping("/login")
     public String login() {
@@ -92,8 +94,8 @@ public class UserLoginAndRegisterController {
     /**
      * 查询该用户名是否已被注册
      *
-     * @param username
-     * @return
+     * @param username 用户名
+     * @return 包装结果
      */
     @RequestMapping("/getUserByName")
     @ResponseBody

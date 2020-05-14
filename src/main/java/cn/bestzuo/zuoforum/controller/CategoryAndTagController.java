@@ -1,10 +1,10 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.pojo.Categories;
 import cn.bestzuo.zuoforum.pojo.Tags;
 import cn.bestzuo.zuoforum.service.CategoryService;
 import cn.bestzuo.zuoforum.service.TagService;
-import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,15 +15,22 @@ import java.util.List;
 
 /**
  * 问题分类和标签Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/21
  */
 @Controller
 public class CategoryAndTagController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    private final TagService tagService;
 
     @Autowired
-    private TagService tagService;
+    public CategoryAndTagController(CategoryService categoryService, TagService tagService) {
+        this.categoryService = categoryService;
+        this.tagService = tagService;
+    }
 
     /**
      * 获取问题分类信息

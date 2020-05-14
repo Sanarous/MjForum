@@ -1,11 +1,11 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.QuestionEdit;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.pojo.vo.QuestionVO;
 import cn.bestzuo.zuoforum.service.QuestionService;
-import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.service.TagService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import com.github.pagehelper.PageHelper;
@@ -22,18 +22,25 @@ import java.util.List;
 
 /**
  * 问题Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/15
  */
 @Controller
 public class QuestionController {
 
-    @Autowired
-    private QuestionService questionService;
+    private final QuestionService questionService;
+
+    private final UserInfoService userInfoService;
+
+    private final TagService tagService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private TagService tagService;
+    public QuestionController(QuestionService questionService, UserInfoService userInfoService, TagService tagService) {
+        this.questionService = questionService;
+        this.userInfoService = userInfoService;
+        this.tagService = tagService;
+    }
 
     /**
      * 获取所有问题信息

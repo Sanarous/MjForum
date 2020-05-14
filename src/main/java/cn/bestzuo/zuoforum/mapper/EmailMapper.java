@@ -1,12 +1,14 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.EmailInfo;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/**
+ * 邮箱Mapper
+ */
 @Component
 public interface EmailMapper {
 

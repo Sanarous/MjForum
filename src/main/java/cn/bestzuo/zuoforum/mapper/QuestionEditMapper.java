@@ -1,16 +1,14 @@
 package cn.bestzuo.zuoforum.mapper;
 
-import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.QuestionEdit;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * 问题加精与置顶mapper
+ *
  * @author zuoxiang
- * @version 1.0
  * @date 2020/5/3 11:00
  */
 @Component

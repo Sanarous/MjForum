@@ -19,24 +19,31 @@ import java.util.Date;
 
 /**
  * 评论点赞Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/21
  */
 @Controller
 public class CommentLikeController {
 
-    @Autowired
-    private CommentLikeService commentLikeService;
+    private final CommentLikeService commentLikeService;
+
+    private final UserInfoService userInfoService;
+
+    private final CommentService commentService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private CommentService commentService;
+    public CommentLikeController(CommentLikeService commentLikeService, UserInfoService userInfoService, CommentService commentService) {
+        this.commentLikeService = commentLikeService;
+        this.userInfoService = userInfoService;
+        this.commentService = commentService;
+    }
 
     /**
      * 查询某一评论下的点赞数
      *
      * @param commentId  评论ID
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getLikeCount")
     @ResponseBody
@@ -52,7 +59,7 @@ public class CommentLikeController {
      * @param commentId   评论ID
      * @param commentUsername   评论用户名
      * @param questionId   问题ID
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getLikeStatus")
     @ResponseBody
@@ -82,7 +89,7 @@ public class CommentLikeController {
      * @param commentId   评论ID
      * @param commentUsername  评论用户名
      * @param questionId    问题ID
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/like")
     @ResponseBody

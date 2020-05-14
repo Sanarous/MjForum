@@ -1,14 +1,12 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.Collection;
-import org.apache.ibatis.annotations.Mapper;
-import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * 收藏问题
+ * 收藏问题Mapper
  */
 @Component
 public interface CollectionMapper {

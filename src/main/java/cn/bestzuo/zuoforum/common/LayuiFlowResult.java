@@ -1,15 +1,12 @@
 package cn.bestzuo.zuoforum.common;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * Layui流式加载响应返回包装结果
+ *
  * @author zuoxiang
- * @version 1.0
  * @date 2020/5/8 19:42
  */
 @Data

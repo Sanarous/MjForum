@@ -1,11 +1,13 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.User;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 用户Mapper
+ */
 @Component
 public interface UserMapper {
 
@@ -37,7 +39,7 @@ public interface UserMapper {
      * @param newPassword
      * @return
      */
-    int updatePassword(String username,String newPassword);
+    int updatePassword(String username, String newPassword);
 
     /**
      * 根据用户Id删除用户信息

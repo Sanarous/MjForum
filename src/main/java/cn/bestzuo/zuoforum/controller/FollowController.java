@@ -17,22 +17,29 @@ import java.util.Date;
 
 /**
  * 关注Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/22
  */
 @Controller
 public class FollowController {
 
-    @Autowired
-    private FollowService followService;
+    private final FollowService followService;
+
+    private final UserInfoService userInfoService;
 
     @Autowired
-    private UserInfoService userInfoService;
+    public FollowController(FollowService followService, UserInfoService userInfoService) {
+        this.followService = followService;
+        this.userInfoService = userInfoService;
+    }
 
     /**
      * 查询关注状态
      *
      * @param userName    被关注者用户名
      * @param followName   关注者用户名
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getFollowStatus")
     @ResponseBody
@@ -63,7 +70,7 @@ public class FollowController {
      *
      * @param userName   被关注者
      * @param followName 关注者
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/follow")
     @ResponseBody

@@ -1,11 +1,13 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.CommentReply;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 楼中楼回复Mapper
+ */
 @Component
 public interface CommentReplyMapper {
 

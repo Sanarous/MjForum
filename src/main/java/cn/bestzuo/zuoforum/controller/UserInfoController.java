@@ -1,8 +1,8 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.UserInfoService;
-import cn.bestzuo.zuoforum.common.ForumResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +15,19 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户信息Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/24
  */
 @Controller
 public class UserInfoController {
 
+    private final UserInfoService userInfoService;
+
     @Autowired
-    private UserInfoService userInfoService;
+    public UserInfoController(UserInfoService userInfoService) {
+        this.userInfoService = userInfoService;
+    }
 
 
     /**
@@ -43,7 +50,7 @@ public class UserInfoController {
      * 根据用户名获取用户头像地址
      *
      * @param username 用户名
-     * @return
+     * @return 包装结果
      */
     @GetMapping("/getavatar")
     @ResponseBody
@@ -56,8 +63,8 @@ public class UserInfoController {
     /**
      * 根据用户名查询用户信息，回显到页面上
      *
-     * @param username
-     * @return
+     * @param username 用户名
+     * @return 包装结果
      */
     @GetMapping("/getUserInfo")
     @ResponseBody
@@ -72,8 +79,8 @@ public class UserInfoController {
     /**
      * 根据用户ID查询用户信息
      *
-     * @param uid
-     * @return
+     * @param uid  用户ID
+     * @return 包装结果
      */
     @GetMapping("/getUserInfoByUid")
     @ResponseBody
@@ -89,7 +96,7 @@ public class UserInfoController {
     /**
      * 根据用户名更新用户信息
      *
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/updateUserInfo")
     @ResponseBody
@@ -106,7 +113,7 @@ public class UserInfoController {
     /**
      * 根据用户UID更新用户信息
      *
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/updateUserInfoByUid")
     @ResponseBody
@@ -120,7 +127,5 @@ public class UserInfoController {
             return new ForumResult(500, "更新信息失败", null);
         }
     }
-
-
 }
 

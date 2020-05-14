@@ -3,11 +3,13 @@ package cn.bestzuo.zuoforum.util;
 import java.util.regex.Pattern;
 
 /**
+ *
+ *  通用工具类
  * @author zuoxiang
- * @version 1.0
  * @date 2020/5/1 15:06
  */
 public class CommonUtils {
+
     //从html中提取纯文本
     public static String Html2Text(String inputString) {
         String htmlStr = inputString; // 含html标签的字符串

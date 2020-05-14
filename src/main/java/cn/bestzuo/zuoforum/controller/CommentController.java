@@ -25,21 +25,28 @@ import java.util.List;
 
 /**
  * 评论Controller
+ *
+ * @author zuoxiang
+ * @date 2019/11/21
  */
 @Controller
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
+
+    private final UserInfoService userInfoService;
+
+    private final QuestionService questionService;
+
+    private final UserRateService userRateService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private UserRateService userRateService;
+    public CommentController(CommentService commentService, UserInfoService userInfoService, QuestionService questionService, UserRateService userRateService) {
+        this.commentService = commentService;
+        this.userInfoService = userInfoService;
+        this.questionService = questionService;
+        this.userRateService = userRateService;
+    }
 
     /**
      * 新增评论
@@ -88,7 +95,7 @@ public class CommentController {
      * 根据问题ID查询问题一级评论信息
      *
      * @param questionId 问题ID
-     * @return
+     * @return 包装结果
      */
     @RequestMapping("/getCommentsByQuestionId")
     @ResponseBody
@@ -115,7 +122,7 @@ public class CommentController {
      * 将Comment转换成前端VO
      *
      * @param comment 评论
-     * @return
+     * @return 前端VO
      */
     private CommentVO convertCommentToVO(Comment comment) {
         CommentVO vo = new CommentVO();
@@ -154,7 +161,6 @@ public class CommentController {
         }
 
         //判断用户积分等级
-        Question question = questionService.selectByPrimaryKey(comment.getQuestionId());
         UserRate userRate = userRateService.selectRateById(comment.getUid());
         if (userRate == null) {
             vo.setRate("暂无");
@@ -174,7 +180,6 @@ public class CommentController {
             else
                 vo.setRate("码圣");
         }
-
         return vo;
     }
 }

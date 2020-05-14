@@ -1,11 +1,13 @@
 package cn.bestzuo.zuoforum.mapper;
 
 import cn.bestzuo.zuoforum.pojo.UserInfo;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 用户信息Mapper
+ */
 @Component
 public interface UserInfoMapper {
 

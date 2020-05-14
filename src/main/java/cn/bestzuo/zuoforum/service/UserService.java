@@ -1,10 +1,12 @@
 package cn.bestzuo.zuoforum.service;
 
 import cn.bestzuo.zuoforum.pojo.User;
-import cn.bestzuo.zuoforum.common.ForumResult;
 
 import java.util.List;
 
+/**
+ * 用户Service
+ */
 public interface UserService {
 
     /**
