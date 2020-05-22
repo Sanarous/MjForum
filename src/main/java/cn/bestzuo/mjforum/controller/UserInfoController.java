@@ -1,15 +1,13 @@
 package cn.bestzuo.mjforum.controller;
 
+import cn.bestzuo.mjforum.admin.controller.VO.UserInfoVO;
 import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.UserInfo;
 import cn.bestzuo.mjforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,9 +35,10 @@ public class UserInfoController {
      * @param model   Model
      * @return 页面
      */
-    @RequestMapping("/user/settings")
+    @GetMapping("/user/settings")
     public String userInfo(HttpServletRequest request, Model model) {
         String username = (String) request.getSession().getAttribute("username");
+
         if (username != null) {
             model.addAttribute("username", username);
         }
@@ -98,7 +97,7 @@ public class UserInfoController {
      *
      * @return 包装结果
      */
-    @RequestMapping("/updateUserInfo")
+    @PutMapping("/updateUserInfo")
     @ResponseBody
     public ForumResult updateUserInfo(UserInfo userInfo) {
         try {
@@ -115,7 +114,7 @@ public class UserInfoController {
      *
      * @return 包装结果
      */
-    @RequestMapping("/updateUserInfoByUid")
+    @PutMapping("/updateUserInfoByUid")
     @ResponseBody
     public ForumResult updateUserInfoByUid(UserInfo userInfo) {
         System.out.println(userInfo.toString());

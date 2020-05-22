@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Collection;
 
 /**
  * 问题管理Service
@@ -17,60 +19,84 @@ import java.util.*;
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
-    @Autowired
-    private QuestionMapper questionMapper;
+    private final QuestionMapper questionMapper;
+
+    private final QuestionTagMapper questionTagMapper;
+
+    private final TagMapper tagMapper;
+
+    private final UserRateMapper userRateMapper;
+
+    private final UserInfoMapper userInfoMapper;
+
+    private final CommentMapper commentMapper;
 
     @Autowired
-    private QuestionTagMapper questionTagMapper;
-
-    @Autowired
-    private TagMapper tagMapper;
-
-    @Autowired
-    private QuestionEditMapper questionEditMapper;
-
-    @Autowired
-    private UserRateMapper userRateMapper;
-
-    @Autowired
-    private UserInfoMapper userInfoMapper;
+    public QuestionServiceImpl(QuestionMapper questionMapper, QuestionTagMapper questionTagMapper, TagMapper tagMapper, UserRateMapper userRateMapper, UserInfoMapper userInfoMapper, CommentMapper commentMapper) {
+        this.questionMapper = questionMapper;
+        this.questionTagMapper = questionTagMapper;
+        this.tagMapper = tagMapper;
+        this.userRateMapper = userRateMapper;
+        this.userInfoMapper = userInfoMapper;
+        this.commentMapper = commentMapper;
+    }
 
 
     /**
      * 查询所有问题信息
      * 将有置顶的放在最前面
+     * 并且按照最后回复时间进行排序
      *
      * @return 问题信息
      */
     @Override
-    public List<Question> queryAllQuestionsWithCurrPage(Integer currPage) {
-        List<Question> reOrderList = new ArrayList<>();
-        List<Question> questionList = questionMapper.getAllQuestions();
-        //先找到置顶的
-        List<Integer> qIdList = new ArrayList<>();
-        List<QuestionEdit> questionEdits = questionEditMapper.queryAllQuestionEditInfo();
-            for(QuestionEdit q : questionEdits) {
-                if (q.getIsDing() == 1) {
-                    //被置顶了，把它加到结果中
-                    Question ding = questionMapper.selectByPrimaryKey(q.getQuestionId());
-                    qIdList.add(q.getQuestionId());
-                    if (currPage == 1) {
-                        reOrderList.add(ding);
-                    }
-                }
-            }
+    public List<Question> queryAllQuestionsWithCurrPage(Integer currPage) throws ParseException {
+        List<Question> reOrderList = new ArrayList<>();  //最终结果容器
 
-            for(Question q : questionList){
-                if(!qIdList.contains(q.getId())){
-                    //非置顶，加到List中
-                    reOrderList.add(q);
+        //存储最后回复时间，没有回复的存储发布时间
+        Map<Question, Date> map = new HashMap<>();
+
+        List<Question> questionList = questionMapper.getAllQuestions();
+
+        for (Question question : questionList) {
+            if (question.getIsDing() != 1) {
+                //非置顶问题
+                //查询时间，有最后回复时间的按照最后回复时间，没有的按照发帖时间
+                List<Comment> comments = commentMapper.queryCommentByQuestionId(question.getId());
+                if (comments.size() > 0) {
+                    //说明这个问题有评论，找最后一条评论的时间，存储进map
+                    map.put(question, new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(comments.get(comments.size() - 1).getTime()));
+                } else {
+                    //说明这个问题没有评论信息，直接放发布时间
+                    map.put(question, new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(question.getGmtCreate()));
                 }
             }
+        }
+
+        //再按照最后回复时间排序
+        List<Map.Entry<Question, Date>> res = new ArrayList<>((map.entrySet()));
+        res.sort(Comparator.comparingLong(o -> o.getValue().getTime()));
+
+        //排序后的结果
+        for (Map.Entry<Question, Date> ent : res) {
+            reOrderList.add(ent.getKey());
+        }
+
+        //先找到置顶的问题加进去
+        List<Question> dingQuestions = questionMapper.getDingQuestions();
+
+        for (Question question : dingQuestions) {
+            reOrderList.add(question);
+        }
+
+        Collections.reverse(reOrderList);
+
         return reOrderList;
     }
 
     /**
      * 查询所有问题
+     *
      * @return 问题信息
      */
     @Override
@@ -81,6 +107,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 推荐
+     *
      * @return 问题信息
      */
     @Override
@@ -90,6 +117,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 热门
+     *
      * @return 问题信息
      */
     @Override
@@ -99,6 +127,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 消灭0回复
+     *
      * @return 问题信息
      */
     @Override
@@ -112,7 +141,7 @@ public class QuestionServiceImpl implements QuestionService {
      * 2. tb_question_tag  //问题和标签的关系
      * 3. tb_tags          //标签表
      * 4. tb_category_tag   //标签分类和标签的关系
-     *
+     * <p>
      * 2020.4.29 发布问题时不再新增数据库中没有的标签
      *
      * @param question 问题信息
@@ -159,7 +188,7 @@ public class QuestionServiceImpl implements QuestionService {
                 res.setIsOriginTag(0);  //设置为非默认标签  0-非默认
                 tagMapper.insertNewTag(res);
 
-               //插入分类和标签的对应关系
+                //插入分类和标签的对应关系
                 // 2020.4.29 分类和标签的关系保持不变
                 tagMapper.insertQuestionAndTag(res.getId(), question.getId());
             }
@@ -174,18 +203,18 @@ public class QuestionServiceImpl implements QuestionService {
             }
 
             //新增用户积分
-            UserInfo userInfo = userInfoMapper.selectUserInfoByName(question.getPublisher());
+            UserInfo userInfo = userInfoMapper.selectUserInfoByUid(question.getPublisherId());
             UserRate userRate = userRateMapper.selectRateById(userInfo.getUId());
-            if(userRate == null){
+            if (userRate == null) {
                 //新增用户积分信息
                 UserRate rate = new UserRate();
                 rate.setUserId(userInfo.getUId());
                 rate.setRate(3);
                 userRateMapper.insertUserRate(rate);
-            }else{
+            } else {
                 int rate = userRate.getRate();
                 //发一贴加3积分
-                userRateMapper.updateRateById(userInfo.getUId(),rate+3);
+                userRateMapper.updateRateById(userInfo.getUId(), rate + 3);
             }
 
         } else {
@@ -212,18 +241,18 @@ public class QuestionServiceImpl implements QuestionService {
             questionTagMapper.insertQuestionTag(questionTag);
 
             //新增用户积分
-            UserInfo userInfo = userInfoMapper.selectUserInfoByName(question.getPublisher());
+            UserInfo userInfo = userInfoMapper.selectUserInfoByUid(question.getPublisherId());
             UserRate userRate = userRateMapper.selectRateById(userInfo.getUId());
-            if(userRate == null){
+            if (userRate == null) {
                 //新增用户积分信息
                 UserRate rate = new UserRate();
                 rate.setUserId(userInfo.getUId());
                 rate.setRate(3);
                 userRateMapper.insertUserRate(rate);
-            }else{
+            } else {
                 int rate = userRate.getRate();
                 //发一贴加3积分
-                userRateMapper.updateRateById(userInfo.getUId(),rate+3);
+                userRateMapper.updateRateById(userInfo.getUId(), rate + 3);
             }
         }
     }
@@ -242,8 +271,8 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 更新阅读量
      *
-     * @param record  问题信息
-     * @return  更新的行数
+     * @param record 问题信息
+     * @return 更新的行数
      */
     @Override
     @Transactional
@@ -271,20 +300,20 @@ public class QuestionServiceImpl implements QuestionService {
         String regex = "^[a-z0-9A-Z\u4e00-\u9fa5]+$";
 
         //校验标签信息以及对标签与问题信息进行操作
-        if(tag.contains(",")){
+        if (tag.contains(",")) {
             //包含多个tag信息
             //1.校验是否出现除数字、英文字母、汉字之外的其它特殊字符
             String[] tags = tag.split(",");
-            for(String s : tags){
-                if(!s.matches(regex))
+            for (String s : tags) {
+                if (!s.matches(regex))
                     return -1;  //说明输入格式有误
             }
             //2.说明格式正确，核对数据库中的标签信息，并对修改后的标签进行删除
             //多标签之间进行删除操作
             List<Integer> newTagIdList = new ArrayList<>();
-            for(String s : tags){
+            for (String s : tags) {
                 Integer tagId = tagMapper.selectTagIdByTagName(s);
-                if(tagId == null){
+                if (tagId == null) {
                     //新增该tag信息
                     Tags t = new Tags();
                     t.setTagsName(s);
@@ -300,28 +329,28 @@ public class QuestionServiceImpl implements QuestionService {
                     qt.setQuestionId(questionId);
                     qt.setTagId(t.getId());
                     questionTagMapper.insertQuestionTag(qt);
-                }else{
+                } else {
                     newTagIdList.add(tagId);
                 }
             }
             //删除新更新的标签集中对应原始标签中不存在的标签
-            for(Integer id : tagIds){
-                if(!newTagIdList.contains(id))
-                    questionTagMapper.deleteQuestionAndTagInfo(questionId,id);
+            for (Integer id : tagIds) {
+                if (!newTagIdList.contains(id))
+                    questionTagMapper.deleteQuestionAndTagInfo(questionId, id);
             }
-        }else{
+        } else {
             //仅包含一个标签信息
             Integer originTagId = tagMapper.selectTagIdByTagName(tag);
 
-            if(!tag.matches(regex)) return -1;
+            if (!tag.matches(regex)) return -1;
 
             List<Integer> tagIdsList = new ArrayList<>();
-            for(Tags t : tagsList){
+            for (Tags t : tagsList) {
                 tagIdsList.add(t.getId());
             }
 
             //说明格式正确，查询该标签是否已经在数据库中，如果没有则新增，并将原始的标签信息删除
-            if(!tagIdsList.contains(originTagId)){
+            if (!tagIdsList.contains(originTagId)) {
                 //新增tag标签
                 Tags t = new Tags();
                 t.setTagsName(tag);
@@ -331,8 +360,8 @@ public class QuestionServiceImpl implements QuestionService {
 
 
                 //新标签，说明原始的标签信息被修改，需要删除原始问题和标签的对应关系
-                for(Integer tagId : tagIds){
-                    questionTagMapper.deleteQuestionAndTagInfo(questionId,tagId);
+                for (Integer tagId : tagIds) {
+                    questionTagMapper.deleteQuestionAndTagInfo(questionId, tagId);
                 }
 
                 //然后新增问题和标签的对应关系
@@ -340,21 +369,21 @@ public class QuestionServiceImpl implements QuestionService {
                 qt.setQuestionId(questionId);
                 qt.setTagId(t.getId());
                 questionTagMapper.insertQuestionTag(qt);
-            }else{
+            } else {
                 //不是新标签，查看原始问题对应标签中是否包含该标签
-                if(tagIds.contains(originTagId)){
+                if (tagIds.contains(originTagId)) {
                     //如果标签库中包含了这个标签，那么只删除原始多余的标签即可
-                    for(Integer tagId : tagIds){
-                        if(tagId != originTagId){
+                    for (Integer tagId : tagIds) {
+                        if (tagId != originTagId) {
                             //删除操作
-                            questionTagMapper.deleteQuestionAndTagInfo(questionId,tagId);
+                            questionTagMapper.deleteQuestionAndTagInfo(questionId, tagId);
                         }
                     }
-                }else{
+                } else {
                     //原始问题信息中没有包含该标签，需要删除原始所有标签，并新增标签信息
-                    for(Integer tagId : tagIds){
+                    for (Integer tagId : tagIds) {
                         //删除操作
-                        questionTagMapper.deleteQuestionAndTagInfo(questionId,tagId);
+                        questionTagMapper.deleteQuestionAndTagInfo(questionId, tagId);
                     }
                     //新增问题与标签对应信息
                     QuestionTag qt = new QuestionTag();
@@ -385,8 +414,9 @@ public class QuestionServiceImpl implements QuestionService {
      * 3.删除该问题下的所有评论信息
      * 4.删除该问题的收藏信息
      * 5.删除评论中获赞的信息
+     *
      * @param questionId 问题ID
-     * @param userId  用户ID
+     * @param userId     用户ID
      * @return 通用结果
      */
     @Override
@@ -397,6 +427,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 根据问题浏览量信息查询问题信息
+     *
      * @return 问题信息
      */
     @Override
@@ -406,7 +437,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 根据问题ID查询标签
-     * @param questionId  问题ID
+     *
+     * @param questionId 问题ID
      * @return 标签名
      */
     @Override
@@ -416,26 +448,29 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 根据发布者查询发布的问题信息
+     *
      * @param publisher 用户
      * @return 问题信息
      */
     @Override
     public List<Question> getAllQuestionsByPublisher(String publisher) {
-        return questionMapper.getAllQuestionsByPublisher(publisher);
+        return questionMapper.getAllQuestionsByPublisherId(userInfoMapper.selectUserInfoByName(publisher).getUId());
     }
 
     /**
      * 获取我的最热问题
+     *
      * @param username 用户名
-     * @return  问题信息
+     * @return 问题信息
      */
     @Override
     public List<Question> selectMyHotQuestions(String username) {
-        return questionMapper.selectMyHotQuestions(username);
+        return questionMapper.selectMyHotQuestions(userInfoMapper.selectUserInfoByName(username).getUId());
     }
 
     /**
      * 查询论坛推荐问题
+     *
      * @return 问题信息
      */
     @Override
@@ -444,37 +479,20 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     /**
-     * 查询问题是否被置顶或者加精的信息
-     * @param questionId 问题ID
-     * @return  问题置顶和加精信息
-     */
-    @Override
-    public QuestionEdit queryQuestionEditInfoByQuestionId(Integer questionId) {
-        return questionEditMapper.queryQuestionEditInfoByQuestionId(questionId);
-    }
-
-    /**
      * 获取所有精品帖子
+     *
      * @return 问题信息
      */
     @Override
     public List<Question> getAllJingQuestions() {
-        List<QuestionEdit> questionEdits = questionEditMapper.queryAllQuestionEditInfo();
-        List<Question> res = new ArrayList<>();
-        if(questionEdits.size() != 0){
-            for(QuestionEdit q : questionEdits){
-                if(q.getIsJing() == 1){
-                    res.add(questionMapper.selectByPrimaryKey(q.getQuestionId()));
-                }
-            }
-        }
-        return res;
+        return questionMapper.getJingQuestions();
     }
 
     /**
      * 更新like_count
+     *
      * @param likeCount  收藏数
-     * @param questionId  问题ID
+     * @param questionId 问题ID
      * @return 更新行数
      */
     @Override

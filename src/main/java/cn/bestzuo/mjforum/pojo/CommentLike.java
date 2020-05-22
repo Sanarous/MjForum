@@ -18,13 +18,13 @@ public class CommentLike {
     private Integer commentUid;
 
     //评论者用户名
-    private String commentName;
+//    private String commentName;
 
     //点赞者用户ID
     private Integer likeId;
 
     //点赞者用户名
-    private String likeName;
+//    private String likeName;
 
     //点赞时间
     private String time;

@@ -1,20 +1,21 @@
 package cn.bestzuo.mjforum.controller;
 
+import cn.bestzuo.mjforum.common.EasyWebImageUploadResult;
 import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.common.LayEditUploadImageResult;
 import cn.bestzuo.mjforum.common.WangEditorResult;
 import cn.bestzuo.mjforum.pojo.UploadImage;
+import cn.bestzuo.mjforum.pojo.vo.UserVO;
 import cn.bestzuo.mjforum.service.UserInfoService;
 import cn.bestzuo.mjforum.util.TencentCOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
@@ -37,10 +38,55 @@ public class ImageUploadController {
         this.userInfoService = userInfoService;
     }
 
+    @PostMapping("/newUpload")
+    @ResponseBody
+    public ForumResult newUpload(@RequestParam("file") MultipartFile multipartFile,
+                                 HttpServletRequest request,Model model) throws IOException {
+
+        String username = (String)request.getSession().getAttribute("username");
+
+        //获取文件的名称
+        String fileName = multipartFile.getOriginalFilename();
+
+        //判断有无后缀
+        assert fileName != null;
+        if (fileName.lastIndexOf(".") < 0)
+            return new ForumResult(500, "上传图片格式不正确", null);
+
+        //获取文件后缀
+        String prefix = fileName.substring(fileName.lastIndexOf("."));
+
+        //如果不是图片
+        if (!prefix.equalsIgnoreCase(".jpg") && !prefix.equalsIgnoreCase(".jpeg") && !prefix.equalsIgnoreCase(".svg") && !prefix.equalsIgnoreCase(".gif") && !prefix.equalsIgnoreCase(".png")) {
+            return new ForumResult(500, "上传图片格式不正确", null);
+        }
+
+        //使用uuid作为文件名，防止生成的临时文件重复
+        final File excelFile = File.createTempFile("imagesFile-" + System.currentTimeMillis(), prefix);
+
+        //将Multifile转换成File
+        multipartFile.transferTo(excelFile);
+
+        //调用腾讯云工具上传文件
+        String imageName = TencentCOS.uploadfile(excelFile, "avatar");
+
+        //程序结束时，删除临时文件
+        deleteFile(excelFile);
+
+        //存入图片名称，用于网页显示
+        model.addAttribute("imageName", IMAGE_PATH + imageName);
+
+        //更新数据库
+        userInfoService.updateUserAvatar(IMAGE_PATH + imageName, username);
+
+        //返回成功信息
+        return new ForumResult(200, "头像更换成功", IMAGE_PATH + imageName);
+    }
+
     /**
      * 上传头像
      */
-    @RequestMapping("/upload")
+    @PostMapping("/upload")
     @ResponseBody
     public ForumResult upload(@RequestParam("file") MultipartFile multipartFile, @RequestParam("username") String username, Model model) throws Exception {
         //获取文件的名称
@@ -100,7 +146,7 @@ public class ImageUploadController {
      * @param multipartFile 文件
      * @return 包装结果
      */
-    @RequestMapping("/uploadImage")
+    @PostMapping("/uploadImage")
     @ResponseBody
     public LayEditUploadImageResult uploadImage(@RequestParam("file") MultipartFile multipartFile) throws IOException {
         //获取文件的名称
@@ -150,9 +196,9 @@ public class ImageUploadController {
      * @return 包装结果
      * @throws IOException 异常
      */
-    @RequestMapping("/uploadQuestionImages")
+    @PostMapping("/uploadQuestionImages")
     @ResponseBody
-    public WangEditorResult publishQuestion(@RequestParam("ques") MultipartFile multipartFile) throws IOException {
+    public EasyWebImageUploadResult publishQuestion(@RequestParam("ques") MultipartFile multipartFile) throws IOException {
         //获取文件的名称
         String fileName = multipartFile.getOriginalFilename();
 
@@ -175,7 +221,8 @@ public class ImageUploadController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new WangEditorResult(1, null);
+
+            return new EasyWebImageUploadResult(null);
         }
 
         //程序结束时，删除临时文件
@@ -189,7 +236,7 @@ public class ImageUploadController {
 
         String[] res = {src};
 
-        return new WangEditorResult(0, res);
+        return new EasyWebImageUploadResult(src);
     }
 }
 

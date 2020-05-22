@@ -4,15 +4,18 @@ import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.CommentReply;
 import cn.bestzuo.mjforum.pojo.Question;
 import cn.bestzuo.mjforum.pojo.UserInfo;
+import cn.bestzuo.mjforum.pojo.vo.CommentReplyVO;
 import cn.bestzuo.mjforum.service.CommentReplyService;
 import cn.bestzuo.mjforum.service.QuestionService;
 import cn.bestzuo.mjforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,16 +90,46 @@ public class CommentReplyController {
     }
 
     /**
+     * 将CommentReply转换到前端VO
+     * @param commentReply
+     * @return
+     */
+    private CommentReplyVO convertCommentReplyToVO(CommentReply commentReply){
+        CommentReplyVO vo = new CommentReplyVO();
+        vo.setRId(commentReply.getRId());
+        vo.setRUid(commentReply.getRUid());
+        vo.setParentCommentId(commentReply.getParentCommentId());
+        vo.setRTime(commentReply.getRTime());
+        vo.setRContent(commentReply.getRContent());
+        vo.setTouid(commentReply.getTouid());
+
+        UserInfo userInfo = userInfoService.selectUserInfoByUid(commentReply.getTouid());
+        UserInfo userInfo1 = userInfoService.selectUserInfoByUid(commentReply.getRUid());
+        vo.setTouname(userInfo.getUsername());
+        vo.setRName(userInfo1.getUsername());
+        vo.setRAvatar(userInfo1.getAvatar());
+
+        return vo;
+    }
+
+    /**
      * 查询楼中楼回复
      *
      * @param parentCommentId 父评论ID
      * @return 包装结果
      */
-    @RequestMapping("/queryReply")
+    @GetMapping("/queryReply")
     @ResponseBody
     public ForumResult queryReplyByCommentId(@RequestParam("parentCommentId") Integer parentCommentId) {
         List<CommentReply> commentReplies = commentReplyService.queryReplyByCommentId(parentCommentId);
-        return commentReplies.size() > 0 ? new ForumResult(200,"查询成功",commentReplies) : new ForumResult(500,"暂无回复",null);
+        if(commentReplies.size() > 0){
+            List<CommentReplyVO> res = new ArrayList<>();
+            for(CommentReply c : commentReplies){
+                res.add(convertCommentReplyToVO(c));
+            }
+            return new ForumResult(200,"查询成功",res);
+        }
+        return new ForumResult(500,"暂无回复",null);
     }
 
     /**
@@ -105,7 +138,7 @@ public class CommentReplyController {
      * @param parentCommentId  父评论ID
      * @return 包装结果
      */
-    @RequestMapping("/getReplyNum")
+    @GetMapping("/getReplyNum")
     @ResponseBody
     public ForumResult queryReplyNums(@RequestParam("parentCommentId") Integer parentCommentId) {
         if (parentCommentId == null)

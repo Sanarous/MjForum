@@ -14,12 +14,17 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    private final CategoryMapper categoryMapper;
+
     @Autowired
-    private CategoryMapper categoryMapper;
+    public CategoryServiceImpl(CategoryMapper categoryMapper) {
+        this.categoryMapper = categoryMapper;
+    }
 
     /**
      * 查询带有默认标签的所有分类信息
-     * @return
+     *
+     * @return 分类信息
      */
     @Override
     public List<Categories> getAllCategories() {

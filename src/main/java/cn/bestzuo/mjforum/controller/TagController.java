@@ -117,14 +117,14 @@ public class TagController {
             vo.setTag(tags);
         }
 
-        vo.setPublisher(question.getPublisher());
         vo.setCommentCount(question.getCommentCount());
         vo.setViewCount(question.getViewCount());
         vo.setLikeCount(question.getLikeCount());
         vo.setGmtCreate(question.getGmtCreate());
         vo.setGmtModified(question.getGmtModified());
 
-        UserInfo info = userInfoService.getUserInfoByName(question.getPublisher());
+        UserInfo info = userInfoService.selectUserInfoByUid(question.getPublisherId());
+        vo.setPublisher(info.getUsername());
         vo.setAvatar(info.getAvatar());
         vo.setUid(info.getUId());
 

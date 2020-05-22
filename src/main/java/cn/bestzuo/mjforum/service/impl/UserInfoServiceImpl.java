@@ -17,11 +17,15 @@ import java.util.List;
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
 
-    @Autowired
-    private UserInfoMapper userInfoMapper;
+    private final UserInfoMapper userInfoMapper;
+
+    private final EmailMapper emailMapper;
 
     @Autowired
-    private EmailMapper emailMapper;
+    public UserInfoServiceImpl(UserInfoMapper userInfoMapper, EmailMapper emailMapper) {
+        this.userInfoMapper = userInfoMapper;
+        this.emailMapper = emailMapper;
+    }
 
     /**
      * 查询所有用户信息
@@ -70,7 +74,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void updateUserInfo(UserInfo userInfo) {
         if(!StringUtils.isEmpty(userInfo.getEmail())){
             //邮箱表中的邮箱信息也需要修改
-            emailMapper.updateEmailByUsername(userInfo.getEmail(),userInfo.getUsername());
+            emailMapper.updateEmailByUid(userInfo.getEmail(),userInfo.getUId());
         }
         userInfoMapper.updateByUsernameSelective(userInfo);
     }

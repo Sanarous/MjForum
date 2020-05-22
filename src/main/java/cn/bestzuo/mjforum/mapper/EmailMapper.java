@@ -14,57 +14,58 @@ public interface EmailMapper {
 
     /**
      * 新增Email信息
-     * @param emailInfo
-     * @return
+     *
+     * @param emailInfo 邮箱信息
+     * @return 更新行数
      */
     int insertEmailInfo(EmailInfo emailInfo);
 
-    /**
-     * 根据用户名查询邮箱信息
-     * @param username
-     * @return
-     */
-    EmailInfo selectEmailInfoByUsername(String username);
 
     /**
      * 根据uid查询邮箱信息
-     * @param uid
-     * @return
+     *
+     * @param uid 用户ID
+     * @return 邮箱信息
      */
     EmailInfo selectEmailInfoByUid(Integer uid);
 
     /**
      * 根据邮箱信息查询验证状态
-     * @param username
-     * @return
+     *
+     * @param uid 用户ID
+     * @return 状态
      */
-    Integer selectEmailCheckStatusByUsername(String username);
+    Integer selectEmailCheckStatusByUid(Integer uid);
 
     /**
      * 根据用户名更新邮箱信息
-     * @param username
-     * @param email
-     * @return
+     *
+     * @param uid   * @param uid 用户ID
+     * @param email 邮箱
+     * @return 更新行数
      */
-    int updateEmailByUsername(String email,String username);
+    int updateEmailByUid(String email, Integer uid);
 
     /**
      * 根据邮箱信息修改邮箱验证状态
-     * @param email
-     * @return
+     *
+     * @param email 邮箱
+     * @return 更新行数
      */
-    int updateEmailStatusByEmail(@RequestParam("check") Integer check,@RequestParam("email") String email);
+    int updateEmailStatusByEmail(@RequestParam("check") Integer check, @RequestParam("email") String email);
 
     /**
      * 查询所有邮箱
-     * @return
+     *
+     * @return 邮箱
      */
     List<String> queryAllEmails();
 
     /**
      * 根据邮箱查询邮箱信息
-     * @param email
-     * @return
+     *
+     * @param email 邮箱
+     * @return 邮箱信息
      */
     EmailInfo selectEmailInfoByEmail(String email);
 }

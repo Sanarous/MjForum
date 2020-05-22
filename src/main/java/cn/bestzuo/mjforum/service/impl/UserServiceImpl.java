@@ -61,14 +61,15 @@ public class UserServiceImpl implements UserService {
 
         //插入 用户名-密码 数据库中 密码加密
         User user = new User();
-        user.setUsername(username);
+        user.setUsername(username);  //注册用户名
         user.setPassword(md5Password(password));
         userMapper.insertUser(user);
 
         //插入用户信息表中
         UserInfo userInfo = new UserInfo();
         userInfo.setUId(user.getUid());
-        userInfo.setUsername(username);
+        userInfo.setLoginName(username); //不可修改的登录用户名
+        userInfo.setUsername(username);  //可以修改的用户昵称
         userInfo.setAvatar("https://bestzuo.cn/images/forum/anonymous.jpg");  //默认头像的地址
         userInfo.setRegisterDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         userInfoMapper.insertSelective(userInfo);
@@ -76,7 +77,6 @@ public class UserServiceImpl implements UserService {
         //插入邮箱表
         EmailInfo emailInfo = new EmailInfo();
         emailInfo.setUid(user.getUid());
-        emailInfo.setUsername(username);
         emailInfo.setCheck(0);
         emailMapper.insertEmailInfo(emailInfo);
 

@@ -15,13 +15,13 @@ public class Follow {
     private Integer userId;
 
     //被关注者用户名
-    private String userName;
+//    private String userName;
 
     //点击关注着ID
     private Integer followId;
 
     //点击关注着用户名
-    private String followName;
+//    private String followName;
 
     //关注时间
     private String time;

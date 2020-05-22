@@ -1,6 +1,5 @@
 package cn.bestzuo.mjforum.admin.controller.VO;
 
-import cn.bestzuo.mjforum.pojo.UserInfo;
 import lombok.Data;
 
 /**

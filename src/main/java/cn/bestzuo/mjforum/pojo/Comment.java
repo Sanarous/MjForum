@@ -17,13 +17,13 @@ public class Comment {
     private String time;
 
     //回复者头像地址
-    private String avatar;
+//    private String avatar;
 
     //评论者ID
     private int uid;
 
     //评论者用户名
-    private String uname;
+//    private String uname;
 
     //关联的问题ID
     private int questionId;

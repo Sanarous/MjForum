@@ -1,7 +1,9 @@
 package cn.bestzuo.mjforum.service.impl;
 
 import cn.bestzuo.mjforum.mapper.FollowMapper;
+import cn.bestzuo.mjforum.mapper.UserInfoMapper;
 import cn.bestzuo.mjforum.pojo.Follow;
+import cn.bestzuo.mjforum.pojo.UserInfo;
 import cn.bestzuo.mjforum.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,15 @@ import java.util.List;
 @Service
 public class FollowServiceImpl implements FollowService {
 
+    private final FollowMapper followMapper;
+
+    private final UserInfoMapper userInfoMapper;
+
     @Autowired
-    private FollowMapper followMapper;
+    public FollowServiceImpl(FollowMapper followMapper, UserInfoMapper userInfoMapper) {
+        this.followMapper = followMapper;
+        this.userInfoMapper = userInfoMapper;
+    }
 
     /**
      * 新增一条关注信息
@@ -38,7 +47,9 @@ public class FollowServiceImpl implements FollowService {
      */
     @Override
     public Follow selectFollowByUserNameAndFollowName(String userName, String followName) {
-        return followMapper.selectFollowByUserNameAndFollowName(userName, followName);
+        UserInfo userInfo = userInfoMapper.selectUserInfoByName(userName);
+        UserInfo userInfo1 = userInfoMapper.selectUserInfoByName(followName);
+        return followMapper.selectFollowByUserIdAndFollowId(userInfo.getUId(), userInfo1.getUId());
     }
 
     /**
@@ -60,7 +71,8 @@ public class FollowServiceImpl implements FollowService {
      */
     @Override
     public List<Follow> selectFollowByUsername(String username) {
-        return followMapper.selectFollowByUsername(username);
+        UserInfo userInfo = userInfoMapper.selectUserInfoByName(username);
+        return followMapper.selectFollowByFollowId(userInfo.getUId());
     }
 
     /**
@@ -70,6 +82,7 @@ public class FollowServiceImpl implements FollowService {
      */
     @Override
     public List<Follow> selectFansByUsername(String username) {
-        return followMapper.selectFansByUsername(username);
+        UserInfo userInfo = userInfoMapper.selectUserInfoByName(username);
+        return followMapper.selectFansByUid(userInfo.getUId());
     }
 }

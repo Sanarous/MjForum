@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Component
 public interface CommentNoticeInfoMapper {
-    List<CommentNoticeInfo> selectCommentNoticeByName(String noticeName);
+    List<CommentNoticeInfo> selectCommentNoticeByUId(Integer uid);
 
     int deleteByPrimaryKey(Integer id);
 

@@ -4,6 +4,7 @@ import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.Question;
 import cn.bestzuo.mjforum.pojo.QuestionEdit;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface QuestionService {
@@ -18,7 +19,7 @@ public interface QuestionService {
      * 查询所有问题信息
      * @return
      */
-    List<Question> queryAllQuestionsWithCurrPage(Integer currPage);
+    List<Question> queryAllQuestionsWithCurrPage(Integer currPage) throws ParseException;
 
     /**
      * 查询所有问题信息
@@ -109,15 +110,8 @@ public interface QuestionService {
     List<Question> selectForumRecommendQuestions();
 
     /**
-     * 根据问题ID查询问题是否被置顶或者加精的信息
-     * @param questionId
-     * @return
-     */
-    QuestionEdit queryQuestionEditInfoByQuestionId(Integer questionId);
-
-    /**
      * 获取所有精品问题
-     * @return
+     * @return 问题信息
      */
     List<Question> getAllJingQuestions();
 

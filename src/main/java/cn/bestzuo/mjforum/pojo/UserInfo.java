@@ -13,7 +13,10 @@ public class UserInfo {
     //对应的用户ID
     private Integer uId;
 
-    //用户名
+    //注册用户名，不可修改
+    private String loginName;
+
+    //用户昵称，可修改
     private String username;
 
     //性别 0-男  1-女  2-保密

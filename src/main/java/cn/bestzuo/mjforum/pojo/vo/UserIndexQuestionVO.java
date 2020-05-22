@@ -25,4 +25,6 @@ public class UserIndexQuestionVO extends Question {
 
     //内容
     private String description;
+
+    private String publisher;
 }

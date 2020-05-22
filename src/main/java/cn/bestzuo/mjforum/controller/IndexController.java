@@ -91,11 +91,29 @@ public class IndexController {
     }
 
     /**
+     * 跳转到标签页面
+     * @return 页面
+     */
+    @GetMapping("/tags")
+    public String getTags(){
+        return "post/tags";
+    }
+
+    /**
+     * 跳转到专题页面
+     * @return 页面
+     */
+    @GetMapping("/topics")
+    public String getTopics(){
+        return "post/topic";
+    }
+
+    /**
      * 查询最新的三个用户信息
      *
      * @return 包装结果
      */
-    @RequestMapping("/getNewUserInfo")
+    @GetMapping("/getNewUserInfo")
     @ResponseBody
     public ForumResult getNewUserInfo() {
         List<UserInfo> newUserInfo = userInfoService.getNewUserInfo();
@@ -112,7 +130,7 @@ public class IndexController {
      *
      * @return 通用返回结果
      */
-    @RequestMapping("/getTopRateUserInfo")
+    @GetMapping("/getTopRateUserInfo")
     @ResponseBody
     public ForumResult getTopRateUserInfo() {
         List<UserRate> userRates = userRateService.selectTopRateUserInfo();
@@ -158,7 +176,7 @@ public class IndexController {
      *
      * @return 通用返回结果
      */
-    @RequestMapping("/getRecommendQuestion")
+    @GetMapping("/getRecommendQuestion")
     @ResponseBody
     public ForumResult getQuestionInfoByViewCount() {
         try {
@@ -193,7 +211,7 @@ public class IndexController {
      *
      * @return 通用返回结果
      */
-    @RequestMapping("/getMostReferTag")
+    @GetMapping("/getMostReferTag")
     @ResponseBody
     public ForumResult selectMostReferTag() {
         try {

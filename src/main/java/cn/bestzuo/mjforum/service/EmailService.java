@@ -1,7 +1,6 @@
 package cn.bestzuo.mjforum.service;
 
 import cn.bestzuo.mjforum.pojo.EmailInfo;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 

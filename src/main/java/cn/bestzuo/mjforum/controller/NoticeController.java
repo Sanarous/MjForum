@@ -61,54 +61,54 @@ public class NoticeController {
     }
 
     @GetMapping("/notice/getCommentNotice")
-    public String getCommentNotice(Model model){
-        model.addAttribute("destination","comment");
+    public String getCommentNotice(Model model) {
+        model.addAttribute("destination", "comment");
         return "user/notice";
     }
 
     @GetMapping("/notice/getCollectionNotice")
-    public String getCollectionNotice(Model model){
-        model.addAttribute("destination","collection");
+    public String getCollectionNotice(Model model) {
+        model.addAttribute("destination", "collection");
         return "user/notice";
     }
 
     @GetMapping("/notice/getFollowNotice")
-    public String getFollowNotice(Model model){
-        model.addAttribute("destination","follow");
+    public String getFollowNotice(Model model) {
+        model.addAttribute("destination", "follow");
         return "user/notice";
     }
 
     @GetMapping("/notice/getPraiseNotice")
-    public String getPraiseNotice(Model model){
-        model.addAttribute("destination","praise");
+    public String getPraiseNotice(Model model) {
+        model.addAttribute("destination", "praise");
         return "user/notice";
     }
 
     @GetMapping("/notice/getMajiangNotice")
-    public String getMajiangNotice(Model model){
-        model.addAttribute("destination","majiang");
+    public String getMajiangNotice(Model model) {
+        model.addAttribute("destination", "majiang");
         return "user/notice";
     }
 
     @GetMapping("/notice/getReportNotice")
-    public String getReportNotice(Model model){
-        model.addAttribute("destination","report");
-        return "user/notice";
-    }
-    @GetMapping("/notice/getOtherNotice")
-    public String getOtherNotice(Model model){
-        model.addAttribute("destination","other");
+    public String getReportNotice(Model model) {
+        model.addAttribute("destination", "report");
         return "user/notice";
     }
 
+    @GetMapping("/notice/getOtherNotice")
+    public String getOtherNotice(Model model) {
+        model.addAttribute("destination", "other");
+        return "user/notice";
+    }
 
 
     /**
      * 获取评论通知消息
      *
-     * @return
+     * @return 包装结果
      */
-    @RequestMapping("/commentNotice")
+    @GetMapping("/commentNotice")
     @ResponseBody
     public LayuiFlowResult commentNotice(@RequestParam("page") Integer page,
                                          @RequestParam("username") String username) {
@@ -134,18 +134,18 @@ public class NoticeController {
     /**
      * 将评论信息转换成前端展示的VO
      *
-     * @param commentNoticeInfo
-     * @return
+     * @param commentNoticeInfo 评论消息通知
+     * @return 前端VO
      */
     private CommentNoticeVO convertCommentNoticeToVO(CommentNoticeInfo commentNoticeInfo) {
         CommentNoticeVO commentNoticeVO = new CommentNoticeVO();
         commentNoticeVO.setId(commentNoticeInfo.getId());
 
         //获取回复者头像
-        UserInfo info = userInfoService.getUserInfoByName(commentNoticeInfo.getCommentName());
+        UserInfo info = userInfoService.selectUserInfoByUid(commentNoticeInfo.getCommentId());
         commentNoticeVO.setCommentAvatar(info.getAvatar());
         commentNoticeVO.setParentCommentId(commentNoticeInfo.getParentCommentId());
-        commentNoticeVO.setUsername(commentNoticeInfo.getCommentName());
+        commentNoticeVO.setUsername(info.getUsername());
         commentNoticeVO.setContent(commentNoticeInfo.getContent());
         commentNoticeVO.setStatus(commentNoticeInfo.getStatus());
         commentNoticeVO.setQuestionId(commentNoticeInfo.getQuestionId());
@@ -166,13 +166,17 @@ public class NoticeController {
      *
      * @return
      */
-    @RequestMapping("/collectionNotice")
+    @GetMapping("/collectionNotice")
     @ResponseBody
     public LayuiFlowResult collectMe(@RequestParam("page") Integer page,
                                      @RequestParam("username") String username) {
+
+        UserInfo userInfo = userInfoService.getUserInfoByName(username);
+        if (userInfo == null) return new LayuiFlowResult(400, "", 0, 0);
+
         //数据校验
         PageHelper.startPage(page, 5);
-        List<Collection> collections = collectionService.selectCollectionByPublisher(username);
+        List<Collection> collections = collectionService.selectCollectionByPublisher(userInfo.getUId());
         PageInfo<Collection> pageInfo = new PageInfo<>(collections);
 
 
@@ -196,7 +200,7 @@ public class NoticeController {
         CollectionNoticeVO vo = new CollectionNoticeVO();
         vo.setId(collection.getId());
         //获取收藏者的用户信息（头像地址）
-        UserInfo userInfo = userInfoService.getUserInfoByName(collection.getUsername());
+        UserInfo userInfo = userInfoService.selectUserInfoByUid(collection.getUId());
         vo.setAvatar(userInfo.getAvatar());
         vo.setUId(userInfo.getUId());
 
@@ -208,7 +212,7 @@ public class NoticeController {
 
         vo.setQuestionId(question.getId());
         vo.setTime(collection.getTime());
-        vo.setUsername(collection.getUsername());
+        vo.setUsername(userInfo.getUsername());
 
         return vo;
     }
@@ -219,7 +223,7 @@ public class NoticeController {
      * @param username
      * @return
      */
-    @RequestMapping("/followNotice")
+    @GetMapping("/followNotice")
     @ResponseBody
     public LayuiFlowResult followMe(@RequestParam("page") Integer page,
                                     @RequestParam("username") String username) {
@@ -247,9 +251,9 @@ public class NoticeController {
     private FollowNoticeVO convertFollowToVO(Follow follow) {
         FollowNoticeVO vo = new FollowNoticeVO();
         vo.setId(follow.getId());
-        vo.setUsername(follow.getFollowName());
 
-        UserInfo info = userInfoService.getUserInfoByName(follow.getFollowName());
+        UserInfo info = userInfoService.selectUserInfoByUid(follow.getFollowId());
+        vo.setUsername(info.getUsername());
         vo.setUid(info.getUId());
         vo.setTime(follow.getTime());
         vo.setAvatar(info.getAvatar());
@@ -263,7 +267,7 @@ public class NoticeController {
      * @param username
      * @return
      */
-    @RequestMapping("/praiseNotice")
+    @GetMapping("/praiseNotice")
     @ResponseBody
     public LayuiFlowResult praiseMe(@RequestParam("page") Integer page,
                                     @RequestParam("username") String username) {
@@ -272,13 +276,13 @@ public class NoticeController {
         List<CommentLike> likes = commentLikeService.selectCommentLikeByUsername(username);
         PageInfo<CommentLike> pageInfo = new PageInfo<>(likes);
 
-        if (likes.size() == 0) return new LayuiFlowResult(200, "查询成功", null,0);
+        if (likes.size() == 0) return new LayuiFlowResult(200, "查询成功", null, 0);
 
         List<CommentLikeVO> res = new ArrayList<>();
         for (CommentLike commentLike : pageInfo.getList()) {
             res.add(convertCommentLikeToVO(commentLike));
         }
-        return new LayuiFlowResult(200, "查询成功", res,pageInfo.getPages());
+        return new LayuiFlowResult(200, "查询成功", res, pageInfo.getPages());
     }
 
     /**
@@ -290,10 +294,10 @@ public class NoticeController {
     private CommentLikeVO convertCommentLikeToVO(CommentLike commentLike) {
         CommentLikeVO vo = new CommentLikeVO();
         vo.setId(commentLike.getId());
-        vo.setUsername(commentLike.getLikeName());
         vo.setUid(commentLike.getLikeId());
 
-        UserInfo info = userInfoService.getUserInfoByName(commentLike.getLikeName());
+        UserInfo info = userInfoService.selectUserInfoByUid(commentLike.getLikeId());
+        vo.setUsername(info.getUsername());
         vo.setAvatar(info.getAvatar());
 
         vo.setQuestionId(commentLike.getQuestionId());

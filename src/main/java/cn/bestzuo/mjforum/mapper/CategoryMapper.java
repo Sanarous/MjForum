@@ -1,7 +1,6 @@
 package cn.bestzuo.mjforum.mapper;
 
 import cn.bestzuo.mjforum.pojo.Categories;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 

@@ -9,10 +9,7 @@ import cn.bestzuo.mjforum.common.ForumResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -127,7 +124,7 @@ public class AdminIndexController {
      *
      * @return  通用返回结果
      */
-    @RequestMapping("/admin/login")
+    @PostMapping("/admin/login")
     @ResponseBody
     public ForumResult login(@RequestParam("username") String username,
                              @RequestParam("password") String password,
@@ -184,7 +181,7 @@ public class AdminIndexController {
      *
      * @return
      */
-    @RequestMapping("/getAdminLoginInfo")
+    @GetMapping("/getAdminLoginInfo")
     @ResponseBody
     public LayuiTableResult getLoginInfo() {
         try {

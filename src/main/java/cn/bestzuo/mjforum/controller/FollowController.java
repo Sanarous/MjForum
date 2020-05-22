@@ -7,6 +7,7 @@ import cn.bestzuo.mjforum.service.FollowService;
 import cn.bestzuo.mjforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +42,7 @@ public class FollowController {
      * @param followName   关注者用户名
      * @return 包装结果
      */
-    @RequestMapping("/getFollowStatus")
+    @GetMapping("/getFollowStatus")
     @ResponseBody
     public ForumResult getFollowStatus(@RequestParam("userName") String userName,
                                        @RequestParam("followName") String followName) {
@@ -98,9 +99,7 @@ public class FollowController {
                 //第一次插入关注信息
                 Follow follow = new Follow();
                 follow.setUserId(userInfo.getUId());
-                follow.setUserName(userName);
                 follow.setFollowId(userInfo1.getUId());
-                follow.setFollowName(followName);
                 follow.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
                 follow.setStatus(1); // 1-表示已关注
 
@@ -156,9 +155,7 @@ public class FollowController {
                 //第一次插入关注信息
                 Follow follow = new Follow();
                 follow.setUserId(userInfo.getUId());
-                follow.setUserName(userName);
                 follow.setFollowId(userInfo1.getUId());
-                follow.setFollowName(followName);
                 follow.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
                 follow.setStatus(1); // 1-表示已关注
 

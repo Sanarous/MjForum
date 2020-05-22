@@ -97,7 +97,7 @@ public class UserLoginAndRegisterController {
      * @param username 用户名
      * @return 包装结果
      */
-    @RequestMapping("/getUserByName")
+    @GetMapping("/getUserByName")
     @ResponseBody
     public ForumResult getUserByName(@RequestParam("username") String username) {
         //后端校验判空
@@ -158,10 +158,11 @@ public class UserLoginAndRegisterController {
     @ResponseBody
     public ForumResult loginUser(@RequestParam("username") String username,
                                  @RequestParam("password") String password,
+                                 @RequestParam("verifyCode") String verifyCode,
                                  HttpServletRequest request) {
         //后端校验用户名
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            return new ForumResult(500, "用户名或密码不能为空", null);
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(verifyCode)) {
+            return new ForumResult(500, "输入信息不能为空", null);
         }
 
         //判断用户名格式
@@ -180,7 +181,7 @@ public class UserLoginAndRegisterController {
             if (emailInfo.getCheck() == 0) return new ForumResult(500, "邮箱未验证", null);
 
             //再根据邮箱查询密码
-            user = userService.getUserByName(emailInfo.getUsername());
+            user = userService.getUserByUserId(emailInfo.getUid());
         } else {
             user = userService.getUserByName(username);
             if (user == null) return new ForumResult(500, "用户不存在", null);
@@ -190,6 +191,10 @@ public class UserLoginAndRegisterController {
         if (!MD5Password.verify(password, user.getPassword())) {
             return new ForumResult(500, "密码错误", null);
         }
+        //校验验证码
+        String code = (String) request.getSession().getAttribute("verifyCode");
+        if (code.compareToIgnoreCase(verifyCode) != 0)
+            return new ForumResult(500, "验证码错误", null);
 
         //将用户信息存在session中
         request.getSession().setAttribute("username", user.getUsername());

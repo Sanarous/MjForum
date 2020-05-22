@@ -3,11 +3,13 @@ package cn.bestzuo.mjforum.controller;
 import cn.bestzuo.mjforum.pojo.Question;
 import cn.bestzuo.mjforum.pojo.vo.UserIndexQuestionVO;
 import cn.bestzuo.mjforum.service.SearchService;
+import cn.bestzuo.mjforum.service.UserInfoService;
 import cn.bestzuo.mjforum.util.CommonUtils;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,9 +28,12 @@ public class SearchController {
 
     private final SearchService searchService;
 
+    private final UserInfoService userInfoService;
+
     @Autowired
-    public SearchController(SearchService searchService) {
+    public SearchController(SearchService searchService, UserInfoService userInfoService) {
         this.searchService = searchService;
+        this.userInfoService = userInfoService;
     }
 
     /**
@@ -37,7 +42,7 @@ public class SearchController {
      * @param keywords
      * @return
      */
-    @RequestMapping("/search")
+    @GetMapping("/search")
     public String searchByKeywords(@RequestParam("keywords") String keywords, Model model) {
         List<Question> questions = searchService.searchByTitleAndContent(keywords);
         List<UserIndexQuestionVO> res = new ArrayList<>();
@@ -70,7 +75,7 @@ public class SearchController {
         vo.setLikeCount(question.getLikeCount());
         vo.setGmtCreate(question.getGmtCreate());
         vo.setViewCount(question.getViewCount());
-        vo.setPublisher(question.getPublisher());
+        vo.setPublisher(userInfoService.selectUserInfoByUid(question.getPublisherId()).getUsername());
 
         String text = CommonUtils.Html2Text(question.getDescription());
         if (text.length() > 50) {

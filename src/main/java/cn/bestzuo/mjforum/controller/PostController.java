@@ -10,10 +10,7 @@ import cn.bestzuo.mjforum.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
@@ -38,16 +35,14 @@ public class PostController {
 
     private final QuestionReportService questionReportService;
 
-    private final QuestionEditService questionEditService;
 
     @Autowired
-    public PostController(QuestionService questionService, UserInfoService userInfoService, UserRateService userRateService, TagService tagService, QuestionReportService questionReportService, QuestionEditService questionEditService) {
+    public PostController(QuestionService questionService, UserInfoService userInfoService, UserRateService userRateService, TagService tagService, QuestionReportService questionReportService) {
         this.questionService = questionService;
         this.userInfoService = userInfoService;
         this.userRateService = userRateService;
         this.tagService = tagService;
         this.questionReportService = questionReportService;
-        this.questionEditService = questionEditService;
     }
 
     /**
@@ -56,7 +51,7 @@ public class PostController {
      * @param id
      * @return
      */
-    @RequestMapping("/question/{id}")
+    @GetMapping("/question/{id}")
     public String getPost(@PathVariable("id") Integer id, Model model) {
         Question question = questionService.selectByPrimaryKey(id);
         if (question != null) {
@@ -82,14 +77,14 @@ public class PostController {
         vo.setTitle(question.getTitle());
         vo.setDescription(question.getDescription());
         vo.setTag(question.getTag());
-        vo.setPublisher(question.getPublisher());
         vo.setCommentCount(question.getCommentCount());
         vo.setViewCount(question.getViewCount());
         vo.setLikeCount(question.getLikeCount());
         vo.setGmtCreate(question.getGmtCreate());
         vo.setGmtModified(question.getGmtModified());
 
-        UserInfo info = userInfoService.getUserInfoByName(question.getPublisher());
+        UserInfo info = userInfoService.selectUserInfoByUid(question.getPublisherId());
+        vo.setPublisher(info.getUsername());
         vo.setUid(info.getUId());
         if(info.getComment() == null || info.getComment() == "" || info.getComment().length() == 0){
             vo.setUserInfo("Ta还没有自我介绍哦");
@@ -126,7 +121,7 @@ public class PostController {
         }
 
         //判断用户积分等级
-        UserRate userRate = userRateService.selectRateById(userInfoService.getUserInfoByName(question.getPublisher()).getUId());
+        UserRate userRate = userRateService.selectRateById(question.getPublisherId());
         if(userRate == null){
             vo.setRate("暂无");
             vo.setRateScore(0);
@@ -147,14 +142,8 @@ public class PostController {
         }
 
         //查询该问题置顶和加精情况
-        QuestionEdit questionEdit = questionEditService.selectQuestionEditById(question.getId());
-        if(questionEdit == null){
-            vo.setIsJing(0);
-            vo.setIsJing(0);
-        }else{
-            vo.setIsJing(questionEdit.getIsJing());
-            vo.setIsDing(questionEdit.getIsDing());
-        }
+        vo.setIsDing(question.getIsDing());
+        vo.setIsJing(question.getIsJing());
 
         return vo;
     }
@@ -164,7 +153,7 @@ public class PostController {
      *
      * @return
      */
-    @RequestMapping("/getForumRecommendQuestions")
+    @GetMapping("/getForumRecommendQuestions")
     @ResponseBody
     public ForumResult getRecommendQuestions() {
         try {
@@ -180,25 +169,20 @@ public class PostController {
      * 获取精品问题
      * @return
      */
-    @RequestMapping("/getJingQuestions")
+    @GetMapping("/getJingQuestions")
     @ResponseBody
     public ForumResult getJingQuestions(){
-        List<QuestionEdit> questionEdits = questionEditService.queryAllJingQuestions();
-        List<Question> res = new ArrayList<>();
-        for(QuestionEdit questionEdit : questionEdits){
-            Question question = questionService.selectByPrimaryKey(questionEdit.getQuestionId());
-            res.add(question);
-        }
-        return new ForumResult(200,"查询成功",res);
+        List<Question> allJingQuestions = questionService.getAllJingQuestions();
+        return new ForumResult(200,"查询成功",allJingQuestions);
     }
 
     /**
      * 获取相关问题推荐
      *
-     * @param questionId
-     * @return
+     * @param questionId 问题ID
+     * @return 包装结果
      */
-    @RequestMapping("/getRelatedQuestions")
+    @GetMapping("/getRelatedQuestions")
     @ResponseBody
     public ForumResult getRelatedQuestions(@RequestParam("questionId") Integer questionId) {
         if (questionId == null) {
@@ -246,7 +230,7 @@ public class PostController {
      * @param reason   举报理由
      * @return
      */
-    @RequestMapping("/userReport")
+    @PostMapping("/userReport")
     @ResponseBody
     public ForumResult userReport(@RequestParam("username") String username,
                                   @RequestParam("rUsername") String rUsername,

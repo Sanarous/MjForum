@@ -20,8 +20,8 @@ public class Question {
     //问题最后回复时间
     private String gmtModified;
 
-    //发布人
-    private String publisher;
+    //发帖用户ID
+    private Integer publisherId;
 
     //评论数
     private Integer commentCount;
@@ -37,4 +37,13 @@ public class Question {
 
     //文章补充描述
     private String description;
+
+    //问题是否被置顶
+    private int isDing;
+
+    //问题是否被加精
+    private int isJing;
+
+    //帖子状态 0-正常 1-删除
+    private int status;
 }

@@ -13,22 +13,25 @@ public interface CommentReplyMapper {
 
     /**
      * 新增一条回复信息
-     * @param commentReply
-     * @return
+     *
+     * @param commentReply 楼中楼评论实体类
+     * @return 更新行数
      */
     int insertCommentReply(CommentReply commentReply);
 
     /**
      * 根据评论Id查找楼中楼回复
-     * @param commentId
-     * @return
+     *
+     * @param commentId 评论ID
+     * @return 评论信息
      */
     List<CommentReply> queryReplyByCommentId(Integer commentId);
 
     /**
      * 查询一个评论下所有回复数
-     * @param parentCommentId
-     * @return
+     *
+     * @param parentCommentId 父评论ID
+     * @return 数量
      */
     int queryReplyNum(Integer parentCommentId);
 }

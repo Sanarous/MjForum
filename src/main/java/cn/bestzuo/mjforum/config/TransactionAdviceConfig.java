@@ -28,7 +28,7 @@ public class TransactionAdviceConfig {
     /**
      * 定义切点路径
      */
-    private static final String AOP_POINTCUT_EXPRESSION = "execution(* cn.bestzuo.zuoforum.service.*.*(..))";
+    private static final String AOP_POINTCUT_EXPRESSION = "execution(* cn.bestzuo.mjforum.service.*.*(..))";
 
     @Autowired
     private PlatformTransactionManager transactionManager;

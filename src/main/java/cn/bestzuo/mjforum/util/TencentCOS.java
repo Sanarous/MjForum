@@ -11,7 +11,7 @@ import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Random;
@@ -22,16 +22,14 @@ import java.util.Random;
  * @author zuoxiang
  * @date 2019/11/24
  */
+@Component
 public class TencentCOS {
 
-    @Value("${tencent.bucket}")
-    private static String bucketName;
+    private static String bucketName = "forum-1258928558";
 
-    @Value("${tencent.secretId}")
-    private static String secretId;
+    private static String secretId = "AKID947wVo4gEWaJp59KFxa12oPq2KPOe7mB";
 
-    @Value("${tencent.secretKey}")
-    private static String secretKey;
+    private static String secretKey = "kIzWpujIfyKFJ7gDHWVFv6VnslOllHWb";
 
     // 1 初始化用户身份信息(secretId, secretKey，可在腾讯云后台中的API密钥管理中查看！
     private static COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);

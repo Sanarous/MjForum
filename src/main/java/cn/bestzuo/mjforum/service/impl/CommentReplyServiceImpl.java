@@ -48,10 +48,7 @@ public class CommentReplyServiceImpl implements CommentReplyService {
         //1. 插入评论回复表
         CommentReply commentReply = new CommentReply();
         commentReply.setRContent(content);
-        commentReply.setRName(username);  //当前回复者
         commentReply.setRUid(userInfo.getUId());   //当前回复者的ID
-        commentReply.setRAvatar(userInfo.getAvatar());
-        commentReply.setTouname(replyfor); //目标回复的用户名
         commentReply.setTouid(userInfo1.getUId());  //目标回复的用户Id
         commentReply.setParentCommentId(parentCommentId); //父评论ID
 
@@ -68,9 +65,7 @@ public class CommentReplyServiceImpl implements CommentReplyService {
             CommentNoticeInfo commentNoticeInfo = new CommentNoticeInfo();
             commentNoticeInfo.setParentCommentId(parentCommentId);  //插入这条回复的父评论ID
             commentNoticeInfo.setCommentId(userInfo.getUId());
-            commentNoticeInfo.setCommentName(username);
             commentNoticeInfo.setNoticeId(userInfo1.getUId());
-            commentNoticeInfo.setNoticeName(userInfo1.getUsername());
             commentNoticeInfo.setContent(content);
             commentNoticeInfo.setQuestionId(qId);
             commentNoticeInfo.setTime(sdf.format(date));

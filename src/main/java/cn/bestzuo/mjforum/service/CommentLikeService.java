@@ -1,5 +1,6 @@
 package cn.bestzuo.mjforum.service;
 
+import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.CommentLike;
 
 import java.util.List;
@@ -7,33 +8,30 @@ import java.util.List;
 public interface CommentLikeService {
 
     /**
-     * 新增一条点赞信息
-     * @param commentLike
-     * @return
+     * 处理评论点赞信息
+     *
+     * @param username        点赞用户名
+     * @param commentId       评论ID
+     * @param commentUsername 评论用户名
+     * @param questionId      问题ID
+     * @return 更新行数
      */
-    int insertCommentLike(CommentLike commentLike);
+    ForumResult processCommentLike(String username, Integer commentId, String commentUsername, Integer questionId);
 
     /**
      * 查询点赞信息
-     * @param commentId
-     * @param likeName
-     * @return
+     *
+     * @param commentId 评论ID
+     * @param likeId    用户ID
+     * @return 点赞信息
      */
-    CommentLike selectCommentLike(Integer commentId,String likeName);
-
-    /**
-     * 更新点赞状态
-     * @param id
-     * @param status
-     * @param time
-     * @return
-     */
-    int updateCommentLike(int status,String time,Integer id);
+    CommentLike selectCommentLike(Integer commentId, Integer likeId);
 
     /**
      * 查询某个评论下的点赞数
-     * @param commentId
-     * @return
+     *
+     * @param commentId 评论ID
+     * @return 数量
      */
     Integer selectLikeCountByCommentId(Integer commentId);
 

@@ -61,7 +61,7 @@ public class UserIndexController {
      * @param token  用户ID
      * @return 用户名
      */
-    @RequestMapping("/user/{token}")
+    @GetMapping("/user/{token}")
     public String userIndex(@PathVariable(value = "token") String token, Model model) {
         if (token == null) {
             return "404";
@@ -83,7 +83,7 @@ public class UserIndexController {
      * @param username  用户名
      * @return 包装结果
      */
-    @RequestMapping("/getUserIndexInfo")
+    @GetMapping("/getUserIndexInfo")
     @ResponseBody
     public ForumResult getMyIndexInfo(@RequestParam("username") String username) {
         //后端校验数据
@@ -135,7 +135,7 @@ public class UserIndexController {
      *
      * @return 包装结果
      */
-    @RequestMapping("/getMyQuestions")
+    @GetMapping("/getMyQuestions")
     @ResponseBody
     public LayuiFlowResult getMyQuestions(@RequestParam("page") Integer page,
                                           @RequestParam("username") String username) {
@@ -192,7 +192,7 @@ public class UserIndexController {
      *
      * @return 包装结果
      */
-    @RequestMapping("/getMyCommentInfo")
+    @GetMapping("/getMyCommentInfo")
     @ResponseBody
     public LayuiFlowResult getMyComments(@RequestParam("page")Integer page,
                                      @RequestParam("username") String username) {
@@ -230,8 +230,9 @@ public class UserIndexController {
     private UserIndexCommentsVO convertCommentToVO(Comment comment) {
         UserIndexCommentsVO vo = new UserIndexCommentsVO();
         vo.setId(comment.getCId());
-        vo.setAvatar(comment.getAvatar());
-        vo.setUsername(comment.getUname());
+        UserInfo userInfo = userInfoService.selectUserInfoByUid(comment.getUid());
+        vo.setAvatar(userInfo.getAvatar());
+        vo.setUsername(userInfo.getUsername());
         vo.setTime(comment.getTime());
         vo.setQuestionId(comment.getQuestionId());
 
@@ -261,7 +262,7 @@ public class UserIndexController {
      * @param username  用户名
      * @return 包装结果
      */
-    @RequestMapping("/getMyCollection")
+    @GetMapping("/getMyCollection")
     @ResponseBody
     public LayuiFlowResult getMyCollections(@RequestParam("page") Integer page,
                                         @RequestParam("username") String username) {
@@ -277,7 +278,7 @@ public class UserIndexController {
 
 
         PageHelper.startPage(page,5);
-        List<Collection> collections = collectionService.selectCollectionInfoByUsername(username);
+        List<Collection> collections = collectionService.selectCollectionInfoByUid(userInfoByName.getUId());
         PageInfo<Collection> pageInfo = new PageInfo<>(collections);
 
         if (pageInfo.getList().size() == 0) {
@@ -298,7 +299,7 @@ public class UserIndexController {
      * @param username 用户名
      * @return 包装结果
      */
-    @RequestMapping("/getMyHotQuestions")
+    @GetMapping("/getMyHotQuestions")
     @ResponseBody
     public LayuiFlowResult getMyHotQuestion(@RequestParam("page") Integer page,
                                         @RequestParam("username") String username) {
@@ -344,7 +345,7 @@ public class UserIndexController {
      * @param username  用户名
      * @return 包装结果
      */
-    @RequestMapping("/getFollowInfo")
+    @GetMapping("/getFollowInfo")
     @ResponseBody
     public ForumResult getFollowInfo(@RequestParam("username") String username) {
         //后端数据校验
@@ -379,10 +380,10 @@ public class UserIndexController {
     private FollowVO convertFollowToVO(Follow follow) {
         FollowVO vo = new FollowVO();
         vo.setId(follow.getUserId());
-        vo.setUsername(follow.getUserName());
 
         //头像
-        UserInfo info = userInfoService.getUserInfoByName(follow.getUserName());
+        UserInfo info = userInfoService.selectUserInfoByUid(follow.getFollowId());
+        vo.setUsername(info.getUsername());
         vo.setAvatar(info.getAvatar());
 
         //工作/学校信息
@@ -429,7 +430,7 @@ public class UserIndexController {
      * @param username 用户名
      * @return 包装结果
      */
-    @RequestMapping("/getFansInfo")
+    @GetMapping("/getFansInfo")
     @ResponseBody
     public ForumResult getMyFans(@RequestParam("username") String username) {
         //后端数据校验
@@ -464,10 +465,10 @@ public class UserIndexController {
     private FollowVO convertFansToVO(Follow follow) {
         FollowVO vo = new FollowVO();
         vo.setId(follow.getFollowId());
-        vo.setUsername(follow.getFollowName());
 
         //头像
-        UserInfo info = userInfoService.getUserInfoByName(follow.getFollowName());
+        UserInfo info = userInfoService.selectUserInfoByUid(follow.getFollowId());
+        vo.setUsername(info.getUsername());
         vo.setAvatar(info.getAvatar());
 
         //工作/学校信息

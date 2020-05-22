@@ -1,7 +1,6 @@
 package cn.bestzuo.mjforum.service;
 
 import cn.bestzuo.mjforum.pojo.CommentNoticeInfo;
-import cn.bestzuo.mjforum.pojo.vo.CommentNoticeVO;
 
 import java.util.List;
 

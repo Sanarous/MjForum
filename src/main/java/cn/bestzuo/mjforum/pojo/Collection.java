@@ -14,14 +14,11 @@ public class Collection {
     //收藏者Id
     private Integer uId;
 
-    //收藏者用户名
-    private String username;
-
     //收藏的问题ID
     private Integer questionId;
 
-    //问题发布者
-    private String publisher;
+    //问题发布者ID
+    private Integer publisherId;
 
     //收藏时间
     private String time;

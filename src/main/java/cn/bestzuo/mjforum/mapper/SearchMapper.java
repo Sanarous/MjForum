@@ -13,8 +13,9 @@ public interface SearchMapper {
 
     /**
      * 根据问题标题和内容搜索关键字
+     *
      * @param keywords 关键字
-     * @return
+     * @return 问题信息
      */
     List<Question> searchByTitleAndContent(String keywords);
 }

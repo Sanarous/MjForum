@@ -1,7 +1,6 @@
 package cn.bestzuo.mjforum.service;
 
 import cn.bestzuo.mjforum.pojo.UserInfo;
-import cn.bestzuo.mjforum.pojo.UserRate;
 
 import java.util.List;
 

@@ -8,6 +8,7 @@ import cn.bestzuo.mjforum.service.UserInfoService;
 import cn.bestzuo.mjforum.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -138,7 +139,7 @@ public class EmailCheckController {
      * @param username 用户名
      * @return  通用返回结果
      */
-    @RequestMapping("/queryEmailStatus")
+    @GetMapping("/queryEmailStatus")
     @ResponseBody
     public ForumResult queryEmailStatus(@RequestParam("username") String username) {
         if (StringUtils.isEmpty(username))
@@ -157,7 +158,7 @@ public class EmailCheckController {
      *
      * @return  通用返回结果
      */
-    @RequestMapping("/getEmailStatus")
+    @GetMapping("/getEmailStatus")
     @ResponseBody
     public ForumResult selectEmailByUsername(@RequestParam("email") String email) {
 

@@ -8,7 +8,8 @@ public interface CategoryService {
 
     /**
      * 查询所有分类信息
-     * @return
+     *
+     * @return 分类信息
      */
     List<Categories> getAllCategories();
 }

@@ -8,12 +8,10 @@ import cn.bestzuo.mjforum.pojo.Question;
 import cn.bestzuo.mjforum.pojo.UserInfo;
 import cn.bestzuo.mjforum.pojo.vo.CommentNoticeVO;
 import cn.bestzuo.mjforum.service.CommentNoticeService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,14 +20,18 @@ import java.util.List;
 @Service
 public class CommentNoticeServiceImpl implements CommentNoticeService {
 
-    @Autowired
-    private CommentNoticeInfoMapper commentNoticeInfoMapper;
+    private final CommentNoticeInfoMapper commentNoticeInfoMapper;
+
+    private final UserInfoMapper userInfoMapper;
+
+    private final QuestionMapper questionMapper;
 
     @Autowired
-    private UserInfoMapper userInfoMapper;
-
-    @Autowired
-    private QuestionMapper questionMapper;
+    public CommentNoticeServiceImpl(CommentNoticeInfoMapper commentNoticeInfoMapper, UserInfoMapper userInfoMapper, QuestionMapper questionMapper) {
+        this.commentNoticeInfoMapper = commentNoticeInfoMapper;
+        this.userInfoMapper = userInfoMapper;
+        this.questionMapper = questionMapper;
+    }
 
 
     @Override
@@ -40,12 +42,13 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 
     /**
      * 根据被通知者用户名查询通知消息
-     * @param noticeName
-     * @return
+     * @param noticeName 通知用户名
+     * @return 通知消息
      */
     @Override
     public List<CommentNoticeInfo> selectCommentNoticeByName(String noticeName) {
-        return commentNoticeInfoMapper.selectCommentNoticeByName(noticeName);
+        UserInfo userInfo = userInfoMapper.selectUserInfoByName(noticeName);
+        return commentNoticeInfoMapper.selectCommentNoticeByUId(userInfo.getUId());
     }
 
     /**
@@ -59,10 +62,10 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
         commentNoticeVO.setId(commentNoticeInfo.getId());
 
         //获取回复者头像
-        UserInfo info = userInfoMapper.selectUserInfoByName(commentNoticeInfo.getCommentName());
+        UserInfo info = userInfoMapper.selectUserInfoByUid(commentNoticeInfo.getCommentId());
         commentNoticeVO.setCommentAvatar(info.getAvatar());
         commentNoticeVO.setParentCommentId(commentNoticeInfo.getParentCommentId());
-        commentNoticeVO.setUsername(commentNoticeInfo.getCommentName());
+        commentNoticeVO.setUsername(info.getUsername());
         commentNoticeVO.setContent(commentNoticeInfo.getContent());
         commentNoticeVO.setStatus(commentNoticeInfo.getStatus());
         commentNoticeVO.setQuestionId(commentNoticeInfo.getQuestionId());

@@ -24,14 +24,14 @@ public class CommentReply {
     private int touid;
 
     //目标用户名
-    private String touname;
+//    private String touname;
 
     //用户头像
-    private String rAvatar;
+//    private String rAvatar;
 
     //用户id
     private int rUid;
 
     //用户名
-    private String rName;
+//    private String rName;
 }

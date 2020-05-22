@@ -3,10 +3,7 @@ package cn.bestzuo.mjforum.controller;
 import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.Question;
 import cn.bestzuo.mjforum.pojo.User;
-import cn.bestzuo.mjforum.service.QuestionService;
-import cn.bestzuo.mjforum.service.QuestionTagService;
-import cn.bestzuo.mjforum.service.TagService;
-import cn.bestzuo.mjforum.service.UserService;
+import cn.bestzuo.mjforum.service.*;
 import cn.bestzuo.mjforum.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +25,8 @@ public class PulishController {
 
     private final UserService userService;
 
+    private final UserInfoService userInfoService;
+
     private final QuestionService questionService;
 
     private final TagService tagService;
@@ -35,11 +34,12 @@ public class PulishController {
     private final QuestionTagService questionTagService;
 
     @Autowired
-    public PulishController(UserService userService, QuestionService questionService, TagService tagService, QuestionTagService questionTagService) {
+    public PulishController(UserService userService, QuestionService questionService, TagService tagService, QuestionTagService questionTagService, UserInfoService userInfoService) {
         this.userService = userService;
         this.questionService = questionService;
         this.tagService = tagService;
         this.questionTagService = questionTagService;
+        this.userInfoService = userInfoService;
     }
 
     @GetMapping("/publish")
@@ -105,7 +105,7 @@ public class PulishController {
 
         //添加发帖人信息
         String username = (String) request.getSession().getAttribute("username");
-        ques.setPublisher(username);
+        ques.setPublisherId(userInfoService.getUserInfoByName(username).getUId());
 
         //发帖时间
         Date date = new Date();
@@ -136,7 +136,7 @@ public class PulishController {
      * @param tag         标签信息
      * @return  通用包装结果
      */
-    @PostMapping("/editQuestionInfo")
+    @PutMapping("/editQuestionInfo")
     @ResponseBody
     public ForumResult editQuestionInfo(@RequestParam("id") Integer questionId,
                                         @RequestParam("description") String description,
@@ -184,7 +184,7 @@ public class PulishController {
             return new ForumResult(400, "信息不存在", null);
 
         //校验问题发布者与操作用户是否为同一人
-        if (!question.getPublisher().equals(user.getUsername())) {
+        if (question.getPublisherId() != user.getUid()) {
             return new ForumResult(400, "非法操作", null);
         }
 

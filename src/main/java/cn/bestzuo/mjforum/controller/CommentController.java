@@ -15,9 +15,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
@@ -36,15 +34,13 @@ public class CommentController {
 
     private final UserInfoService userInfoService;
 
-    private final QuestionService questionService;
 
     private final UserRateService userRateService;
 
     @Autowired
-    public CommentController(CommentService commentService, UserInfoService userInfoService, QuestionService questionService, UserRateService userRateService) {
+    public CommentController(CommentService commentService, UserInfoService userInfoService, UserRateService userRateService) {
         this.commentService = commentService;
         this.userInfoService = userInfoService;
-        this.questionService = questionService;
         this.userRateService = userRateService;
     }
 
@@ -56,7 +52,7 @@ public class CommentController {
      * @param questionId 问题ID
      * @return 封装
      */
-    @RequestMapping("/comment")
+    @PostMapping("/comment")
     @ResponseBody
     public ForumResult commentOnQuestion(
             @RequestParam("username") String username,
@@ -72,19 +68,10 @@ public class CommentController {
             return new ForumResult(400, "关联问题信息不存在", null);
         }
 
-        //判断user信息
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
-        if (userInfo == null)
-            return new ForumResult(500, "用户信息不存在", null);
-
-        //判断questionId
-        Question question = questionService.selectByPrimaryKey(questionId);
-        if (question == null)
-            return new ForumResult(500, "问题信息不存在", null);
-
+        //插入评论信息
         try {
             Comment com = commentService.insertCommentByQuestionId(username, comment, questionId);
-            return new ForumResult(200, "评论成功", com);
+            return com == null ? new ForumResult(500, "评论失败，非法操作", null) : new ForumResult(200, "操作成功", com);
         } catch (Exception e) {
             e.printStackTrace();
             return new ForumResult(500, "评论失败，请稍后再试", null);
@@ -97,13 +84,14 @@ public class CommentController {
      * @param questionId 问题ID
      * @return 包装结果
      */
-    @RequestMapping("/getCommentsByQuestionId")
+    @GetMapping("/getCommentsByQuestionId")
     @ResponseBody
     public LayuiFlowResult getCommentsByQuestionId(@RequestParam("page") Integer page,
                                                    @RequestParam("questionId") Integer questionId) {
         //后端数据校验
         if (questionId == null) return new LayuiFlowResult(400, "关联问题失效", null, 0);
 
+        //流式加载分页请求
         PageHelper.startPage(page, 5);
         List<Comment> comments = commentService.queryCommentByQuestionId(questionId);
         PageInfo<Comment> pageInfo = new PageInfo<>(comments);
@@ -129,11 +117,11 @@ public class CommentController {
         vo.setUid(comment.getUid());
         vo.setCId(comment.getCId());
         vo.setQuestionId(comment.getQuestionId());
-        vo.setUname(comment.getUname());
         vo.setTime(comment.getTime());
         vo.setComment(comment.getComment());
 
-        UserInfo info = userInfoService.getUserInfoByName(comment.getUname());
+        UserInfo info = userInfoService.selectUserInfoByUid(comment.getUid());
+        vo.setUname(info.getUsername());
         //获取评论者的头像信息
         vo.setAvatar(info.getAvatar());
 

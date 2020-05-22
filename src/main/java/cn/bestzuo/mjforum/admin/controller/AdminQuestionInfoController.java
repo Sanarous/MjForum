@@ -21,16 +21,20 @@ import java.util.List;
 @Controller
 public class AdminQuestionInfoController {
 
+    private final AdminQuestionInfoService adminQuestionInfoService;
+
     @Autowired
-    private AdminQuestionInfoService adminQuestionInfoService;
+    public AdminQuestionInfoController(AdminQuestionInfoService adminQuestionInfoService) {
+        this.adminQuestionInfoService = adminQuestionInfoService;
+    }
 
     /**
      * 查询问题信息
-     * @param page
-     * @param limit
-     * @return
+     * @param page  当前页面
+     * @param limit  每页数量
+     * @return  包装结果
      */
-    @RequestMapping("/getAdminQuestion")
+    @GetMapping("/getAdminQuestion")
     @ResponseBody
     public LayuiTableResult getAllQuestionInfo(@RequestParam("page") Integer page,
                                                @RequestParam("limit") Integer limit,
@@ -52,10 +56,10 @@ public class AdminQuestionInfoController {
 
     /**
      * 更新加精状态
-     * @param questionId
-     * @return
+     * @param questionId 问题ID
+     * @return 包装结果
      */
-    @PostMapping("/updateJingForQuestionById")
+    @PutMapping("/updateJingForQuestionById")
     @ResponseBody
     public ForumResult updateJingForQuestionById(@RequestParam("questionId") Integer questionId){
         if(questionId == null) return new ForumResult(400,"问题ID不能为空",null);
@@ -67,10 +71,10 @@ public class AdminQuestionInfoController {
 
     /**
      * 更新置顶状态
-     * @param questionId
-     * @return
+     * @param questionId 问题ID
+     * @return  包装结果
      */
-    @PostMapping("/updateDingForQuestionById")
+    @PutMapping("/updateDingForQuestionById")
     @ResponseBody
     public ForumResult updateDingForQuestionById(@RequestParam("questionId") Integer questionId){
         if(questionId == null) return new ForumResult(400,"问题ID不能为空",null);
@@ -87,7 +91,7 @@ public class AdminQuestionInfoController {
      * @param keyword
      * @return
      */
-    @RequestMapping("/getReport")
+    @GetMapping("/getReport")
     @ResponseBody
     public LayuiTableResult getAllReports(@RequestParam("page") Integer page,
                                      @RequestParam("limit") Integer limit,
@@ -110,9 +114,9 @@ public class AdminQuestionInfoController {
 
     /**
      * 更新问题处理结果
-     * @param flag
-     * @param reportId
-     * @return
+     * @param flag  处理标志 0-未处理 1-已处理
+     * @param reportId  举报ID
+     * @return  包装结果
      */
     @PostMapping("/updateProcessResult")
     @ResponseBody
@@ -125,8 +129,8 @@ public class AdminQuestionInfoController {
 
     /**
      * 查询举报处理请求
-     * @param reportId
-     * @return
+     * @param reportId 举报ID
+     * @return  包装结果
      */
     @GetMapping("/getStatusById")
     public ForumResult getStatusForReport(@RequestParam("reportId") Integer reportId){
