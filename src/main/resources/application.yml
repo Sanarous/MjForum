@@ -22,7 +22,7 @@ spring:
   mail:
     host: smtp.qq.com
     username: mjforum@foxmail.com
-    password: tgkjkezqtyzubbgf
+    password: 
     protocol: smtp
     properties.mail.smtp.auth: true
     properties.mail.smtp.port: 465
