@@ -22,7 +22,7 @@ public interface CollectionMapper {
      * 更新收藏状态
      * @return 更新行数
      */
-    int updateCollectionStatus(Integer status,String time,Integer uId,Integer questionId);
+    int updateCollectionStatus(Integer status, String time, Integer uId, Integer questionId);
 
     /**
      * 查询收藏情况
@@ -37,7 +37,7 @@ public interface CollectionMapper {
      * @param questionId  问题ID
      * @return  收藏信息
      */
-    Collection selectSpecificCollections(Integer uId,Integer questionId);
+    Collection selectSpecificCollections(Integer uId, Integer questionId);
 
     /**
      * 根据用户名和问题ID查找到对应问题收藏的状态
@@ -45,7 +45,7 @@ public interface CollectionMapper {
      * @param questionId  问题ID
      * @return 收藏状态
      */
-    Integer selectCollectionStatus(Integer uId,Integer questionId);
+    Integer selectCollectionStatus(Integer uId, Integer questionId);
 
     /**
      * 根据问题发布者查询该发布者的被收藏情况

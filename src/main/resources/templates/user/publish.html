@@ -3,90 +3,157 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <title>发布问题 - 码匠论坛</title>
-    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link href="/static/assets/libs/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/static/assets/module/admin.css?v=318" rel="stylesheet">
+    <link href="/static/assets/module/notice/notice.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/css/publish.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
     <script th:src="@{/static/common/jquery.min.js}"></script>
-    <script th:src="@{/static/js/qiniu.min.js}"></script>
-    <script src="/static/plupload/plupload.full.min.js"></script>
-    <script src="/static/plupload/wangEditor/wangEditor.min.js"></script>
-    <script th:src="@{/static/layui/layui.js}"></script>
     <script th:src="@{/static/js/search.js}"></script>
     <script th:src="@{/static/js/forum.js}"></script>
-    <script th:src="@{/static/js/emoji.js}"></script>
+    <script src="/static/assets/libs/layui/layui.js" type="text/javascript"></script>
+    <script src="/static/assets/module/notice/notice.js" type="text/javascript"></script>
+    <script src="/static/assets/libs/tinymce/tinymce.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        .layui-header {
+            background: #393D49;
+        }
+
+        body .tox-tinymce-aux {
+            z-index: 19892000;
+        }
+
+        .layui-card-body {
+            padding: 0 !important;
+        }
+    </style>
 </head>
 <body>
-<div class="layui-layout layui-layout-admin">
+<div class="layui-layout">
     <header th:replace="common/header"></header>
-    <fieldset class="layui-elem-field layui-field-title">
-        <legend>发起提问</legend>
-    </fieldset>
+    <!-- 左侧 -->
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs8">
+                <div class="layui-card" style="padding: 20px">
+                    <form class="layui-form layui-form-pane" method="post">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">问题标题</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" lay-verify="title" name="title"
+                                       placeholder="请输入标题"
+                                       type="text">
+                            </div>
+                        </div>
+                        <!--富文本编辑器-->
+                        <div class="layui-card">
+                            <div class="layui-card-body" id="loading-textarea">
+                                <div class="page-loading">
+                                    <div class="ball-loader">
+                                        <span></span><span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <textarea id="demoEditor"></textarea>
+                            </div>
+                        </div>
 
-    <div class="layui-col-xs8" style="margin-left: 3%;margin-bottom: 100px">
-        <form class="layui-form layui-form-pane" method="post">
-            <div class="layui-form-item">
-                <label class="layui-form-label">问题标题</label>
-                <div class="layui-input-block">
-                    <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题"
-                           class="layui-input">
+                        <!-- 添加标签 -->
+                        <div style="height: 10px"></div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">问题标签</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" id="question-tag" lay-verify="tag"
+                                       name="tag"
+                                       placeholder="请输入标签名称，用英文逗号分隔"
+                                       type="text">
+                            </div>
+                        </div>
+                        <!-- 数据库标签选择 -->
+                        <div class="layui-tab" id="forum-tags"></div>
+
+                        <div style="height: 20px"></div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-filter="publish" lay-submit=""
+                                        style="float: right;border-radius: 10px"
+                                        type="submit"><i class="layui-icon layui-icon-survey"
+                                                         style="font-size: 15px;font-weight: 500">发布帖子</i></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <!--wangEditor富文本编辑器-->
-            <div id="editor" class="text"></div>
-            <!-- 添加标签 -->
-            <div style="height: 10px"></div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">问题标签</label>
-                <div class="layui-input-block">
-                    <input type="text" name="tag" id="question-tag" lay-verify="tag" autocomplete="off"
-                           placeholder="请输入标签名称，用英文逗号分隔"
-                           class="layui-input">
+            <!-- 右侧 -->
+            <div class="layui-col-xs3">
+                <div class="layui-card" style="padding: 20px">
+                    <div id="publishInfo">
+                        <div class="info">
+                            <h1 style="text-align: center"><i aria-hidden="true" class="fa fa-university"></i>&nbsp;问题发起指南
+                            </h1>
+                            <ol>
+                                <li>问题标题: 请用精简的语言描述您发布的问题，不超过 50 字</li>
+                                <li>问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料</li>
+                                <li>选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过 10 个字</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <!-- 数据库标签选择 -->
-            <div class="layui-tab" id="forum-tags"></div>
-
-            <div style="height: 20px"></div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button type="submit" style="float: right;border-radius: 10px" class="layui-btn"
-                            lay-submit=""
-                            lay-filter="publish"><i style="font-size: 15px;font-weight: 500"
-                                                    class="layui-icon layui-icon-survey">发布问题</i></button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="layui-col-xs3" style="margin-left: 4%">
-
-        <div id="publishInfo">
-            <div class="info">
-                <h1 style="text-align: center"><i class="fa fa-university" aria-hidden="true"></i>&nbsp;问题发起指南</h1>
-                <ol>
-                    <li>问题标题: 请用精简的语言描述您发布的问题，不超过 50 字</li>
-                    <li>问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料</li>
-                    <li>选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过 10 个字</li>
-                </ol>
             </div>
         </div>
     </div>
-
     <script th:inline="javascript">
 
         let loginUserInfo = [[${session.loginUserInfo}]];
         init(loginUserInfo);
 
-        layui.use(['element', 'form', 'layedit', 'jquery'], function () {
+        layui.config({
+            base: '/static/assets/module/'
+        }).use(['admin', 'element', 'form', 'layedit', 'jquery', 'notice'], function () {
+            let admin = layui.admin;
             let element = layui.element;
             let layedit = layui.layedit;
             let form = layui.form;
+            let notice = layui.notice;
             element.init();
 
             $("#title-publish").addClass("layui-this");
 
+            // 渲染富文本编辑器
+            tinymce.init({
+                selector: '#demoEditor',
+                // skin: 'oxide-dark',
+                theme: 'silver',
+                // icons_url: '/icons/custom/icons.js',
+                icons: 'custom',
+                setup: function () {
+                    admin.removeLoading('#loading-textarea', true, true);
+                },
+                height: 525,
+                branding: false,
+                language: 'zh_CN',
+                plugins: 'code print preview fullscreen paste searchreplace save autosave link autolink image imagetools media table codesample lists advlist hr charmap emoticons anchor directionality pagebreak quickbars nonbreaking visualblocks visualchars wordcount',
+                toolbar: 'fullscreen preview code | undo redo | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | formatselect fontselect fontsizeselect | link image media emoticons charmap anchor pagebreak codesample | ltr rtl',
+                toolbar_drawer: 'sliding',
+                automatic_uploads: false,
+                images_upload_url: '/uploadQuestionImages',
+                file_picker_types: 'media',
+                file_picker_callback: function (callback, value, meta) {
+                    layer.msg('演示环境不允许上传', {anim: 6});
+                },
+                init_instance_callback: function (editor) {
+                    console.log(editor);
+                }
+            });
+
+            // 监听页面卸载并销毁编辑器
+            admin.on('destroy(plugin/other/editor)', function () {
+                tinymce.get('demoEditor').destroy(false);
+            });
+            /////////////////////////////////////////////////
+
             //面包屑使用
-            let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>发起提问</cite></a>";
+            let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>发帖</cite></a>";
             $(".layui-breadcrumb a").last().after(currPoisition);
 
             //配置图片上传
@@ -96,45 +163,6 @@
                     , type: ''
                 }
             });
-
-            //配置wangEditor富文本编辑器
-            let E = window.wangEditor;
-            let editor = new E('#editor');
-
-            editor.customConfig.debug = true;
-            // editor.customConfig.customAlert = function (info) {
-            //     // info 是需要提示的内容
-            //     alert('上传图片助手：' + info)
-            // };
-
-            //wangEditor配置
-            editor.customConfig.uploadImgServer = '/uploadQuestionImages';  // 上传图片到服务器
-            // editor.customConfig.qiniu = true
-            editor.customConfig.uploadImgShowBase64 = true;   // 使用 base64 保存图片
-            editor.customConfig.uploadImgTimeout = 100000000;
-            editor.customConfig.uploadImgMaxSize = 20 * 1024 * 1024;  //图片最大20M
-            editor.customConfig.uploadImgMaxLength = 5;
-            editor.customConfig.uploadFileName = 'ques';
-            // editor.customConfig.showLinkImg = false;   //是否关闭在线图片链接
-
-            editor.customConfig.uploadImgHooks = {
-                fail: function (xhr, editor, result) {
-                    // 图片上传并返回结果，但图片插入错误时触发
-                    // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-                    layer.msg("图片插入失败");
-                },
-                error: function (xhr, editor) {
-                    layer.msg("图片上传失败");
-                },
-                timeout: function (xhr, editor) {
-                    layer.msg("图片上传超时");
-                },
-            };
-
-            //配置表情包
-            initEmoji(editor);
-
-            editor.create();
 
             //表单验证
             form.verify({
@@ -170,23 +198,22 @@
             form.on('submit(publish)', function (data) {
                 //提交前的校验数据
                 if (data.field.title == null || ($.trim(data.field.title).length === 0)) {
-                    layer.msg("标题不能为空哦", {icon: 0, time: 2000});
+                    notice.msg('标题不能为空哦', {icon: 3});
                     return false;
                 }
                 if (($.trim(data.field.title).length > 50)) {
-                    layer.msg("标题不能超过50个字符哦", {icon: 0, time: 2000});
+                    notice.msg('标题不能超过50个字符哦', {icon: 3});
                     return false;
                 }
                 //验证输入内容不能为空
-                let summary = editor.txt.html();
-                if (summary.replace(/<.*?>/g, "") === null || summary.replace(/<.*?>/g, "") === "") {
-                    layer.msg("输入内容不能为空", {icon: 0, time: 2000});
+                if (admin.util.fullTextIsEmpty(tinymce.get('demoEditor').getContent())) {
+                    notice.msg('正文内容不能为空哦', {icon: 3});
                     return false;
                 }
 
                 //标签不能为空
                 if (data.field.tag == null || ($.trim(data.field.tag).length === 0)) {
-                    layer.msg("至少填写一个标签哦", {icon: 0, time: 2000});
+                    notice.msg('至少填写一个标签哦', {icon: 3});
                     return false;
                 }
 
@@ -201,34 +228,35 @@
                     for (let i = 0; i < tags.length - 1; i++) {
                         for (let j = i + 1; j < tags.length; j++) {
                             if (tags[i].toLowerCase() === tags[j].toLowerCase()) {
-                                layer.msg("同一个标签不能重复添加哦", {icon: 0, time: 2000});
+                                notice.msg('不要重复添加同一个标签哦', {icon: 3});
                                 return false;
                             }
                         }
                     }
                 }
-
                 $.ajax({
                     type: "post",
                     url: "/publish",
                     data: {
                         title: data.field.title,
-                        description: editor.txt.html(),
+                        description: tinymce.get('demoEditor').getContent(),
                         tag: data.field.tag
                     },
                     success: function (res) {
                         if (res.status === 200) {
-                            layer.alert("发布问题成功，积分+3", {icon: 6, time: 2000}, function () {
-                                window.location.href = "/";
+                            notice.msg('发帖成功', {
+                                icon: 1, timeout: 1000, onClosed: function () {
+                                    window.location.href = "/";
+                                }
                             });
                         } else if (res.status === 500) {
-                            layer.alert(res.msg, {icon: 5, time: 2000});
+                            notice.msg(res.msg, {icon: 2});
                         } else if (res.status === 400) {
-                            layer.alert(res.msg, {icon: 5, time: 2000});
+                            notice.msg(res.msg, {icon: 2});
                         }
                     },
                     error: function () {
-                        layer.alert("系统错误，请稍后再试", {icon: 5, time: 2000});
+                        notice.msg('系统错误,请稍后再试', {icon: 2});
                     }
                 });
                 return false;
@@ -346,7 +374,6 @@
             return html + "</div>";
         }
     </script>
-    <!--    <footer th:replace="common/footer"></footer>-->
 </div>
 </body>
 </html>

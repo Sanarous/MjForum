@@ -39,7 +39,7 @@ spring:
     url: jdbc:mysql://localhost:3306/forum?useUnicode=true&characterEncoding=utf-8&
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: zuoxiang
+    password: root
 
   # redis服务
   redis:
@@ -80,10 +80,5 @@ pagehelper:
 # 腾讯云地址
 tencent:
   path: https://forum-1258928558.cos.ap-guangzhou.myqcloud.com/
-  bucket: forum-1258928558
-  secretId: AKID947wVo4gEWaJp59KFxa12oPq2KPOe7mB
-  secretKey: kIzWpujIfyKFJ7gDHWVFv6VnslOllHWb
-
-
 
 

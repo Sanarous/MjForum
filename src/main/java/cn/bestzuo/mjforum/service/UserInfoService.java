@@ -27,7 +27,7 @@ public interface UserInfoService {
     /**
      * 修改用户头像
      */
-    void updateUserAvatar(String avatar,String username);
+    void updateUserAvatar(String avatar, String username);
 
     /**
      * 更新用户信息

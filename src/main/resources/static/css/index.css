@@ -1,4 +1,27 @@
 /** index.html 对应的css文件 **/
+.layui-header {
+    background: #393D49;
+}
+
+#ques-pagination .layui-laypage-count {
+    background: #9990;
+}
+
+#ques-pagination .layui-laypage-skip {
+    background: #9990;
+}
+
+.layui-colla-title {
+    background-color: #fff !important;
+}
+
+.layui-collapse {
+    border-style: hidden !important;
+}
+
+.layui-colla-content, .layui-colla-item {
+    border-top-style: hidden !important;
+}
 
 body{
     font-family: "Linux Biolinum",'Noto Serif SC',sans-serif;
@@ -220,7 +243,7 @@ div#test1 {
 }
 
 .boxContent:hover{
-    background-color: #9999991f;
+    /*background-color: #fff;*/
     transform: scale(1.05);
 }
 
@@ -297,8 +320,8 @@ div#test1 {
     padding: 2px 4px;
     color: #fff;
     font-weight: 500;
-    font-size: 16px;
-    line-height: 18px;
+    font-size: 13px;
+    line-height: 17px;
     background-color: #f89d4a;
     border-radius: 2px;
 }
@@ -323,7 +346,8 @@ div#test1 {
 }
 
 .topic-info-title{
-    font-size: 17px;
+    vertical-align: -1px;
+    font-size: 15px;
 }
 
 .topic-focus-info{

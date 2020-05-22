@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Collection;
 
 /**
  * 问题管理Service
@@ -449,23 +448,23 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 根据发布者查询发布的问题信息
      *
-     * @param publisher 用户
+     * @param publisherId 用户
      * @return 问题信息
      */
     @Override
-    public List<Question> getAllQuestionsByPublisher(String publisher) {
-        return questionMapper.getAllQuestionsByPublisherId(userInfoMapper.selectUserInfoByName(publisher).getUId());
+    public List<Question> getAllQuestionsByPublisher(Integer publisherId) {
+        return questionMapper.getAllQuestionsByPublisherId(publisherId);
     }
 
     /**
      * 获取我的最热问题
      *
-     * @param username 用户名
+     * @param publisherId 用户名
      * @return 问题信息
      */
     @Override
-    public List<Question> selectMyHotQuestions(String username) {
-        return questionMapper.selectMyHotQuestions(userInfoMapper.selectUserInfoByName(username).getUId());
+    public List<Question> selectMyHotQuestions(Integer publisherId) {
+        return questionMapper.selectMyHotQuestions(publisherId);
     }
 
     /**

@@ -14,7 +14,7 @@
         define(factory);
     } else if (window.layui && layui.define) {  // layui加载
         layui.define(function (exports) {
-            layui.link(layui.cache.base + 'Cropper/Cropper.css');
+            layui.link('/static/assets/module/Cropper/Cropper.css');
             exports('Cropper', factory());
         });
     } else {

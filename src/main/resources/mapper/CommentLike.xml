@@ -2,26 +2,30 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.CommentLikeMapper">
+<mapper namespace="cn.bestzuo.mjforum.mapper.CommentLikeMapper">
     <!--新增一条点赞信息-->
     <insert id="insertCommentLike">
-        insert into tb_comment_like(comment_id,comment_uid,comment_name,like_id,like_name,`time`,`status`,question_id)
-        values (#{commentId},#{commentUid},#{commentName},#{likeId},#{likeName},#{time},#{status},#{questionId})
+        insert into tb_comment_like(comment_id,comment_uid,like_id,`time`,`status`,question_id)
+        values (#{commentId},#{commentUid},#{likeId},#{time},#{status},#{questionId})
     </insert>
+
     <!-- 修改点赞状态 -->
     <update id="updateCommentLike">
         update tb_comment_like set `status` = #{status},`time` = #{time} where id = #{id}
     </update>
+
     <!-- 根据评论ID和用户名查询点赞信息 -->
-    <select id="selectCommentLike" resultType="cn.bestzuo.zuoforum.pojo.CommentLike">
-        select * from tb_comment_like where comment_id = #{commentId} and like_name = #{likeName}
+    <select id="selectCommentLike" resultType="cn.bestzuo.mjforum.pojo.CommentLike">
+        select * from tb_comment_like where comment_id = #{commentId} and like_id = #{likeId}
     </select>
+
     <!-- 根据评论ID查询该评论的点赞数 -->
     <select id="selectLikeCountByCommentId" resultType="java.lang.Integer">
         select count(*) from tb_comment_like where comment_id = #{commentId} and status = 1
     </select>
+
     <!--查询评论者的所有点赞数-->
-    <select id="selectCommentLikeByUsername" resultType="cn.bestzuo.zuoforum.pojo.CommentLike">
-        select * from tb_comment_like where comment_name = #{username} and `status` = 1 order by id desc
+    <select id="selectCommentLikeByUid" resultType="cn.bestzuo.mjforum.pojo.CommentLike">
+        select * from tb_comment_like where comment_uid = #{uid} and `status` = 1 order by id desc
     </select>
 </mapper>

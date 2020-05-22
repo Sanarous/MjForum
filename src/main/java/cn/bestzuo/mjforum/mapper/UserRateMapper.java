@@ -37,5 +37,5 @@ public interface UserRateMapper {
     /**
      * 根据用户ID更新用户积分
      */
-    int updateRateById(Integer userId,Integer rate);
+    int updateRateById(Integer userId, Integer rate);
 }

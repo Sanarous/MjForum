@@ -3,16 +3,16 @@ package cn.bestzuo.mjforum.controller;
 import cn.bestzuo.mjforum.common.EasyWebImageUploadResult;
 import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.common.LayEditUploadImageResult;
-import cn.bestzuo.mjforum.common.WangEditorResult;
 import cn.bestzuo.mjforum.pojo.UploadImage;
-import cn.bestzuo.mjforum.pojo.vo.UserVO;
 import cn.bestzuo.mjforum.service.UserInfoService;
 import cn.bestzuo.mjforum.util.TencentCOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ public class ImageUploadController {
     @PostMapping("/newUpload")
     @ResponseBody
     public ForumResult newUpload(@RequestParam("file") MultipartFile multipartFile,
-                                 HttpServletRequest request,Model model) throws IOException {
+                                 HttpServletRequest request, Model model) throws IOException {
 
         String username = (String)request.getSession().getAttribute("username");
 

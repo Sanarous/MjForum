@@ -44,7 +44,7 @@ public class LayuiFlowResult {
 
     }
 
-    public static LayuiFlowResult build(int status,String msg,Object data,int pages){
+    public static LayuiFlowResult build(int status, String msg, Object data, int pages) {
         return new LayuiFlowResult(status,msg,data,pages);
     }
 
@@ -65,7 +65,7 @@ public class LayuiFlowResult {
         return new LayuiFlowResult(200,"",null,0);
     }
 
-    public static LayuiFlowResult build(int status,String msg){
+    public static LayuiFlowResult build(int status, String msg) {
         return new LayuiFlowResult(status,msg,null,0);
     }
 }

@@ -1236,6 +1236,7 @@ layui.define([], function (exports) {
         };
     });
 
-    layui.link(layui.cache.base + 'notice/notice.css');  // 加载css
+    // layui.link(layui.cache.base + 'notice/notice.css');  // 加载css
+    layui.link('/static/assets/module/notice/notice.css');  // 加载css
     exports('notice', $iziToast);
 });

@@ -5,7 +5,6 @@
     <title>讨论 - 码匠论坛</title>
     <link rel="stylesheet" href="/static/assets/libs/layui/css/layui.css"/>
     <link rel="stylesheet" href="/static/assets/module/admin.css?v=318">
-    <link rel="stylesheet" href="/static/assets/module/notice/notice.css">
     <link rel="stylesheet" href="/static/common/custom.css" media="all"/>
     <link rel="stylesheet" href="/static/css/index.css" media="all"/>
     <link rel="stylesheet" href="/static/css/post.css" media="all"/>
@@ -45,7 +44,7 @@
                     <span id="questionDing" th:if="${question.isDing} eq 1" style="color:red;">[置顶]</span>
                     <span id="questionJing" th:if="${question.isJing} eq 1" style="color:red;">[精品]</span>
                         发帖用户：<a th:href="@{'/user/'+${question.uid}}"><span th:text="${question.publisher}"></span></a>&nbsp;|&nbsp;
-                        浏览量： <span th:text="${question.viewCount}"></span>&nbsp;|&nbsp;
+                        浏览量： <span id="viewCount" th:text="${question.viewCount}"></span>&nbsp;|&nbsp;
                         评论数： <span th:text="${question.commentCount}"></span>&nbsp;|&nbsp;
                         收藏数： <span th:text="${question.likeCount}"></span>&nbsp;|&nbsp;
                         发布于：<span th:text="${question.gmtCreate}"></span>&nbsp;|&nbsp;
@@ -137,7 +136,9 @@
                                                                  aria-hidden="true"></i>&nbsp;关注</span>
                                     <span class="job-title" th:utext="${question.jobTitle}"></span>
                                     <div style="width: 370px">
-                                        <span id="rate" title="用户等级头衔" class=""></span>
+                                        <span class="" id="rate"
+                                              lay-bgImg="linear-gradient(to right,#8510FF,#D025C2,#FF8B2D,#F64E2C)"
+                                              lay-direction="3" lay-tips="用户等级头衔"></span>
                                         <div id="question-userinfo" th:utext="${question.userInfo}"></div>
                                     </div>
                                 </dd>
@@ -189,6 +190,9 @@
                 url: '/uploadImage'
             }
         });
+
+        //动画旋转
+        admin.util.animateNum('#viewCount');
 
         //评论区域的富文本编辑器
         edit = layedit.build('comment-description', {

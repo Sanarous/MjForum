@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.SearchMapper">
+<mapper namespace="cn.bestzuo.mjforum.mapper.SearchMapper">
     <!-- 根据关键词查询问题 -->
-    <select id="searchByTitleAndContent" parameterType="string" resultType="cn.bestzuo.zuoforum.pojo.Question">
+    <select id="searchByTitleAndContent" parameterType="string" resultType="cn.bestzuo.mjforum.pojo.Question">
         SELECT * FROM tb_question WHERE title LIKE CONCAT('%',#{keywords},'%')  OR `description` LIKE CONCAT('%',#{keywords},'%')
     </select>
 </mapper>

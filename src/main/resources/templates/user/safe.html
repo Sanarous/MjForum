@@ -2,69 +2,332 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <link href="/static/assets/libs/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/static/assets/module/admin.css?v=318" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/css/userinfo.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
-    <script th:src="@{/static/layui/layui.js}"></script>
+    <script src="/static/assets/libs/layui/layui.js" type="text/javascript"></script>
+    <script src="/static/assets/module/notice/notice.js" type="text/javascript"></script>
+    <script src="/static/assets/module/steps/steps.js" type="text/javascript"></script>
     <script th:src="@{/static/js/search.js}"></script>
     <script th:src="@{/static/common/jquery.min.js}"></script>
     <script th:src="@{/static/js/forum.js}"></script>
     <style type="text/css">
-        .d1 button{
+        .layui-header {
+            background: #393D49;
+        }
+
+        .d1 button {
             top: 12px !important;
+        }
+
+        [lay-filter="formStepsStep"] .layui-form-item {
+            margin-bottom: 25px;
         }
     </style>
 </head>
 <body>
-<div class="layui-layout layui-layout-admin">
+<div class="layui-layout">
     <header th:replace="common/header"></header>
 
-    <div style="width:800px;margin: 0 auto;padding: 10px 20px 0 400px;">
-        <h2 style="margin-bottom: 16px">修改密码</h2>
-        <form class="layui-form layui-form-pane" method="post" lay-filter="userinfo" style="margin-bottom: 10%">
-            <div class="layui-form-item">
-                <label class="layui-form-label">原密码</label>
-                <div class="layui-input-inline">
-                    <input type="password" name="oldPass" lay-verify="oldPass" autocomplete="off" class="layui-input">
+    <div class="layui-tab layui-tab-vertical">
+        <ul class="layui-tab-title">
+            <li class="layui-this" style="font-size: 20px">密保设置</li>
+            <li style="font-size: 20px;">修改密码</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-fluid">
+                    <div class="layui-card">
+                        <div class="layui-card-body" style="padding-top: 40px;">
+                            <!-- 分布表单开始 -->
+                            <div class="layui-tab layui-steps layui-steps-readonly" lay-filter="formStepsStep"
+                                 style="max-width: 650px;">
+                                <!-- 标题 -->
+                                <ul class="layui-tab-title">
+                                    <li class="layui-this">
+                                        <i class="layui-icon layui-icon-ok">1</i>
+                                        <span class="layui-steps-title">第一步</span>
+                                        <span class="layui-steps-content">填写当前用户密码</span>
+                                    </li>
+                                    <li>
+                                        <i class="layui-icon layui-icon-ok">2</i>
+                                        <span class="layui-steps-title">第二步</span>
+                                        <span class="layui-steps-content">设置密保信息</span>
+                                    </li>
+                                    <li>
+                                        <i class="layui-icon layui-icon-ok">3</i>
+                                        <span class="layui-steps-title">第三步</span>
+                                        <span class="layui-steps-content">操作成功</span>
+                                    </li>
+                                </ul>
+                                <div class="layui-tab-content">
+                                    <div class="layui-tab-item layui-show">
+                                        <!-- 表单一 -->
+                                        <form class="layui-form" lay-filter="formStepForm1"
+                                              style="max-width: 460px;margin: 0 auto;padding: 40px 30px 0 0;">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label layui-form-required">当前密码:</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input" id="password" lay-verType="tips"
+                                                           lay-verify="required"
+                                                           name="password" placeholder="请输入登录密码" required
+                                                           type="password">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block">
+                                                    <button class="layui-btn" lay-filter="formStepSubmit1" lay-submit>
+                                                        &emsp;下一步&emsp;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="layui-tab-item">
+                                        <!-- 表单二 -->
+                                        <form class="layui-form"
+                                              style="max-width: 460px;margin: 0 auto;padding: 40px 30px 0 0;">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">问题一:</label>
+                                                <div class="layui-input-block">
+                                                    <select lay-verType="tips" lay-verify="required" name="question1"
+                                                            required>
+                                                        <option value="q1">您父亲的名字是？</option>
+                                                        <option value="q2">您母亲的名字是？</option>
+                                                        <option value="q3">您配偶的名字是？</option>
+                                                        <option value="q4">您孩子的名字是？</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label layui-form-required">答案：</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input"
+                                                           lay-verType="tips"
+                                                           lay-verify="required" name="answer1" placeholder="请输入问题一的答案"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">问题二:</label>
+                                                <div class="layui-input-block">
+                                                    <select lay-verType="tips" lay-verify="required" name="question2"
+                                                            required>
+                                                        <option value="1">您小学就读于哪座城市？</option>
+                                                        <option value="2">您中学的校名是？</option>
+                                                        <option value="3">您大学的宿舍号是？</option>
+                                                        <option value="4">您最难忘的一位老师的名字是？</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label layui-form-required">答案：</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input"
+                                                           lay-verType="tips"
+                                                           lay-verify="required" name="answer2" placeholder="请输入问题二的答案"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">问题三:</label>
+                                                <div class="layui-input-block">
+                                                    <select lay-verType="tips" lay-verify="required" name="question3"
+                                                            required>
+                                                        <option value="1">对您影响最深的人的名字是？</option>
+                                                        <option value="2">您第一次旅游的时间是？</option>
+                                                        <option value="3">您曾经暗恋过的人的名字是？</option>
+                                                        <option value="4">您最难忘的一座城市是？</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label layui-form-required">答案：</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input"
+                                                           lay-verType="tips"
+                                                           lay-verify="required" name="answer2" placeholder="请输入问题三的答案"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block">
+                                                    <button class="layui-btn layui-btn-primary" data-steps="prev"
+                                                            type="button"> 上 一 步&nbsp;
+                                                    </button>
+                                                    <button class="layui-btn" lay-filter="formStepSubmit2" lay-submit>
+                                                        &emsp;提交&emsp;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="layui-tab-item text-center" style="padding-top: 40px;">
+                                        <!-- 表单三 -->
+                                        <i class="layui-icon layui-icon-ok layui-circle"
+                                           style="background: #52C41A;color: #fff;font-size:30px;font-weight:bold;padding: 20px;line-height: 80px;"></i>
+                                        <div style="font-size: 24px;color: #333;margin-top: 30px;">设置密保成功</div>
+                                        <div style="font-size: 14px;color: #666;margin-top: 20px;">您可通过密保找回您的密码</div>
+                                        <div style="text-align: center;margin: 50px 0 25px 0;">
+                                            <button class="layui-btn" data-steps="next">重新设置</button>
+                                            <button class="layui-btn layui-btn-primary">返回首页</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- //分布表单结束 -->
+                            <hr>
+                            <div style="padding: 10px 30px 20px 30px;">
+                                <h3>说明</h3><br>
+                                <h4>填写登录密码</h4>
+                                <p class="layui-text">确认是本人操作</p>
+                                <br><h4>填写密保信息</h4>
+                                <p class="layui-text">请填写一些常用的信息，内容不要过于简单，避免被他人盗用。</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">新密码</label>
-                <div class="layui-input-inline">
-                    <input type="password" name="newPass" lay-verify="newPass" autocomplete="off" class="layui-input">
+            <div class="layui-tab-item">
+                <div class="layui-fluid">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <!-- 分布表单开始 -->
+                            <div class="layui-tab layui-steps layui-steps-readonly" lay-filter="formStepsStep"
+                                 style="max-width: 650px;">
+                                <div class="layui-tab-content">
+                                    <div class="layui-tab-item layui-show">
+                                        <!-- 表单一 -->
+                                        <form class="layui-form" lay-filter="formStepForm1"
+                                              style="max-width: 400px;margin: 0 auto;padding: 40px 30px 0 0;">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label layui-form-required">当前密码:</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input" lay-verType="tips"
+                                                           lay-verify="required" name="password" placeholder="请输入当前登录密码"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label layui-form-required">新密码:</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input" lay-verType="tips"
+                                                           lay-verify="required" name="newPassword" placeholder="请输入新密码"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item layui-form-text">
+                                                <label class="layui-form-label layui-form-required">再次输入:</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input" lay-verType="tips"
+                                                           lay-verify="required"
+                                                           name="newPassword2" placeholder="请再次输入新密码" required/>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block">
+                                                    <button class="layui-btn" lay-filter="formStepSubmit1" lay-submit>
+                                                        &emsp;确认修改&emsp;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div style="padding: 10px 30px 20px 30px;">
+                                <h3>说明</h3><br>
+                                <h4>密码输入说明</h4>
+                                <p class="layui-text">密码输入字符数必须在6至12个字符之内，尽量复杂。</p>
+                                <br><h4>密码修改说明</h4>
+                                <p class="layui-text">每天仅能修改一次密码，请不要多次操作。</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">再次输入</label>
-                <div class="layui-input-inline">
-                    <input type="password" name="repeatNewPass" lay-verify="repeatNewPass" autocomplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="updatePass">立即修改</button>
-                </div>
-            </div>
-        </form>
-<!--        <footer th:replace="common/footer"></footer>-->
+        </div>
     </div>
+
+    <!--    <div style="width:800px;margin: 0 auto;padding: 10px 20px 0 400px;">-->
+    <!--        <h2 style="margin-bottom: 16px">修改密码</h2>-->
+    <!--    <form class="layui-form" method="post" lay-filter="userinfo">-->
+    <!--        <div class="layui-form-item">-->
+    <!--            <label class="layui-form-label">原密码</label>-->
+    <!--            <div class="layui-input-inline">-->
+    <!--                <input type="password" name="oldPass" lay-verify="oldPass" autocomplete="off" class="layui-input">-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div class="layui-form-item">-->
+    <!--            <label class="layui-form-label">新密码</label>-->
+    <!--            <div class="layui-input-inline">-->
+    <!--                <input type="password" name="newPass" lay-verify="newPass" autocomplete="off" class="layui-input">-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div class="layui-form-item">-->
+    <!--            <label class="layui-form-label">再次输入</label>-->
+    <!--            <div class="layui-input-inline">-->
+    <!--                <input type="password" name="repeatNewPass" lay-verify="repeatNewPass" autocomplete="off"-->
+    <!--                       class="layui-input">-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div class="layui-form-item">-->
+    <!--            <div class="layui-input-block">-->
+    <!--                <button type="submit" class="layui-btn" lay-submit="" lay-filter="updatePass">立即修改</button>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </form>-->
+    <!--    </div>-->
 </div>
 <script th:inline="javascript">
     let loginUserInfo = [[${session.loginUserInfo}]];
     init(loginUserInfo);
 
-    layui.use(['element', 'form', 'laydate', 'upload', 'jquery'], function () {
+    layui.config({
+        base: '/static/assets/module/'
+    }).use(['element', 'form', 'laydate', 'upload', 'jquery', 'steps', 'notice'], function () {
         let element = layui.element;
         let form = layui.form;
-        $ = layui.jquery;
+        let $ = layui.jquery;
+        let steps = layui.steps;
+        let notice = layui.notice;
+
+        form.render('select', 'formStepForm1');
 
         //面包屑使用
         let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>安全设置</cite></a>";
         $(".layui-breadcrumb a").last().after(currPoisition);
 
         $("#title-user").addClass("layui-this");
+
+        /* 验证登录密码 */
+        form.on('submit(formStepSubmit1)', function (data) {
+
+            $.ajax({
+                type: "get",
+                data: {password: data.field.password},
+                url: "/verifyPassword",
+                async: false,
+                success: function (res) {
+                    if (res.status === 200) {
+                        steps.next('formStepsStep');
+                    } else {
+                        notice.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        /* 表单二提交事件 */
+        form.on('submit(formStepSubmit2)', function (data) {
+            steps.next('formStepsStep');
+            return false;
+        });
 
         form.verify({
             oldPass: function (value) {

@@ -41,14 +41,14 @@ public interface EmailService {
      * @param email
      * @return
      */
-    int updateEmailByUsername(String email,String username);
+    int updateEmailByUsername(String email, String username);
 
     /**
      * 根据邮箱信息修改邮箱验证状态
      * @param email
      * @return
      */
-    int updateEmailStatusByEmail(Integer check,String email);
+    int updateEmailStatusByEmail(Integer check, String email);
 
     /**
      * 查询所有邮箱

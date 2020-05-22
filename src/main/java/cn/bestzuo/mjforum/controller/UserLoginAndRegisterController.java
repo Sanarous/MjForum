@@ -197,15 +197,14 @@ public class UserLoginAndRegisterController {
             return new ForumResult(500, "验证码错误", null);
 
         //将用户信息存在session中
-        request.getSession().setAttribute("username", user.getUsername());
-        request.getSession().setAttribute("uid", user.getUid());
-
-        //将所有页面需要的用户信息存储到session中
         UserInfo userInfo = userInfoService.selectUserInfoByUid(user.getUid());
+        request.getSession().setAttribute("username", userInfo.getUsername());
+        request.getSession().setAttribute("uid", userInfo.getUId());
+
+        //将所有页面需要的用户信息存储到session中，主要就是ID和用户名
         UserVO userVO = new UserVO();
-        userVO.setUid(user.getUid());
-        userVO.setUsername(user.getUsername());
-        userVO.setAvatar(userInfo.getAvatar());
+        userVO.setUid(userInfo.getUId());
+        userVO.setUsername(userInfo.getUsername());
 
         //将所有需要用到的用户信息放到session中
         request.getSession().setAttribute("loginUserInfo",userVO);

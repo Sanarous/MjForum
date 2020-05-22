@@ -2,20 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
+    <title>用户主页 - 码匠论坛</title>
+    <link href="/static/assets/libs/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/static/assets/module/admin.css?v=318" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/static/css/userinfo.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/css/user.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/css/fancybox.min.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
-    <script th:src="@{/static/layui/layui.js}"></script>
-    <script th:src="@{/static/js/search.js}"></script>
     <script th:src="@{/static/common/jquery.min.js}"></script>
+    <script src="/static/assets/libs/layui/layui.js" type="text/javascript"></script>
+    <script src="/static/assets/module/notice/notice.js" type="text/javascript"></script>
     <script th:src="@{/static/js/forum.js}"></script>
+    <script th:src="@{/static/js/search.js}"></script>
     <script th:src="@{/static/js/fancybox.min.js}"></script>
 </head>
 <body>
-<div class="layui-layout layui-layout-admin">
+<div class="layui-layout">
     <header th:replace="common/header"></header>
 
     <div id="user-index-body" style="margin-left: 33%;margin-top: 2%">
@@ -47,19 +50,21 @@
     let loginUserInfo = [[${session.loginUserInfo}]];
     init(loginUserInfo);
 
-    layui.use(['element', 'form', 'jquery', 'flow'], function () {
+    let username = [[${username}]];
+
+    layui.config({
+        base: '/static/assets/module/'
+    }).use(['element', 'form', 'jquery', 'flow', 'admin'], function () {
         let element = layui.element;
         let $ = layui.jquery;
         let flow = layui.flow;
+        let admin = layui.admin;
 
         //面包屑使用
         let currPoisition = "<span lay-separator=\"\">&gt;</span><a><cite>用户主页</cite></a>";
         $(".layui-breadcrumb a").last().after(currPoisition);
 
         $("#title-user").addClass("layui-this");
-
-        //获取user的个人信息
-        let username = [[${username}]];
 
         //监听选项卡切换事件，流加载信息
         element.on('tab(userIndex)', function (data) {
@@ -280,7 +285,7 @@
 
     //页面加载完成就开始
     $(document).ready(function () {
-        let username = loginUserInfo.username;  //登录用户名
+        // let username = loginUserInfo.username;  //登录用户名
 
         if (($.trim(username).length > 0)) {
             //获取我的详情页面

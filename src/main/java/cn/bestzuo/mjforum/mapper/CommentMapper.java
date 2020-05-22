@@ -42,5 +42,5 @@ public interface CommentMapper {
      * @param questionId 问题ID
      * @return  更新行数
      */
-    int selectOneUserCommentOnOneQuestionCount(Integer uid,Integer questionId);
+    int selectOneUserCommentOnOneQuestionCount(Integer uid, Integer questionId);
 }

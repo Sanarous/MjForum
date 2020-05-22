@@ -133,13 +133,12 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * 根据用户名查询评论信息
-     * @param uname  用户名
+     * @param uid  用户名
      * @return  评论信息
      */
     @Override
-    public List<Comment> selectCommentsByUname(String uname) {
-        UserInfo userInfo = userInfoMapper.selectUserInfoByName(uname);
-        return commentMapper.selectCommentsByUid(userInfo.getUId());
+    public List<Comment> selectCommentsByUserId(Integer uid) {
+        return commentMapper.selectCommentsByUid(uid);
     }
 
     /**

@@ -2,23 +2,29 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.FollowMapper">
+<mapper namespace="cn.bestzuo.mjforum.mapper.FollowMapper">
     <!-- 新增一条关注信息 -->
-    <insert id="insertFollow" parameterType="cn.bestzuo.zuoforum.pojo.Follow">
-        insert into tb_follow(user_id,`user_name`,follow_id,follow_name,`time`,`status`) values (#{userId},#{userName},#{followId},#{followName},#{time},#{status})
+    <insert id="insertFollow" parameterType="cn.bestzuo.mjforum.pojo.Follow">
+        insert into tb_follow(user_id,follow_id,`time`,`status`) values (#{userId},#{followId},#{time},#{status})
     </insert>
+
     <!-- 根据主键ID修改关注状态 -->
     <update id="updateFollowStatusById">
         update tb_follow set `status` = #{status} where id = #{id}
     </update>
+
     <!-- 根据关注者的用户名和被关注者的用户名查询关注信息 -->
-    <select id="selectFollowByUserNameAndFollowName" resultType="cn.bestzuo.zuoforum.pojo.Follow">
-        select * from tb_follow where user_name = #{userName} and follow_name = #{followName}
+    <select id="selectFollowByUserIdAndFollowId" resultType="cn.bestzuo.mjforum.pojo.Follow">
+        select * from tb_follow where user_id = #{userId} and follow_id = #{followId}
     </select>
-    <select id="selectFollowByUsername" resultType="cn.bestzuo.zuoforum.pojo.Follow">
-        select * from tb_follow where follow_name = #{username} and `status` = 1 order by id desc
+
+    <!-- 根据用户名查询关注信息 -->
+    <select id="selectFollowByFollowId" resultType="cn.bestzuo.mjforum.pojo.Follow">
+        select * from tb_follow where follow_id = #{followId} and `status` = 1 order by id desc
     </select>
-    <select id="selectFansByUsername" resultType="cn.bestzuo.zuoforum.pojo.Follow">
-        select * from tb_follow where user_name = #{username} and `status` = 1 order by id desc
+
+    <!-- 根据用户名查询粉丝信息 -->
+    <select id="selectFansByUid" resultType="cn.bestzuo.mjforum.pojo.Follow">
+        select * from tb_follow where user_id = #{userId} and `status` = 1 order by id desc
     </select>
 </mapper>

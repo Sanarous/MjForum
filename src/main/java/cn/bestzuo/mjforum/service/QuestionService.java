@@ -2,7 +2,6 @@ package cn.bestzuo.mjforum.service;
 
 import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.Question;
-import cn.bestzuo.mjforum.pojo.QuestionEdit;
 
 import java.text.ParseException;
 import java.util.List;
@@ -74,7 +73,7 @@ public interface QuestionService {
      * @param userId
      * @return
      */
-    ForumResult deleteQuestion(Integer questionId,Integer userId);
+    ForumResult deleteQuestion(Integer questionId, Integer userId);
 
     /**
      * 根据浏览量查询文章信息
@@ -91,17 +90,17 @@ public interface QuestionService {
 
     /**
      * 根据发布者查询发布的问题
-     * @param publisher
+     * @param publisherId
      * @return
      */
-    List<Question> getAllQuestionsByPublisher(String publisher);
+    List<Question> getAllQuestionsByPublisher(Integer publisherId);
 
     /**
      * 获取我的最热问题
-     * @param username
+     * @param publisherId
      * @return
      */
-    List<Question> selectMyHotQuestions(String username);
+    List<Question> selectMyHotQuestions(Integer publisherId);
 
     /**
      * 查询论坛推荐问题
@@ -121,5 +120,5 @@ public interface QuestionService {
      * @param questionId
      * @return
      */
-    int updateLikeCountById(Integer likeCount,Integer questionId);
+    int updateLikeCountById(Integer likeCount, Integer questionId);
 }

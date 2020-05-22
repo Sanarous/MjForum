@@ -1,7 +1,8 @@
 /** EasyWeb spa v3.1.8 date:2020-05-04 License By http://easyweb.vip */
 layui.config({
     version: '318',   // 更新组件缓存，设为true不缓存，也可以设一个固定值
-    base: 'assets/module/'
+    // base: '/static/assets/module/'
+    base: getProjectUrl() + '/static/assets/module/'
 }).extend({
     steps: 'steps/steps',
     notice: 'notice/notice',
@@ -15,11 +16,11 @@ layui.config({
     introJs: 'introJs/introJs',
     zTree: 'zTree/zTree'
 }).use(['layer', 'setter', 'index', 'admin'], function () {
-    var $ = layui.jquery;
-    var layer = layui.layer;
-    var setter = layui.setter;
-    var index = layui.index;
-    var admin = layui.admin;
+    let $ = layui.jquery;
+    let layer = layui.layer;
+    let setter = layui.setter;
+    let index = layui.index;
+    let admin = layui.admin;
 
     /* 检查是否登录 */
     if (!setter.getToken()) {
@@ -47,5 +48,21 @@ layui.config({
             name: '<i class="layui-icon layui-icon-home"></i>'
         });
     });
-
 });
+
+/* 获取项目根路径 */
+function getProjectUrl() {
+    let layuiDir = layui.cache.dir;
+    if (!layuiDir) {
+        let js = document.scripts, last = js.length - 1, src;
+        for (let i = last; i > 0; i--) {
+            if (js[i].readyState === 'interactive') {
+                src = js[i].src;
+                break;
+            }
+        }
+        let jsPath = src || js[last].src;
+        layuiDir = jsPath.substring(0, jsPath.lastIndexOf('/') + 1);
+    }
+    return layuiDir.substring(0, layuiDir.indexOf('assets'));
+}

@@ -35,7 +35,7 @@ public interface TagService {
      * @param tagId
      * @param questionId
      */
-    void insertQuestionAndTag(Integer tagId,Integer questionId);
+    void insertQuestionAndTag(Integer tagId, Integer questionId);
 
 
     /**

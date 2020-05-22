@@ -3,8 +3,14 @@ package cn.bestzuo.mjforum.admin.service;
 import cn.bestzuo.mjforum.admin.pojo.QuestionInfo;
 import cn.bestzuo.mjforum.admin.pojo.QuestionReportVO;
 import cn.bestzuo.mjforum.common.ForumResult;
-import cn.bestzuo.mjforum.mapper.*;
-import cn.bestzuo.mjforum.pojo.*;
+import cn.bestzuo.mjforum.mapper.QuestionMapper;
+import cn.bestzuo.mjforum.mapper.QuestionReportMapper;
+import cn.bestzuo.mjforum.mapper.UserInfoMapper;
+import cn.bestzuo.mjforum.mapper.UserRateMapper;
+import cn.bestzuo.mjforum.pojo.Question;
+import cn.bestzuo.mjforum.pojo.QuestionReport;
+import cn.bestzuo.mjforum.pojo.UserInfo;
+import cn.bestzuo.mjforum.pojo.UserRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

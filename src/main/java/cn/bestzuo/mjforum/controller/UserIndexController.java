@@ -14,7 +14,10 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
@@ -58,7 +61,7 @@ public class UserIndexController {
     /**
      * 查询对应的用户名
      *
-     * @param token  用户ID
+     * @param token 用户ID
      * @return 用户名
      */
     @GetMapping("/user/{token}")
@@ -67,20 +70,25 @@ public class UserIndexController {
             return "404";
         }
         //根据用户ID查询对应的用户信息
-        int uid = Integer.parseInt(token);
-        //查询用户ID
-        UserInfo userInfo = userInfoService.selectUserInfoByUid(uid);
-        if (userInfo == null) return "404";
-        //保存用户信息
-        model.addAttribute("username", userInfo.getUsername());
-        return "user/user";
+        try {
+            int uid = Integer.parseInt(token);
+            //查询用户ID
+            UserInfo userInfo = userInfoService.selectUserInfoByUid(uid);
+            if (userInfo == null) return "404";
+            //保存用户信息
+            model.addAttribute("username", userInfo.getUsername());
+            return "user/user";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "404";
+        }
     }
 
 
     /**
      * 获取首页用户信息
      *
-     * @param username  用户名
+     * @param username 用户名
      * @return 包装结果
      */
     @GetMapping("/getUserIndexInfo")
@@ -116,7 +124,7 @@ public class UserIndexController {
             vo.setFans(fans.size());
 
             //查询我发布的问题数
-            List<Question> questions = questionService.getAllQuestionsByPublisher(username);
+            List<Question> questions = questionService.getAllQuestionsByPublisher(userInfoByName.getUId());
             vo.setQuestionNum(questions.size());
 
             //查询我收获的点赞数
@@ -139,38 +147,33 @@ public class UserIndexController {
     @ResponseBody
     public LayuiFlowResult getMyQuestions(@RequestParam("page") Integer page,
                                           @RequestParam("username") String username) {
-        //后端校验数据
-        if (StringUtils.isEmpty(username)) {
-            return new LayuiFlowResult(400, "用户名不能为空", null,0);
-        }
-
         //后台查询数据库信息
         UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
         if (userInfoByName == null) {
-            return new LayuiFlowResult(400, "用户不存在", null,0);
+            return new LayuiFlowResult(400, "用户不存在", null, 0);
         }
 
         //查询问题信息
-        PageHelper.startPage(page,5);
-        List<Question> questions = questionService.getAllQuestionsByPublisher(username);
+        PageHelper.startPage(page, 5);
+        List<Question> questions = questionService.getAllQuestionsByPublisher(userInfoByName.getUId());
         PageInfo<Question> pageInfo = new PageInfo<>(questions);
 
-
+        System.out.println(pageInfo.getList().size());
         if (pageInfo.getList().size() == 0) {
-            return new LayuiFlowResult(200, "查询成功", null,0);
+            return new LayuiFlowResult(200, "查询成功", null, 0);
         } else {
             List<UserIndexQuestionVO> res = new ArrayList<>();
             for (Question question : pageInfo.getList()) {
                 res.add(convertQuestionToVO(question));
             }
-            return new LayuiFlowResult(200, "查询成功", res,pageInfo.getPages());
+            return new LayuiFlowResult(200, "查询成功", res, pageInfo.getPages());
         }
     }
 
     /**
      * 将Question信息转换成前端VO
      *
-     * @param question  问题信息
+     * @param question 问题信息
      * @return 前端VO类
      */
     private UserIndexQuestionVO convertQuestionToVO(Question question) {
@@ -194,38 +197,33 @@ public class UserIndexController {
      */
     @GetMapping("/getMyCommentInfo")
     @ResponseBody
-    public LayuiFlowResult getMyComments(@RequestParam("page")Integer page,
-                                     @RequestParam("username") String username) {
-        //后端数据校验
-        if (StringUtils.isEmpty(username)) {
-            return new LayuiFlowResult(400, "用户未登录", null,0);
-        }
-
+    public LayuiFlowResult getMyComments(@RequestParam("page") Integer page,
+                                         @RequestParam("username") String username) {
         UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
         if (userInfoByName == null) {
-            return new LayuiFlowResult(400, "用户信息不存在", null,0);
+            return new LayuiFlowResult(400, "用户信息不存在", null, 0);
         }
 
         //查询数据库，封装成前端VO
-        PageHelper.startPage(page,5);
-        List<Comment> comments = commentService.selectCommentsByUname(username);
+        PageHelper.startPage(page, 5);
+        List<Comment> comments = commentService.selectCommentsByUserId(userInfoByName.getUId());
         PageInfo<Comment> pageInfo = new PageInfo<>(comments);
 
         if (pageInfo.getList().size() == 0) {
-            return new LayuiFlowResult(200, "查询成功", null,0);
+            return new LayuiFlowResult(200, "查询成功", null, 0);
         } else {
             List<UserIndexCommentsVO> res = new ArrayList<>();
             for (Comment c : pageInfo.getList()) {
                 res.add(convertCommentToVO(c));
             }
-            return new LayuiFlowResult(200, "查询成功", res,pageInfo.getPages());
+            return new LayuiFlowResult(200, "查询成功", res, pageInfo.getPages());
         }
     }
 
     /**
      * 将评论信息转换成前端VO
      *
-     * @param comment  评论信息
+     * @param comment 评论信息
      */
     private UserIndexCommentsVO convertCommentToVO(Comment comment) {
         UserIndexCommentsVO vo = new UserIndexCommentsVO();
@@ -259,37 +257,31 @@ public class UserIndexController {
     /**
      * 我的收藏信息
      *
-     * @param username  用户名
+     * @param username 用户名
      * @return 包装结果
      */
     @GetMapping("/getMyCollection")
     @ResponseBody
     public LayuiFlowResult getMyCollections(@RequestParam("page") Integer page,
-                                        @RequestParam("username") String username) {
-        //后端数据校验
-        if (StringUtils.isEmpty(username)) {
-            return new LayuiFlowResult(400, "用户未登录", null,0);
-        }
-
+                                            @RequestParam("username") String username) {
         UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
         if (userInfoByName == null) {
-            return new LayuiFlowResult(400, "用户信息不存在", null,0);
+            return new LayuiFlowResult(400, "用户信息不存在", null, 0);
         }
 
-
-        PageHelper.startPage(page,5);
+        PageHelper.startPage(page, 5);
         List<Collection> collections = collectionService.selectCollectionInfoByUid(userInfoByName.getUId());
         PageInfo<Collection> pageInfo = new PageInfo<>(collections);
 
         if (pageInfo.getList().size() == 0) {
-            return new LayuiFlowResult(200, "查询成功", null,0);
+            return new LayuiFlowResult(200, "查询成功", null, 0);
         } else {
             List<UserIndexQuestionVO> res = new ArrayList<>();
             for (Collection c : pageInfo.getList()) {
                 res.add(convertQuestionToVO(questionService.selectByPrimaryKey(c.getQuestionId())));
             }
             Collections.reverse(res);
-            return new LayuiFlowResult(200, "查询成功", res,pageInfo.getPages());
+            return new LayuiFlowResult(200, "查询成功", res, pageInfo.getPages());
         }
     }
 
@@ -302,29 +294,29 @@ public class UserIndexController {
     @GetMapping("/getMyHotQuestions")
     @ResponseBody
     public LayuiFlowResult getMyHotQuestion(@RequestParam("page") Integer page,
-                                        @RequestParam("username") String username) {
+                                            @RequestParam("username") String username) {
         //后端数据校验
         if (StringUtils.isEmpty(username)) {
-            return new LayuiFlowResult(400, "用户未登录", null,0);
+            return new LayuiFlowResult(400, "用户未登录", null, 0);
         }
 
         UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
         if (userInfoByName == null) {
-            return new LayuiFlowResult(400, "用户信息不存在", null,0);
+            return new LayuiFlowResult(400, "用户信息不存在", null, 0);
         }
 
-        PageHelper.startPage(page,5);
-        List<Question> questions = questionService.selectMyHotQuestions(username);
+        PageHelper.startPage(page, 5);
+        List<Question> questions = questionService.selectMyHotQuestions(userInfoByName.getUId());
         PageInfo<Question> pageInfo = new PageInfo<>(questions);
 
         if (pageInfo.getList().size() == 0) {
-            return new LayuiFlowResult(200, "查询成功", null,0);
+            return new LayuiFlowResult(200, "查询成功", null, 0);
         } else {
             List<UserIndexQuestionVO> res = new ArrayList<>();
             for (Question question : pageInfo.getList()) {
                 res.add(convertQuestionToVO(question));
             }
-            return new LayuiFlowResult(200, "查询成功", res,pageInfo.getPages());
+            return new LayuiFlowResult(200, "查询成功", res, pageInfo.getPages());
         }
     }
 
@@ -342,7 +334,7 @@ public class UserIndexController {
     /**
      * 获取我的关注人信息
      *
-     * @param username  用户名
+     * @param username 用户名
      * @return 包装结果
      */
     @GetMapping("/getFollowInfo")
@@ -374,7 +366,7 @@ public class UserIndexController {
     /**
      * 将Follow转转成前端VO
      *
-     * @param follow  关注信息
+     * @param follow 关注信息
      * @return 前端VO
      */
     private FollowVO convertFollowToVO(Follow follow) {
@@ -416,7 +408,7 @@ public class UserIndexController {
         vo.setFans(followService.selectFansByUsername(info.getUsername()).size());
 
         //发起的问题
-        vo.setQuestionNum(questionService.getAllQuestionsByPublisher(info.getUsername()).size());
+        vo.setQuestionNum(questionService.getAllQuestionsByPublisher(info.getUId()).size());
 
         //获得的点赞总数
         vo.setLikeCount(commentLikeService.selectCommentLikeByUsername(info.getUsername()).size());
@@ -501,7 +493,7 @@ public class UserIndexController {
         vo.setFans(followService.selectFansByUsername(info.getUsername()).size());
 
         //发起的问题
-        vo.setQuestionNum(questionService.getAllQuestionsByPublisher(info.getUsername()).size());
+        vo.setQuestionNum(questionService.getAllQuestionsByPublisher(info.getUId()).size());
 
         //获得的点赞总数
         vo.setLikeCount(commentLikeService.selectCommentLikeByUsername(info.getUsername()).size());

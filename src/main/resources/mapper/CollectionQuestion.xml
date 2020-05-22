@@ -2,27 +2,34 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.CollectionMapper">
-
-    <insert id="insertCollection" parameterType="cn.bestzuo.zuoforum.pojo.Collection">
-        insert into tb_collection(u_id,`username`,question_id,publisher,`time`,`status`) values (#{uId},#{username},#{questionId},#{publisher},#{time},#{status})
+<mapper namespace="cn.bestzuo.mjforum.mapper.CollectionMapper">
+    <!-- 新增收藏信息 -->
+    <insert id="insertCollection" parameterType="cn.bestzuo.mjforum.pojo.Collection">
+        insert into tb_collection(u_id,question_id,publisher_id,`time`,`status`) values (#{uId},#{questionId},#{publisherId},#{time},#{status})
     </insert>
+
     <!-- 更新问题状态 -->
     <update id="updateCollectionStatus">
-      update tb_collection set `status` = #{status},`time` = #{time} where username = #{username} and question_id = #{questionId}
+      update tb_collection set `status` = #{status},`time` = #{time} where u_id = #{uId} and question_id = #{questionId}
     </update>
+
     <!-- 根据用户名查询名下收藏内容 -->
-    <select id="selectCollectionInfoByUsername" resultType="cn.bestzuo.zuoforum.pojo.Collection">
-        select * from tb_collection where username = #{username}
+    <select id="selectCollectionInfoByUid" resultType="cn.bestzuo.mjforum.pojo.Collection">
+        select * from tb_collection where u_id = #{uId}
     </select>
+
+    <!-- 查询收藏状态 -->
     <select id="selectCollectionStatus" resultType="java.lang.Integer">
-        select `status` from tb_collection where username = #{username} and question_id = #{questionId}
+        select `status` from tb_collection where u_id = #{uId} and question_id = #{questionId}
     </select>
-    <select id="selectSpecificCollections" resultType="cn.bestzuo.zuoforum.pojo.Collection">
-        select * from tb_collection where username = #{username} and question_id = #{questionId}
+
+    <!-- 查询指定收藏信息 -->
+    <select id="selectSpecificCollections" resultType="cn.bestzuo.mjforum.pojo.Collection">
+        select * from tb_collection where u_id = #{uId} and question_id = #{questionId}
     </select>
+
     <!-- 根据问题发布者查询发布的问题被收藏的情况 -->
-    <select id="selectCollectionByPublisher" resultType="cn.bestzuo.zuoforum.pojo.Collection">
-        select * from tb_collection where publisher = #{publisher} and status = 1 order by id desc
+    <select id="selectCollectionByPublisher" resultType="cn.bestzuo.mjforum.pojo.Collection">
+        select * from tb_collection where publisher_id = #{publisherId} and status = 1 order by id desc
     </select>
 </mapper>

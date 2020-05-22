@@ -2,33 +2,39 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.EmailMapper">
-    <select id="selectEmailInfoByUsername" parameterType="string" resultType="cn.bestzuo.zuoforum.pojo.EmailInfo">
-        select * from tb_email where username = #{username}
-    </select>
+<mapper namespace="cn.bestzuo.mjforum.mapper.EmailMapper">
 
-    <select id="selectEmailInfoByUid" parameterType="string" resultType="cn.bestzuo.zuoforum.pojo.EmailInfo">
+    <!-- 查询邮箱验证信息 -->
+    <select id="selectEmailInfoByUid" parameterType="string" resultType="cn.bestzuo.mjforum.pojo.EmailInfo">
         select * from tb_email where u_id = #{uid}
     </select>
 
-    <select id="selectEmailCheckStatusByUsername" parameterType="string" resultType="int">
-        select `check` from tb_email where username = #{username}
+    <!-- 根据用户ID查询邮箱验证结果 -->
+    <select id="selectEmailCheckStatusByUid" parameterType="int" resultType="int">
+        select `check` from tb_email where u_id = #{uid}
     </select>
+
+    <!-- 查询所有验证过的邮箱信息 -->
     <select id="queryAllEmails" resultType="java.lang.String">
         select email from tb_email where `check` = 1
     </select>
-    <select id="selectEmailInfoByEmail" resultType="cn.bestzuo.zuoforum.pojo.EmailInfo">
+
+    <!-- 根据邮箱查询邮箱信息 -->
+    <select id="selectEmailInfoByEmail" resultType="cn.bestzuo.mjforum.pojo.EmailInfo">
         select * from tb_email where email = #{email}
     </select>
 
-    <insert id="insertEmailInfo" parameterType="cn.bestzuo.zuoforum.pojo.EmailInfo">
-        insert into tb_email(u_id,username,email,`check`) values (#{uid},#{username},#{email},#{check})
+    <!-- 新增查询邮箱信息 -->
+    <insert id="insertEmailInfo" parameterType="cn.bestzuo.mjforum.pojo.EmailInfo">
+        insert into tb_email(u_id,email,`check`) values (#{uid},#{email},#{check})
     </insert>
 
-    <update id="updateEmailByUsername" parameterType="string">
-        update tb_email set email = #{email} where username = #{username}
+    <!-- 根据用户名更新查询邮箱信息 -->
+    <update id="updateEmailByUid" parameterType="string">
+        update tb_email set email = #{email} where u_id = #{uid}
     </update>
 
+    <!-- 根据邮箱更新查询邮箱信息 -->
     <update id="updateEmailStatusByEmail">
         update tb_email set `check` = #{check} where email = #{email}
     </update>

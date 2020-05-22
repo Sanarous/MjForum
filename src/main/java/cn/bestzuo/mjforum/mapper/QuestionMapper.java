@@ -86,7 +86,7 @@ public interface QuestionMapper {
      * @param questionId  问题ID
      * @return  更新行数
      */
-    int updateLikeCountById(Integer likeCount,Integer questionId);
+    int updateLikeCountById(Integer likeCount, Integer questionId);
 
     /**
      * 推荐
@@ -132,7 +132,7 @@ public interface QuestionMapper {
      * @param questionId 问题ID
      * @return 更新行数
      */
-    int updateDingStatusByQuestionId(int isDing,int questionId);
+    int updateDingStatusByQuestionId(int isDing, int questionId);
 
     /**
      * 更新加精状态
@@ -140,5 +140,5 @@ public interface QuestionMapper {
      * @param questionId 问题ID
      * @return  更新行数
      */
-    int updateJingStatusByQuestionId(int isJing,int questionId);
+    int updateJingStatusByQuestionId(int isJing, int questionId);
 }

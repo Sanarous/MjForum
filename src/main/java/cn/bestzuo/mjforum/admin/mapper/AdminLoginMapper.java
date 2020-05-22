@@ -16,7 +16,7 @@ public interface AdminLoginMapper {
      * @param time
      * @return
      */
-    int insertLoginInfo(String ip,String info,String time);
+    int insertLoginInfo(String ip, String info, String time);
 
     /**
      * 查询最近5次的登录信息

@@ -1,3 +1,7 @@
+.layui-header {
+    background: #393D49;
+}
+
 .question-title{
     margin:10px auto;
 }
@@ -100,12 +104,14 @@
     text-align: justify;
     letter-spacing: 1px;
     overflow-wrap: break-word;
-    text-indent: 2rem;
+    /*text-indent: 2rem;*/
     line-height: 33px;
 }
 
 .question-body p img{
     max-width: 60% !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .post-tag{
@@ -460,5 +466,41 @@ span.focus-links:hover{
 
 .layui-layedit img{
     width: auto !important;
+}
+
+table {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+table tr th {
+    background-color: rgb(81, 130, 187);
+    color: #fff;
+    border-bottom-width: 0;
+}
+
+table td {
+    color: #000;
+}
+
+table tr, table th {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(81, 130, 187);
+}
+
+table td, table th {
+    padding: 5px 10px;
+    /*font-size: 12px;*/
+    font-family: Verdana;
+    font-weight: bold;
+    border: 1px solid rgb(26, 61, 103);
+}
+
+#updateBtn {
+    margin-bottom: 10px;
+    float: right;
+    margin-right: 15px;
 }
 

@@ -43,7 +43,7 @@ public class ForumResult {
 
     }
 
-    public static ForumResult build(int status,String msg,Object data){
+    public static ForumResult build(int status, String msg, Object data) {
         return new ForumResult(status,msg,data);
     }
 
@@ -64,7 +64,7 @@ public class ForumResult {
         return new ForumResult(200,"",null);
     }
 
-    public static ForumResult build(int status,String msg){
+    public static ForumResult build(int status, String msg) {
         return new ForumResult(status,msg,null);
     }
 
@@ -74,7 +74,7 @@ public class ForumResult {
      * @param clazz   对象
      * @return 包装结果
      */
-    public static ForumResult formatToPojo(String jsonData,Class<?> clazz){
+    public static ForumResult formatToPojo(String jsonData, Class<?> clazz) {
         try {
             if (clazz == null) {
                 return MAPPER.readValue(jsonData, ForumResult.class);
@@ -115,7 +115,7 @@ public class ForumResult {
      * @param clazz  对象
      * @return 包装结果
      */
-    public static ForumResult formatToList(String jsonData,Class<?> clazz){
+    public static ForumResult formatToList(String jsonData, Class<?> clazz) {
         try {
             JsonNode jsonNode = MAPPER.readTree(jsonData);
             JsonNode data = jsonNode.get("data");

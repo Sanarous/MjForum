@@ -2,11 +2,9 @@ package cn.bestzuo.mjforum.controller;
 
 import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.Question;
-import cn.bestzuo.mjforum.pojo.QuestionEdit;
 import cn.bestzuo.mjforum.pojo.UserInfo;
 import cn.bestzuo.mjforum.pojo.vo.QuestionVO;
 import cn.bestzuo.mjforum.service.QuestionService;
-import cn.bestzuo.mjforum.service.TagService;
 import cn.bestzuo.mjforum.service.UserInfoService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -14,7 +12,6 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 

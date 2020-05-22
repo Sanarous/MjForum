@@ -11,7 +11,7 @@ public interface CommentService {
      * @param comment
      * @return
      */
-    Comment insertCommentByQuestionId(String username,String comment,Integer questionId);
+    Comment insertCommentByQuestionId(String username, String comment, Integer questionId);
 
     /**
      * 根据问题ID查询评论信息
@@ -23,7 +23,7 @@ public interface CommentService {
     /**
      * 根据评论者查询评论信息
      */
-    List<Comment> selectCommentsByUname(String uname);
+    List<Comment> selectCommentsByUserId(Integer uid);
 
     /**
      * 根据评论ID查询评论信息

@@ -2,11 +2,14 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.admin.mapper.AdminLoginMapper">
+<mapper namespace="cn.bestzuo.mjforum.admin.mapper.AdminLoginMapper">
+    <!-- 新增管理员用户登录信息 -->
     <insert id="insertLoginInfo" useGeneratedKeys="true" keyProperty="id">
         insert into tb_admin_login_info(ip,info,`time`) values (#{ip},#{info},#{time})
     </insert>
-    <select id="queryAllLoginInfo" resultType="cn.bestzuo.zuoforum.admin.pojo.LoginInfo">
+
+    <!-- 查询所有登录信息 -->
+    <select id="queryAllLoginInfo" resultType="cn.bestzuo.mjforum.admin.pojo.LoginInfo">
         select ip,info,`time` from tb_admin_login_info order by id desc limit 8
     </select>
 </mapper>

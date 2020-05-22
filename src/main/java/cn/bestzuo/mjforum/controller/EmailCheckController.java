@@ -48,8 +48,8 @@ public class EmailCheckController {
     /**
      * 验证邮件
      *
-     * @param emailTo  发送邮箱地址
-     * @return  通用返回结果
+     * @param emailTo 发送邮箱地址
+     * @return 通用返回结果
      */
     @RequestMapping("/email")
     @ResponseBody
@@ -58,7 +58,7 @@ public class EmailCheckController {
         String randomCode = getRandomCode(6);
         try {
             //存入redis，设置15分钟过期时间
-            redisUtil.set(emailTo,randomCode,15 * 60);
+            redisUtil.set(emailTo, randomCode, 15 * 60);
             mailService.sendSimpleMail(emailTo, "码匠论坛 邮箱验证", "您的邮箱验证码为：" + randomCode + "（15分钟后失效）");
             return new ForumResult(200, "邮件发送成功", null);
         } catch (Exception e) {
@@ -70,8 +70,8 @@ public class EmailCheckController {
     /**
      * 随机生成6位数验证码
      *
-     * @param codeNum  输入验证码位数
-     * @return  验证码
+     * @param codeNum 输入验证码位数
+     * @return 验证码
      */
     private String getRandomCode(int codeNum) {
         Random random = new Random();
@@ -85,32 +85,32 @@ public class EmailCheckController {
 
     /**
      * 邮箱验证
-     * @param verifyCode  用户输入的验证码
+     *
+     * @param verifyCode 用户输入的验证码
      * @param username   用户名
-     * @param email   邮箱
-     * @param request  http请求
-     * @return  通用结果
+     * @param email      邮箱
+     * @return 通用结果
      */
     @RequestMapping("/checkEmail")
     @ResponseBody
     public ForumResult checkEmail(@RequestParam("verifyCode") String verifyCode,
                                   @RequestParam("username") String username,
-                                  @RequestParam("email") String email,
-                                  HttpServletRequest request) {
+                                  @RequestParam("email") String email) {
         if (verifyCode == null || verifyCode.length() == 0) {
             return new ForumResult(400, "验证码不能为空", null);
         }
 
         //从redis中取出验证码
-        String emailCode = (String)redisUtil.get(email);
-        if(emailCode == null){
-            return new ForumResult(500,"验证码已过期",null);
+        String emailCode = (String) redisUtil.get(email);
+        if (emailCode == null) {
+            return new ForumResult(500, "验证码已过期", null);
         }
-//        String emailCode = (String) request.getSession().getAttribute("emailCode");
+
         try {
             if (emailCode.equalsIgnoreCase(verifyCode)) {
                 //改变数据库状态
                 //先查询状态
+                System.out.println(username);
                 Integer status = emailService.selectEmailCheckStatusByUsername(username);
                 if (status == 0) {
                     //验证成功，保存信息到用户数据库
@@ -137,7 +137,7 @@ public class EmailCheckController {
      * 查询邮箱验证状态
      *
      * @param username 用户名
-     * @return  通用返回结果
+     * @return 通用返回结果
      */
     @GetMapping("/queryEmailStatus")
     @ResponseBody
@@ -156,7 +156,7 @@ public class EmailCheckController {
     /**
      * 查询邮箱是否已经被验证过
      *
-     * @return  通用返回结果
+     * @return 通用返回结果
      */
     @GetMapping("/getEmailStatus")
     @ResponseBody

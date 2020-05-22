@@ -2,27 +2,34 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.UserMapper">
+<mapper namespace="cn.bestzuo.mjforum.mapper.UserMapper">
     <!-- 修改密码 -->
     <update id="updatePassword">
         update tb_user set password = #{newPassword} where username = #{username}
     </update>
+
     <!--根据用户ID删除用户信息-->
     <delete id="deleteUserById">
         delete from tb_user where uid = #{id}
     </delete>
-    <select id="getAllUsers" resultType="cn.bestzuo.zuoforum.pojo.User">
+
+    <!-- 查询所有用户信息 -->
+    <select id="getAllUsers" resultType="cn.bestzuo.mjforum.pojo.User">
         select * from tb_user
     </select>
+
     <!-- 插入一条用户信息，并返回主键信息 -->
-    <insert id="insertUser" parameterType="cn.bestzuo.zuoforum.pojo.User" useGeneratedKeys="true" keyProperty="uid">
+    <insert id="insertUser" parameterType="cn.bestzuo.mjforum.pojo.User" useGeneratedKeys="true" keyProperty="uid">
         insert into tb_user(username,password) values (#{username},#{password})
     </insert>
-    <select id="getUserByName" parameterType="string" resultType="cn.bestzuo.zuoforum.pojo.User">
+
+    <!-- 根据用户名查询信息 -->
+    <select id="getUserByName" parameterType="string" resultType="cn.bestzuo.mjforum.pojo.User">
         select * from tb_user where username = #{username}
     </select>
+
     <!-- 据用户uid查询用户-->
-    <select id="getUserByUserId" parameterType="int" resultType="cn.bestzuo.zuoforum.pojo.User">
+    <select id="getUserByUserId" parameterType="int" resultType="cn.bestzuo.mjforum.pojo.User">
         select * from tb_user where uid = #{userId}
     </select>
 </mapper>

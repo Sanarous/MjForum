@@ -2,7 +2,6 @@ package cn.bestzuo.mjforum.controller;
 
 import cn.bestzuo.mjforum.common.ForumResult;
 import cn.bestzuo.mjforum.pojo.Question;
-import cn.bestzuo.mjforum.pojo.QuestionEdit;
 import cn.bestzuo.mjforum.pojo.UserInfo;
 import cn.bestzuo.mjforum.pojo.UserRate;
 import cn.bestzuo.mjforum.pojo.vo.QuestionVO;

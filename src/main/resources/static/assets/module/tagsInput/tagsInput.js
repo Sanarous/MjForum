@@ -17,7 +17,7 @@
     } else if (window.layui && layui.define) {  // layui加载
         layui.define('jquery', function (exports) {
             var $ = layui.jquery;
-            layui.link(layui.cache.base + 'tagsInput/tagsInput.css');
+            layui.link('/static/assets/module/tagsInput/tagsInput.css');
             exports('tagsInput', factory($));
         });
     } else {

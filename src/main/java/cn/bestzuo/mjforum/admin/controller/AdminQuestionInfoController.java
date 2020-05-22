@@ -94,8 +94,8 @@ public class AdminQuestionInfoController {
     @GetMapping("/getReport")
     @ResponseBody
     public LayuiTableResult getAllReports(@RequestParam("page") Integer page,
-                                     @RequestParam("limit") Integer limit,
-                                     @RequestParam(value = "key[username]", required = false) String keyword){
+                                          @RequestParam("limit") Integer limit,
+                                          @RequestParam(value = "key[username]", required = false) String keyword) {
         if(keyword != null && keyword.length() != 0){
             //携带关键字进行查询
             PageHelper.startPage(page, limit);

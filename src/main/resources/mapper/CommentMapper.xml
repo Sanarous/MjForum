@@ -2,23 +2,28 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.CommentMapper">
+<mapper namespace="cn.bestzuo.mjforum.mapper.CommentMapper">
+
     <!-- 根据问题ID查询问题下所有的评论（没有回复） -->
-    <select id="queryCommentByQuestionId" parameterType="int" resultType="cn.bestzuo.zuoforum.pojo.Comment">
+    <select id="queryCommentByQuestionId" parameterType="int" resultType="cn.bestzuo.mjforum.pojo.Comment">
         select * from tb_comment where question_id = #{questionId}
     </select>
-    <!-- 根据评论者查询评论信息 -->
-    <select id="selectCommentsByUname" resultType="cn.bestzuo.zuoforum.pojo.Comment">
-        select * from tb_comment where uname = #{uname} order by c_id desc
+
+    <!-- 根据评论者ID查询评论信息 -->
+    <select id="selectCommentsByUid" resultType="cn.bestzuo.mjforum.pojo.Comment">
+        select * from tb_comment where uid = #{uid} order by c_id desc
     </select>
-    <select id="selectCommentByPrimaryKey" resultType="cn.bestzuo.zuoforum.pojo.Comment">
+
+    <!-- 根据主键查询评论信息 -->
+    <select id="selectCommentByPrimaryKey" resultType="cn.bestzuo.mjforum.pojo.Comment">
         select * from tb_comment where c_id = #{id}
     </select>
 
     <!-- 插入一条评论 -->
-    <insert id="insertCommentByQuestionId" useGeneratedKeys="true" keyProperty="cId" parameterType="cn.bestzuo.zuoforum.pojo.Comment">
-        insert into tb_comment(comment,`time`,avatar,uid,uname,question_id)
-        values( #{comment},#{time},#{avatar},#{uid},#{uname},#{questionId} )
+    <insert id="insertCommentByQuestionId" useGeneratedKeys="true" keyProperty="cId"
+            parameterType="cn.bestzuo.mjforum.pojo.Comment">
+        insert into tb_comment(comment,`time`,uid,question_id)
+        values( #{comment},#{time},#{uid},#{questionId} )
     </insert>
 
     <!-- 查询同一用户在同一问题下评论的次数 -->

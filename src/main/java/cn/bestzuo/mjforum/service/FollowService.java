@@ -19,14 +19,14 @@ public interface FollowService {
      * @param followName
      * @return
      */
-    Follow selectFollowByUserNameAndFollowName(String userName,String followName);
+    Follow selectFollowByUserNameAndFollowName(String userName, String followName);
 
     /**
      * 根据主键改变关注状态
      * @param id
      * @return
      */
-    int updateFollowStatusById(int status,Integer id);
+    int updateFollowStatusById(int status, Integer id);
 
     /**
      * 根据用户名查询关注的人

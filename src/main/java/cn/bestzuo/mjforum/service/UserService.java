@@ -36,7 +36,7 @@ public interface UserService {
      * @param newPassword
      * @return
      */
-    int updatePassword(String username,String oldPassword,String newPassword);
+    int updatePassword(String username, String oldPassword, String newPassword);
 
     /**
      * 根据用户Id删除用户信息

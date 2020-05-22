@@ -2,17 +2,19 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.bestzuo.zuoforum.mapper.CommentReplyMapper">
+<mapper namespace="cn.bestzuo.mjforum.mapper.CommentReplyMapper">
     <!-- 插入一条回复信息 -->
-    <insert id="insertCommentReply" parameterType="cn.bestzuo.zuoforum.pojo.CommentReply">
-        insert into tb_comment_reply(r_content,r_time,parent_comment_id,touid,touname,r_avatar,r_uid,r_name)
-        values(#{rContent},#{rTime},#{parentCommentId},#{touid},#{touname},#{rAvatar},#{rUid},#{rName} )
+    <insert id="insertCommentReply" parameterType="cn.bestzuo.mjforum.pojo.CommentReply">
+        insert into tb_comment_reply(r_content,r_time,parent_comment_id,touid,r_uid)
+        values(#{rContent},#{rTime},#{parentCommentId},#{touid},#{rUid} )
     </insert>
-    
-    <select id="queryReplyByCommentId" parameterType="int" resultType="cn.bestzuo.zuoforum.pojo.CommentReply">
+
+    <!-- 根据评论ID查询楼中楼回复 -->
+    <select id="queryReplyByCommentId" parameterType="int" resultType="cn.bestzuo.mjforum.pojo.CommentReply">
         select * from tb_comment_reply where parent_comment_id = #{parentCommentId}
     </select>
 
+    <!-- 查询楼中楼回复数量 -->
     <select id="queryReplyNum" parameterType="int" resultType="int">
         select count(*) from tb_comment_reply where parent_comment_id = #{parentCommentId}
     </select>
