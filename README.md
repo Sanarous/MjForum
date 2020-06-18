@@ -2,7 +2,7 @@
 
 码匠论坛是一个功能基本全面的内部交流使用论坛平台，提供发布问题、个人资料展示、评论、回复、搜索、接收消息通知等基本功能。后端采用了 SpringBoot + MyBatis + MySQL进行构建，前端采用了 Thymeleaf + Layui 进行展示，界面风格简洁。由于是个人无聊时开发，代码风格比较乱，部分逻辑由于没有测试会存在较多 BUG，如果后期有时间会重构整体代码。
 
-![](https://bestzuo.cn/images/forum/forum.jpg)
+![](https://blog.bestzuo.cn/images/forum/forum.jpg)
 
 
 # 技术选型
